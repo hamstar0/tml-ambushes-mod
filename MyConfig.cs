@@ -28,10 +28,16 @@ namespace Ambushes {
 		public int HugeWorldInitialAmbushes { get; set; } = 2048;
 
 		[DefaultValue( 60 * 60 * 15 )]
-		[Label("Duration between ambush random generations (in ticks)")]
+		[Label( "Duration (in ticks) until an ambush randomly regenerates elsewhere" )]
 		public int AmbushRegenTickRate { get; set; } = 60 * 60 * 15;    // 15 minutes
 
 		[DefaultValue(64)]
 		public int MinimumAmbushTileSpacing { get; set; } = 64;
+
+		////
+
+		[Header( "Ambush settings" )]
+		[DefaultValue( 8 )]
+		public int AmbushTriggerRadiusTiles { get; set; } = 8;
 	}
 }

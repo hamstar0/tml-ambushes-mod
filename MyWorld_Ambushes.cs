@@ -10,6 +10,8 @@ using Terraria.ModLoader;
 namespace Ambushes {
 	partial class AmbushesWorld : ModWorld {
 		private void InitializeAmbushes() {
+			this.Ambushes.Clear();
+
 			for( int i=0; i<this.MaxAmbushes; i++ ) {
 				this.CreateRandomAmbushAsync();
 			}
@@ -38,20 +40,26 @@ namespace Ambushes {
 			var cts = new CancellationTokenSource();
 
 			Task.Factory.StartNew( () => {
+				Ambush ambush;
 
+				lock( AmbushesWorld.MyLock ) {
+					if( this.GetRandomOpenAmbushPoint( out ambush, 1000 ) ) {
+						this.SpawnAmbush( ambush );
+					}
+				}
 			}, cts.Token );
 		}
 
 
 		////////////////
 
-		private bool GetRandomOpenAmbushPoint( out (int TileX, int TileY) randTileCenter, int maxAttempts ) {
+		private bool GetRandomOpenAmbushPoint( out Ambush ambush, int maxAttempts ) {
 			int attempts = 0;
 
 			do {
-				randTileCenter = this.GetRandomAmbushPoint( maxAttempts );
+				ambush = this.GetRandomAmbushPoint( maxAttempts );
 
-				if( !this.HasNearbyAmbushes( randTileCenter.TileX, randTileCenter.TileY) ) {
+				if( !this.HasNearbyAmbushes(ambush.TileX, ambush.TileY) ) {
 					return true;
 				}
 			} while( attempts++ < maxAttempts );
@@ -60,20 +68,21 @@ namespace Ambushes {
 		}
 
 
-		private (int TileX, int TileY) GetRandomAmbushPoint( int maxAttempts ) {
+		private Ambush GetRandomAmbushPoint( int maxAttempts ) {
 			int attempts = 0;
 			int randTileX, randTileY;
+			IList<(int TileX, int TileY)> edgeTiles;
 
 			do {
 				randTileX = Main.rand.Next( 64, Main.maxTilesX - 64 );
 				randTileY = Main.rand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
 
-				if( !Ambush.CheckForAmbushElegibility( ref randTileX, ref randTileY ) ) {
+				if( !Ambush.CheckForAmbushElegibility( randTileX, randTileY, out edgeTiles ) ) {
 					break;
 				}
 			} while( attempts++ < maxAttempts );
 
-			return (randTileX, randTileY);
+			return new Ambush( randTileX, randTileY, edgeTiles );
 		}
 
 
@@ -100,16 +109,12 @@ namespace Ambushes {
 
 		////////////////
 
-		private void SpawnAmbush( int tileX, int tileY ) {
-			var mymod = AmbushesMod.Instance;
-
-			lock( AmbushesWorld.MyLock ) {
-				if( !this.Ambushes.ContainsKey( tileX ) ) {
-					this.Ambushes[ tileX ] = new Dictionary<int, Ambush>();
-				}
-
-				this.Ambushes[ tileX ][ tileY ] = new Ambush( tileX, tileY );
+		private void SpawnAmbush( Ambush ambush ) {
+			if( !this.Ambushes.ContainsKey(ambush.TileX) ) {
+				this.Ambushes[ ambush.TileX ] = new Dictionary<int, Ambush>();
 			}
+
+			this.Ambushes[ ambush.TileX ][ ambush.TileY ] = ambush;
 		}
 	}
 }

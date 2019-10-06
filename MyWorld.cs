@@ -1,6 +1,4 @@
-﻿using HamstarHelpers.Classes.Tiles.TilePattern;
-using HamstarHelpers.Helpers.World;
-using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.Helpers.World;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -18,7 +16,6 @@ namespace Ambushes {
 		private int MaxAmbushes;
 		private int AmbushRegenDelay;
 
-		private TilePattern AmbushAreaPattern;
 		private IDictionary<int, IDictionary<int, Ambush>> Ambushes
 			= new Dictionary<int, IDictionary<int, Ambush>>();
 
@@ -28,13 +25,6 @@ namespace Ambushes {
 
 		public override void Initialize() {
 			var mymod = (AmbushesMod)this.mod;
-
-			this.AmbushAreaPattern = new TilePattern( new TilePatternBuilder {
-				HasLava = false,
-				IsSolid = false,
-				IsPlatform = false,
-				IsActuated = false,
-			} );
 
 			switch( WorldHelpers.GetSize() ) {
 			default:
