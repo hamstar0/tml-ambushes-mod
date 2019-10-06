@@ -1,1 +1,1 @@
-Ambushes is a pretty cool mod, it does...this. Modify this file with a description of your mod.
+Populates your worlds with random enemy ambushes. Some may be difficult to escape from. Configurable.
