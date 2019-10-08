@@ -7,57 +7,62 @@ using Terraria;
 
 namespace Ambushes {
 	public class Ambush {
-		public static bool CheckForAmbushElegibility( int tileX, int tileY, out IList<(int TileX, int TileY)> edgeTiles ) {
-			edgeTiles = new List<(int TileX, int TileY)> { (tileX, tileY) };
+		public static bool CheckForAmbushElegibility( int tileX, int tileY, out IDictionary<int, ISet<int>> edgeTiles ) {
+			edgeTiles = new Dictionary<int, ISet<int>> { { tileX, new HashSet<int> { tileY } } };
 
-			var edgeTileQueue = new List<(int TileX, int TileY)>();
+			var edgeTileQueue = new Dictionary<int, ISet<int>>();
 			var chartedTiles = new Dictionary<int, ISet<int>>();
 
-			int maxDistSqr = 60 * 60;
-			int maxCount = 1600;
-			int count = 0;
+			int maxDistSqr = 50 * 50;
+			int minNeededAirTiles = 576;
+			int airTileCount = 0;
 
 			do {
-				for( int i = 0; i < edgeTiles.Count; i++ ) {
-					int eTileX = edgeTiles[i].TileX;
-					int eTileY = edgeTiles[i].TileY;
+				foreach( (int eTileX, ISet<int> eTileYs) in edgeTiles ) {
+					foreach( int eTileY in eTileYs ) {
+						int distX = tileX - eTileX;
+						int distY = tileY - eTileY;
 
-					if( ( eTileX * eTileX ) + ( eTileY * eTileY ) > maxDistSqr ) {
-						continue;
-					}
-
-					Tile tile = Framing.GetTileSafely( eTileX, eTileY );
-
-					if( TileHelpers.IsAir( tile, true, false ) ) {
-						if( !chartedTiles.ContainsKey(eTileX) || !chartedTiles[eTileX].Contains(eTileY) ) {
-							chartedTiles.Set2D( eTileX, eTileY );
-							edgeTileQueue.Add( (eTileX, eTileY) );
-							count++;
+						if( ((distX * distX) + (distY * distY)) > maxDistSqr ) {
+							continue;
 						}
-					}
 
-					if( count >= maxCount ) {
-						break;
+						Tile eTile = Framing.GetTileSafely( eTileX, eTileY );
+
+						if( TileHelpers.IsAir( eTile, true, false ) ) {
+							if( !chartedTiles.ContainsKey(eTileX) || !chartedTiles[eTileX].Contains(eTileY) ) {
+								chartedTiles.Set2D( eTileX, eTileY );
+								edgeTileQueue.Set2D( eTileX, eTileY );
+								airTileCount++;
+							}
+						}
+
+						if( airTileCount >= minNeededAirTiles ) {
+							break;
+						}
 					}
 				}
 
 				edgeTiles.Clear();
 
-				foreach( (int eTileX, int eTileY) in edgeTileQueue ) {
-					Ambush.GetUnchartedNeighboringEdgeTiles( eTileX, eTileY, chartedTiles, edgeTiles );
+				foreach( (int eTileX, ISet<int> eTileYs) in edgeTileQueue ) {
+					foreach( int eTileY in eTileYs ) {
+						Ambush.GetUnchartedNeighboringEdgeTiles( eTileX, eTileY, chartedTiles, ref edgeTiles );
+					}
 				}
 
 				edgeTileQueue.Clear();
-			} while( edgeTiles.Count > 0 && count < maxCount );
+			} while( edgeTiles.Count > 0 && airTileCount < minNeededAirTiles );
 
-			return count >= maxCount;
+			return airTileCount >= minNeededAirTiles;
 		}
 
 		////
 
-		private static void GetUnchartedNeighboringEdgeTiles( int eTileX, int eTileY,
+		private static void GetUnchartedNeighboringEdgeTiles(
+					int eTileX, int eTileY,
 					IDictionary<int, ISet<int>> chartedTiles,
-					IList<(int TileX, int TileY)> newEdgeTiles ) {
+					ref IDictionary<int, ISet<int>> newEdgeTiles ) {
 			IEnumerable<(int, int)> neighbors() {
 				yield return ( eTileX, eTileY - 1 );
 				yield return ( eTileX - 1, eTileY );
@@ -66,12 +71,14 @@ namespace Ambushes {
 			};
 
 			foreach( (int tileX, int tileY) in neighbors() ) {
-				if( !chartedTiles.ContainsKey( tileX ) || !chartedTiles[tileX].Contains( tileY ) ) {
-					Tile tile = Framing.GetTileSafely( tileX, tileY );
+				if( chartedTiles.ContainsKey( tileX ) && chartedTiles[tileX].Contains( tileY ) ) {
+					continue;
+				}
 
-					if( TileHelpers.IsAir(tile, true, false) ) {
-						newEdgeTiles.Add( (tileX, tileY) );
-					}
+				Tile tile = Framing.GetTileSafely( tileX, tileY );
+
+				if( TileHelpers.IsAir(tile, true, false) ) {
+					newEdgeTiles.Set2D( tileX, tileY );
 				}
 			}
 		}
@@ -89,14 +96,13 @@ namespace Ambushes {
 			} while( TileHelpers.IsAir(tile, true, false) );
 
 			tileY = Math.Max( tileY, (tileY + y) - (mymod.Config.AmbushTriggerRadiusTiles / 2) );
-			;
 		}
 
 
 
 		////////////////
 
-		private IList<(int TileX, int TileY)> EdgeTiles;
+		private IDictionary<int, ISet<int>> EdgeTiles;
 
 		////////////////
 
@@ -107,7 +113,7 @@ namespace Ambushes {
 
 		////////////////
 
-		public Ambush( int tileX, int tileY, IList<(int TileX, int TileY)> edgeTiles ) {
+		public Ambush( int tileX, int tileY, IDictionary<int, ISet<int>> edgeTiles ) {
 			this.TileX = tileX;
 			this.TileY = tileY;
 			this.EdgeTiles = edgeTiles;

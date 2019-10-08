@@ -7,16 +7,16 @@ using Terraria.ModLoader;
 
 namespace Ambushes {
 	partial class AmbushesWorld : ModWorld {
-		private static object MyLock = new object();
+		internal static object MyLock = new object();
 
 
 
 		////////////////
 
-		private int MaxAmbushes;
+		public int MaxAmbushes { get; private set; }
 		private int AmbushRegenDelay;
 
-		private IDictionary<int, IDictionary<int, Ambush>> Ambushes
+		internal IDictionary<int, IDictionary<int, Ambush>> Ambushes
 			= new Dictionary<int, IDictionary<int, Ambush>>();
 
 
@@ -44,8 +44,6 @@ namespace Ambushes {
 				this.MaxAmbushes = mymod.Config.HugeWorldInitialAmbushes;
 				break;
 			}
-
-			this.InitializeAmbushes();
 		}
 
 
@@ -53,7 +51,7 @@ namespace Ambushes {
 
 		public override void PreUpdate() {
 			if( Main.netMode != 1 ) {
-				this.UpdateAmbushes();
+				this.UpdateAmbushes( this.MaxAmbushes );
 			}
 		}
 	}

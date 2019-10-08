@@ -1,25 +1,33 @@
-﻿using HamstarHelpers.Helpers.DotNET.Extensions;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.DotNET.Extensions;
+using HamstarHelpers.Helpers.TModLoader;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 
 namespace Ambushes {
 	partial class AmbushesWorld : ModWorld {
-		private void InitializeAmbushes() {
+		internal void InitializeAmbushesAsync( int maxAmbushes ) {
 			this.Ambushes.Clear();
 
-			for( int i=0; i<this.MaxAmbushes; i++ ) {
-				this.CreateRandomAmbushAsync();
-			}
-		}
+			var cts = new CancellationTokenSource();
 
+			Task.Factory.StartNew( () => {
+				for( int i = 0; i < maxAmbushes; i++ ) {
+					this.CreateRandomAmbushAsync();
+					Thread.Sleep( AmbushesMod.Instance.Config.AmbushInitialGenerationSlowness );
+				}
+			}, cts.Token );
+		}
+		
 		////////////////
 
-		private void UpdateAmbushes() {
+		private void UpdateAmbushes( int maxAmbushes ) {
 			var mymod = (AmbushesMod)this.mod;
 
 			if( this.AmbushRegenDelay++ < mymod.Config.AmbushRegenTickRate ) {
@@ -28,7 +36,7 @@ namespace Ambushes {
 
 			this.AmbushRegenDelay = 0;
 
-			if( this.Ambushes.Count < this.MaxAmbushes ) {
+			if( this.Ambushes.Count < maxAmbushes ) {
 				this.CreateRandomAmbushAsync();
 			}
 		}
@@ -37,13 +45,15 @@ namespace Ambushes {
 		////////////////
 
 		private void CreateRandomAmbushAsync() {
+			lock( AmbushesWorld.MyLock ) { }
+
 			var cts = new CancellationTokenSource();
 
 			Task.Factory.StartNew( () => {
-				Ambush ambush;
-
 				lock( AmbushesWorld.MyLock ) {
-					if( this.GetRandomOpenAmbushPoint( out ambush, 1000 ) ) {
+					Ambush ambush = this.CreateNonNeighboringRandomAmbush( 1000 );
+
+					if( ambush != null ) {
 						this.SpawnAmbush( ambush );
 					}
 				}
@@ -53,35 +63,41 @@ namespace Ambushes {
 
 		////////////////
 
-		private bool GetRandomOpenAmbushPoint( out Ambush ambush, int maxAttempts ) {
+		private Ambush CreateNonNeighboringRandomAmbush( int maxAttempts ) {
 			int attempts = 0;
 
 			do {
-				ambush = this.GetRandomAmbushPoint( maxAttempts );
+				Ambush ambush = this.CreateRandomAmbush( maxAttempts );
 
 				if( !this.HasNearbyAmbushes(ambush.TileX, ambush.TileY) ) {
-					return true;
+					return ambush;
 				}
 			} while( attempts++ < maxAttempts );
 
-			return false;
+			return null;
 		}
 
 
-		private Ambush GetRandomAmbushPoint( int maxAttempts ) {
+		private Ambush CreateRandomAmbush( int maxAttempts ) {
 			int attempts = 0;
 			int randTileX, randTileY;
-			IList<(int TileX, int TileY)> edgeTiles;
+			IDictionary<int, ISet<int>> edgeTiles;
+			UnifiedRandom rand = TmlHelpers.SafelyGetRand();
 
 			do {
-				randTileX = Main.rand.Next( 64, Main.maxTilesX - 64 );
-				randTileY = Main.rand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
+				randTileX = rand.Next( 64, Main.maxTilesX - 64 );
+				randTileY = rand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
 
-				if( !Ambush.CheckForAmbushElegibility( randTileX, randTileY, out edgeTiles ) ) {
+				if( Ambush.CheckForAmbushElegibility( randTileX, randTileY, out edgeTiles ) ) {
 					break;
 				}
 			} while( attempts++ < maxAttempts );
 
+			if( attempts >= maxAttempts ) {
+				return null;
+			}
+
+			Ambush.AdjustAmbushTileCenter( randTileX, ref randTileY );
 			return new Ambush( randTileX, randTileY, edgeTiles );
 		}
 
@@ -110,6 +126,11 @@ namespace Ambushes {
 		////////////////
 
 		private void SpawnAmbush( Ambush ambush ) {
+			var mymod = AmbushesMod.Instance;
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "Created ambush as " + ambush.TileX + "," + ambush.TileY + " ("+this.Ambushes.Count2D()+")" );
+			}
+
 			if( !this.Ambushes.ContainsKey(ambush.TileX) ) {
 				this.Ambushes[ ambush.TileX ] = new Dictionary<int, Ambush>();
 			}

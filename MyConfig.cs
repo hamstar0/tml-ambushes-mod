@@ -12,6 +12,7 @@ namespace Ambushes {
 
 		[Header( "Debug settings" )]
 		public bool DebugModeInfo { get; set; } = false;
+		public bool DebugModeInfoMap { get; set; } = false;
 
 		////
 
@@ -27,11 +28,14 @@ namespace Ambushes {
 		[DefaultValue( 2048 )]
 		public int HugeWorldInitialAmbushes { get; set; } = 2048;
 
+		[DefaultValue( 10 )]
+		public int AmbushInitialGenerationSlowness { get; set; } = 10;
+
 		[DefaultValue( 60 * 60 * 15 )]
-		[Label( "Duration (in ticks) until an ambush randomly regenerates elsewhere" )]
+		[Label( "Duration (in ticks) until a used ambush re-randomizes" )]
 		public int AmbushRegenTickRate { get; set; } = 60 * 60 * 15;    // 15 minutes
 
-		[DefaultValue(64)]
+		[DefaultValue( 64 )]
 		public int MinimumAmbushTileSpacing { get; set; } = 64;
 
 		////
