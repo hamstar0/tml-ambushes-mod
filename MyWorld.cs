@@ -1,13 +1,12 @@
 ﻿using HamstarHelpers.Helpers.World;
 using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
 
 namespace Ambushes {
 	partial class AmbushesWorld : ModWorld {
-		internal static object MyLock = new object();
+		private static object MyLock = new object();
 
 
 
@@ -16,8 +15,7 @@ namespace Ambushes {
 		public int MaxAmbushes { get; private set; }
 		private int AmbushRegenDelay;
 
-		internal IDictionary<int, IDictionary<int, Ambush>> Ambushes
-			= new Dictionary<int, IDictionary<int, Ambush>>();
+		internal AmbushManager AmbushMngr;
 
 
 

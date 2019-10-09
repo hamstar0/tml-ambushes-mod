@@ -58,13 +58,11 @@ namespace Ambushes {
 
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
 
-			if( Monitor.TryEnter(AmbushesWorld.MyLock) ) {
-				foreach( (int tileX, IDictionary<int, Ambush> ambYs) in myworld.Ambushes ) {
-					foreach( (int tileY, Ambush ambush) in ambYs ) {
-						this.DrawAmbushOnFullscreenMap( tileX, tileY, ambush );
-					}
+			if( !AmbushManager.IsLocked ) {
+				foreach( Ambush ambush in myworld.AmbushMngr.GetAllAmbushes() ) {
+					this.DrawAmbushOnFullscreenMap( ambush.TileX, ambush.TileY, ambush );
 				}
-			}
+			} 
 		}
 
 		////

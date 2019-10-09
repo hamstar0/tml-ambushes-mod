@@ -1,5 +1,4 @@
 ﻿using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.TModLoader;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using Terraria.Utilities;
 namespace Ambushes {
 	partial class AmbushesWorld : ModWorld {
 		internal void InitializeAmbushesAsync( int maxAmbushes ) {
-			this.Ambushes.Clear();
+			this.AmbushMngr.Clear();
 
 			var cts = new CancellationTokenSource();
 
@@ -36,7 +35,7 @@ namespace Ambushes {
 
 			this.AmbushRegenDelay = 0;
 
-			if( this.Ambushes.Count < maxAmbushes ) {
+			if( this.AmbushMngr.Count < maxAmbushes ) {
 				this.CreateRandomAmbushAsync();
 			}
 		}
@@ -106,16 +105,14 @@ namespace Ambushes {
 			int minTileDist = AmbushesMod.Instance.Config.MinimumAmbushTileSpacing;
 			int minTileDistSqt = minTileDist * minTileDist;
 
-			foreach( (int otherTileX, IDictionary<int, Ambush> otherTileYs) in this.Ambushes ) {
-				foreach( (int otherTileY, Ambush ambush) in otherTileYs ) {
-					int xDist = otherTileX - tileX;
-					int yDist = otherTileY - tileY;
-					int xDistSqr = xDist * xDist;
-					int yDistSqr = yDist * yDist;
+			foreach( Ambush ambush in this.AmbushMngr.GetAllAmbushes() ) {
+				int xDist = ambush.TileX - tileX;
+				int yDist = ambush.TileY - tileY;
+				int xDistSqr = xDist * xDist;
+				int yDistSqr = yDist * yDist;
 
-					if( (xDistSqr + yDistSqr) < minTileDistSqt ) {
-						return true;
-					}
+				if( (xDistSqr + yDistSqr) < minTileDistSqt ) {
+					return true;
 				}
 			}
 
@@ -128,14 +125,10 @@ namespace Ambushes {
 		private void SpawnAmbush( Ambush ambush ) {
 			var mymod = AmbushesMod.Instance;
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "Created ambush as " + ambush.TileX + "," + ambush.TileY + " ("+this.Ambushes.Count2D()+")" );
+				LogHelpers.Log( "Created ambush as " + ambush.TileX + "," + ambush.TileY + " ("+this.AmbushMngr.Count+")" );
 			}
 
-			if( !this.Ambushes.ContainsKey(ambush.TileX) ) {
-				this.Ambushes[ ambush.TileX ] = new Dictionary<int, Ambush>();
-			}
-
-			this.Ambushes[ ambush.TileX ][ ambush.TileY ] = ambush;
+			this.AmbushMngr.AddAmbush( ambush );
 		}
 	}
 }

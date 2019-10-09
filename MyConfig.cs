@@ -17,15 +17,15 @@ namespace Ambushes {
 		////
 
 		[Header( "Ambush world settings" )]
-		[DefaultValue( 160 )]
+		[DefaultValue( 128 )]
 		public int TinyWorldInitialAmbushes { get; set; } = 160;    // SmallWorldInitialAmbushes / 2
-		[DefaultValue( 256 )]
+		[DefaultValue( 192 )]
 		public int SmallWorldInitialAmbushes { get; set; } = 256;  // 4200 x 1200 = 5040000
-		[DefaultValue( 512 )]
+		[DefaultValue( 384 )]
 		public int MediumWorldInitialAmbushes { get; set; } = 512; // 6400 x 1800 = 11520000
-		[DefaultValue( 1024 )]
+		[DefaultValue( 768 )]
 		public int LargeWorldInitialAmbushes { get; set; } = 1024;  // 8400 x 2400 = 20160000
-		[DefaultValue( 2048 )]
+		[DefaultValue( 1280 )]
 		public int HugeWorldInitialAmbushes { get; set; } = 2048;
 
 		[DefaultValue( 10 )]

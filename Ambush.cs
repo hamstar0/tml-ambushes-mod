@@ -7,6 +7,7 @@ using Terraria;
 
 namespace Ambushes {
 	public class Ambush {
+		#region StaticMethods
 		public static bool CheckForAmbushElegibility( int tileX, int tileY, out IDictionary<int, ISet<int>> edgeTiles ) {
 			edgeTiles = new Dictionary<int, ISet<int>> { { tileX, new HashSet<int> { tileY } } };
 
@@ -97,26 +98,27 @@ namespace Ambushes {
 
 			tileY = Math.Max( tileY, (tileY + y) - (mymod.Config.AmbushTriggerRadiusTiles / 2) );
 		}
+		#endregion
 
 
 
-		////////////////
-
+		#region InstanceFields
 		private IDictionary<int, ISet<int>> EdgeTiles;
+		#endregion
 
-		////////////////
-
+		#region InstanceProperties
 		public int TileX { get; }
 		public int TileY { get; }
+		#endregion
 
 
 
-		////////////////
-
+		#region InstanceMethods
 		public Ambush( int tileX, int tileY, IDictionary<int, ISet<int>> edgeTiles ) {
 			this.TileX = tileX;
 			this.TileY = tileY;
 			this.EdgeTiles = edgeTiles;
 		}
+		#endregion
 	}
 }
