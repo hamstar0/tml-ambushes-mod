@@ -23,8 +23,9 @@ namespace Ambushes {
 
 		public override void Initialize() {
 			var mymod = (AmbushesMod)this.mod;
+			WorldSize size = WorldHelpers.GetSize();
 
-			switch( WorldHelpers.GetSize() ) {
+			switch( size ) {
 			default:
 			case WorldSize.SubSmall:
 				this.MaxAmbushes = mymod.Config.TinyWorldInitialAmbushes;
@@ -42,6 +43,8 @@ namespace Ambushes {
 				this.MaxAmbushes = mymod.Config.HugeWorldInitialAmbushes;
 				break;
 			}
+
+			this.AmbushMngr = new AmbushManager( size );
 		}
 
 

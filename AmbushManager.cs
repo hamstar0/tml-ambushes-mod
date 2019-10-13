@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Helpers.DotNET.Extensions;
+using HamstarHelpers.Helpers.World;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -6,24 +7,26 @@ using System.Threading;
 
 namespace Ambushes {
 	class AmbushManager {
-		#region StaticFields
 		private static object MyLock = new object();
-		#endregion
 
 
-		#region StaticProperties
+		////////////////
+
 		public static bool IsLocked => Monitor.TryEnter( AmbushManager.MyLock );
-		#endregion
 
 
 
-		#region InstanceFields
+		////////////////
+
 		private IDictionary<int, IDictionary<int, Ambush>> Ambushes
 			= new Dictionary<int, IDictionary<int, Ambush>>();
-		#endregion
+		private IDictionary<int, IDictionary<int, IList<Ambush>>> AmbushSegs
+			= new Dictionary<int, IDictionary<int, IList<Ambush>>>();
 
 
-		#region InstanceProperties
+
+		////////////////
+
 		public int Count {
 			get {
 				lock( AmbushManager.MyLock ) {
@@ -31,12 +34,12 @@ namespace Ambushes {
 				}
 			}
 		}
-		#endregion
 
 
 
-		#region InstanceMethods
-		public AmbushManager() { }
+		////////////////
+
+		public AmbushManager( WorldSize size ) { }
 
 
 		////////////////
@@ -51,15 +54,56 @@ namespace Ambushes {
 			}
 		}
 
+		public IEnumerable<Ambush> GetAmbushesNear( int tileX, int tileY ) {
+			var mymod = AmbushesMod.Instance;
+			int radius = mymod.Config.AmbushTriggerRadiusTiles;
+			int segX = tileX / radius;
+			int segY = tileY / radius;
+			var ambushes = new List<Ambush>();
+
+			lock( AmbushManager.MyLock ) {
+				if( !this.AmbushSegs.ContainsKey( segX - 1 ) &&
+					!this.AmbushSegs.ContainsKey( segX ) &&
+					!this.AmbushSegs.ContainsKey( segX + 1 ) ) {
+					return ambushes;
+				}
+
+				int radiusSqr = radius * radius;
+
+				for( int i = segX - 1; i <= segX + 1; i++ ) {
+					if( !this.AmbushSegs.ContainsKey(i) ) { continue; }
+
+					for( int j = segY - 1; j <= segY + 1; j++ ) {
+						if( !this.AmbushSegs[i].ContainsKey(j) ) { continue; }
+
+						foreach( Ambush ambush in this.AmbushSegs[i][j] ) {
+							if( (ambush.TileX * ambush.TileX) + (ambush.TileY * ambush.TileY) < radiusSqr ) {
+								ambushes.Add( ambush );
+							}
+						}
+					}
+				}
+			}
+
+			return ambushes;
+		}
+
+
 		////////////////
 
 		public void AddAmbush( Ambush ambush ) {
-			lock( AmbushManager.MyLock ) {
-				if( !this.Ambushes.ContainsKey( ambush.TileX ) ) {
-					this.Ambushes[ambush.TileX] = new Dictionary<int, Ambush>();
-				}
+			var mymod = AmbushesMod.Instance;
+			int radius = mymod.Config.AmbushTriggerRadiusTiles;
 
-				this.Ambushes[ambush.TileX][ambush.TileY] = ambush;
+			lock( AmbushManager.MyLock ) {
+				this.Ambushes.Set2D( ambush.TileX, ambush.TileY, ambush );
+
+				IList<Ambush> segAmbushes;
+				if( this.AmbushSegs.TryGetValue2D(ambush.TileX / radius, ambush.TileY / radius, out segAmbushes) ) {
+					segAmbushes.Add( ambush );
+				} else {
+					this.AmbushSegs.Set2D( ambush.TileX / radius, ambush.TileY / radius, new List<Ambush> { ambush } );
+				}
 			}
 		}
 
@@ -67,7 +111,7 @@ namespace Ambushes {
 
 		public void Clear() {
 			this.Ambushes.Clear();
+			this.Ambushes.Clear();
 		}
-		#endregion
 	}
 }
