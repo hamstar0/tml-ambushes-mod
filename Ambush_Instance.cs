@@ -1,6 +1,4 @@
-﻿using HamstarHelpers.Helpers.Tiles;
-using HamstarHelpers.Helpers.DotNET.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Terraria;
 
@@ -22,6 +20,13 @@ namespace Ambushes {
 			this.TileX = tileX;
 			this.TileY = tileY;
 			this.EdgeTiles = edgeTiles;
+		}
+
+
+		////////////////
+
+		public void Trigger( Player player ) {
+
 		}
 	}
 }

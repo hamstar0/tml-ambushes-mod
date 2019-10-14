@@ -11,10 +11,13 @@ namespace Ambushes {
 			if( Main.netMode == 1 ) { return; }
 
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
-			IList<Ambush> ambushes = myworld.AmbushMngr.GetAmbushesNear( (int)this.player.position.X >> 4, (int)this.player.position.Y >> 4 );
+			IList<Ambush> ambushes = myworld.AmbushMngr.GetAmbushesNear(
+				(int)this.player.position.X >> 4,
+				(int)this.player.position.Y >> 4
+			);
 
 			if( ambushes.Count > 0 ) {
-				ambushes.First().Trigger( this.player );
+				myworld.AmbushMngr.TriggerAmbush( ambushes.First(), this.player );
 			}
 		}
 	}

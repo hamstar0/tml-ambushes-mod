@@ -3,6 +3,7 @@ using HamstarHelpers.Helpers.World;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Terraria;
 
 
 namespace Ambushes {
@@ -112,6 +113,17 @@ namespace Ambushes {
 		public void Clear() {
 			this.Ambushes.Clear();
 			this.Ambushes.Clear();
+		}
+
+
+		////////////////
+
+		public void TriggerAmbush( Ambush ambush, Player player ) {
+			ambush.Trigger( player );
+
+			if( this.Ambushes.ContainsKey(ambush.TileX) ) {
+				this.Ambushes[ambush.TileX].Remove( ambush.TileY );
+			}
 		}
 	}
 }
