@@ -54,7 +54,7 @@ namespace Ambushes {
 			}
 		}
 
-		public IEnumerable<Ambush> GetAmbushesNear( int tileX, int tileY ) {
+		public IList<Ambush> GetAmbushesNear( int tileX, int tileY ) {
 			var mymod = AmbushesMod.Instance;
 			int radius = mymod.Config.AmbushTriggerRadiusTiles;
 			int segX = tileX / radius;
