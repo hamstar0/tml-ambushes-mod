@@ -97,7 +97,7 @@ namespace Ambushes {
 			}
 
 			Ambush.AdjustAmbushTileCenter( randTileX, ref randTileY );
-			return new Ambush( randTileX, randTileY, edgeTiles );
+			return Ambush.CreateRandom( randTileX, randTileY, edgeTiles );
 		}
 
 

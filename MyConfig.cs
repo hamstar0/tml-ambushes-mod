@@ -43,5 +43,11 @@ namespace Ambushes {
 		[Header( "Ambush settings" )]
 		[DefaultValue( 8 )]
 		public int AmbushTriggerRadiusTiles { get; set; } = 8;
+
+		[DefaultValue( 6 )]
+		public int BrambleTicksPerDamage { get; set; } = 6;
+
+		[DefaultValue( 1 )]
+		public int BrambleDamage { get; set; } = 1;
 	}
 }

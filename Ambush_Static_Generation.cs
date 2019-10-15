@@ -7,6 +7,15 @@ using Terraria;
 
 namespace Ambushes {
 	partial class Ambush {
+		public static Ambush CreateRandom( int tileX, int tileY, IDictionary<int, ISet<int>> edgeTiles ) {
+			bool isEntrapping = Main.rand.Next( 4 ) == 0;
+
+			return new Ambush( tileX, tileY, edgeTiles, isEntrapping );
+		}
+
+
+		////////////////
+
 		public static bool CheckForAmbushElegibility( int tileX, int tileY, out IDictionary<int, ISet<int>> edgeTiles ) {
 			edgeTiles = new Dictionary<int, ISet<int>> { { tileX, new HashSet<int> { tileY } } };
 
