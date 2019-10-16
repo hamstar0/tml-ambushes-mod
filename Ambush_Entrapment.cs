@@ -36,11 +36,7 @@ namespace Ambushes {
 		private static void CreateEntrapmentAsync( (int TileX, int TileY)[] edgeRandTiles, int lastIdx ) {
 			(int tileX, int tileY) randTile = edgeRandTiles[ lastIdx ];
 
-			if( TileHelpers.IsAir( Framing.GetTileSafely(randTile.tileX, randTile.tileY) ) ) {
-				int brambleType = ModContent.TileType<CursedBrambleTile>();
-
-				TileHelpers.PlaceTile( randTile.tileX, randTile.tileY, brambleType );
-			}
+			Ambush.CreateBrambleAt( randTile.tileX, randTile.tileY );
 
 			if( lastIdx > 0 ) {
 				lastIdx--;
@@ -52,6 +48,28 @@ namespace Ambushes {
 						return false;
 					}
 				);
+			}
+		}
+
+
+		public static void CreateBrambleAt( int tileX, int tileY ) {
+			int thick = AmbushesMod.Config.BrambleThickness;
+			float dense = AmbushesMod.Config.BrambleDensity;
+			int brambleType = ModContent.TileType<CursedBrambleTile>();
+			
+			for( int i=thick/-2; i<thick/2; i++ ) {
+				for( int j = thick / -2; j < thick / 2; j++ ) {
+					if( TmlHelpers.SafelyGetRand().NextFloat() > dense ) {
+						continue;
+					}
+
+					int x = tileX + i;
+					int y = tileX + j;
+
+					if( TileHelpers.IsAir( Framing.GetTileSafely( x, y ) ) ) {
+						TileHelpers.PlaceTile( x, y, brambleType );
+					}
+				}
 			}
 		}
 	}
