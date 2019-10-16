@@ -1,3 +1,4 @@
+using HamstarHelpers.Helpers.Tiles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -19,6 +20,11 @@ namespace Ambushes.Tiles {
 
 		public override void NumDust(int i, int j, bool fail, ref int num) {
 			num = fail ? 1 : 3;
+		}
+
+
+		public override void RandomUpdate( int i, int j ) {
+			TileHelpers.KillTile( i, j, false, false );
 		}
 	}
 }

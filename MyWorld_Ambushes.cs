@@ -11,7 +11,7 @@ using Terraria.Utilities;
 
 namespace Ambushes {
 	partial class AmbushesWorld : ModWorld {
-		private static Ambush CreateRandomAmbush( int maxAttempts ) {
+		private static Ambush CreateRandomWorldAmbush( int maxAttempts ) {
 			int attempts = 0;
 			int randTileX, randTileY;
 			IDictionary<int, ISet<int>> edgeTiles;
@@ -20,7 +20,7 @@ namespace Ambushes {
 			do {
 				randTileX = rand.Next( 64, Main.maxTilesX - 64 );
 				randTileY = rand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
-
+				
 				if( Ambush.CheckForAmbushElegibility( randTileX, randTileY, out edgeTiles ) ) {
 					break;
 				}
@@ -29,7 +29,7 @@ namespace Ambushes {
 			if( attempts >= maxAttempts ) {
 				return null;
 			}
-
+			
 			Ambush.AdjustAmbushTileCenter( randTileX, ref randTileY );
 			return Ambush.CreateRandomType( randTileX, randTileY, edgeTiles );
 		}
@@ -44,7 +44,7 @@ namespace Ambushes {
 			//Task.Factory.StartNew( () => {
 			Task.Run( () => {
 				for( int i = 0; i < maxAmbushes; i++ ) {
-					this.CreateRandomAmbushAsync();
+					this.CreateRandomWorldAmbushAsync();
 					Thread.Sleep( AmbushesMod.Config.AmbushInitialGenerationSlowness );
 				}
 			} );
@@ -60,14 +60,14 @@ namespace Ambushes {
 			this.AmbushRegenDelay = 0;
 
 			if( this.AmbushMngr.Count < maxAmbushes ) {
-				this.CreateRandomAmbushAsync();
+				this.CreateRandomWorldAmbushAsync();
 			}
 		}
 
 
 		////////////////
 
-		private void CreateRandomAmbushAsync() {
+		private void CreateRandomWorldAmbushAsync() {
 			lock( AmbushesWorld.MyLock ) { }
 
 			//var cts = new CancellationTokenSource();
@@ -75,8 +75,7 @@ namespace Ambushes {
 			//Task.Factory.StartNew( () => {
 			Task.Run( () => {
 				lock( AmbushesWorld.MyLock ) {
-					Ambush ambush = this.CreateNonNeighboringRandomAmbush( 10000 );
-
+					Ambush ambush = this.CreateNonNeighboringRandomWorldAmbush( 10000 );
 					if( ambush != null ) {
 						this.SpawnAmbush( ambush );
 					}
@@ -88,11 +87,14 @@ namespace Ambushes {
 
 		////////////////
 
-		private Ambush CreateNonNeighboringRandomAmbush( int maxAttempts ) {
+		private Ambush CreateNonNeighboringRandomWorldAmbush( int maxAttempts ) {
 			int attempts = 0;
 
 			do {
-				Ambush ambush = AmbushesWorld.CreateRandomAmbush( maxAttempts );
+				Ambush ambush = AmbushesWorld.CreateRandomWorldAmbush( maxAttempts );
+				if( ambush == null ) {
+					continue;
+				}
 
 				if( !this.HasNearbyAmbushes(ambush.TileX, ambush.TileY) ) {
 					return ambush;
@@ -112,7 +114,7 @@ namespace Ambushes {
 				int yDist = ambush.TileY - tileY;
 				int xDistSqr = xDist * xDist;
 				int yDistSqr = yDist * yDist;
-
+				
 				if( (xDistSqr + yDistSqr) < minTileDistSqt ) {
 					return true;
 				}

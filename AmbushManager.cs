@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.World;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -125,9 +126,35 @@ namespace Ambushes {
 
 		////
 
+		public void RemoveAmbush( Ambush ambush ) {
+			lock( AmbushManager.MyLock ) {
+				bool foundY = false;
+				bool foundX = this.Ambushes.ContainsKey( ambush.TileX );
+				int radius = AmbushesMod.Config.AmbushTriggerRadiusTiles;
+
+				if( foundX ) {
+					foundY = this.Ambushes[ambush.TileX].Remove( ambush.TileY );
+				}
+
+				if( !foundX || !foundY ) {
+					if( AmbushesMod.Config.DebugModeInfo ) {
+						LogHelpers.WarnOnce( "Isolated ambush triggered at " + ambush.TileX + ":" + ambush.TileY + " (" + foundX + "," + foundY + ")" );
+						Main.NewText( "Isolated ambush triggered at " + ambush.TileX + ":" + ambush.TileY, Color.Yellow );
+					}
+				}
+
+				int segX = ambush.TileX / radius;
+				int segY = ambush.TileY / radius;
+
+				if( this.AmbushSegs.ContainsKey(segX) ) {
+					this.AmbushSegs[segX].Remove2D( segY, ambush );
+				}
+			}
+		}
+
 		public void Clear() {
 			this.Ambushes.Clear();
-			this.Ambushes.Clear();
+			this.AmbushSegs.Clear();
 		}
 
 
@@ -136,9 +163,7 @@ namespace Ambushes {
 		public void TriggerAmbush( Ambush ambush, Player player ) {
 			ambush.Trigger( player );
 
-			if( this.Ambushes.ContainsKey(ambush.TileX) ) {
-				this.Ambushes[ambush.TileX].Remove( ambush.TileY );
-			}
+			this.RemoveAmbush( ambush );
 		}
 	}
 }

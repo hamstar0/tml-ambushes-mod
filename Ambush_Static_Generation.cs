@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using HamstarHelpers.Helpers.TModLoader;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Classes.Tiles.TilePattern;
 
 
 namespace Ambushes {
@@ -23,6 +25,10 @@ namespace Ambushes {
 			var edgeTileQueue = new Dictionary<int, ISet<int>>();
 			var chartedTiles = new Dictionary<int, ISet<int>>();
 
+			TilePattern pattern = new TilePattern( new TilePatternBuilder {
+				IsSolid = false,
+				IsActuated = false
+			} );
 			int maxDistSqr = 50 * 50;
 			int minNeededAirTiles = 576;
 			int airTileCount = 0;
@@ -37,16 +43,16 @@ namespace Ambushes {
 							continue;
 						}
 
-						Tile eTile = Framing.GetTileSafely( eTileX, eTileY );
+						var eTile = Framing.GetTileSafely( eTileX, eTileY );
 
-						if( TileHelpers.IsAir( eTile, true, false ) ) {
+						if( pattern.Check(eTileX, eTileY) ) {
 							if( !chartedTiles.ContainsKey(eTileX) || !chartedTiles[eTileX].Contains(eTileY) ) {
 								chartedTiles.Set2D( eTileX, eTileY );
 								edgeTileQueue.Set2D( eTileX, eTileY );
 								airTileCount++;
 							}
 						}
-
+						
 						if( airTileCount >= minNeededAirTiles ) {
 							break;
 						}
@@ -63,7 +69,7 @@ namespace Ambushes {
 
 				edgeTileQueue.Clear();
 			} while( edgeTiles.Count > 0 && airTileCount < minNeededAirTiles );
-
+			
 			return airTileCount >= minNeededAirTiles;
 		}
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
@@ -53,9 +54,9 @@ namespace Ambushes {
 			string timerName = "AmbushesCursedBrambleHurt_" + this.player.whoAmI;
 
 			if( this.player.velocity.LengthSquared() > 0.5f ) {
-				this.player.velocity *= 0.91f;
+				this.player.velocity *= 0.9f;
 			}
-				
+			
 			if( Timers.GetTimerTickDuration( timerName ) <= 0 ) {
 				Timers.SetTimer( timerName, AmbushesMod.Config.BrambleTicksPerDamage, () => {
 					PlayerHelpers.RawHurt(
@@ -69,6 +70,8 @@ namespace Ambushes {
 					);
 					return false;
 				} );
+
+				this.player.AddBuff( BuffID.Venom, 60 );
 			}
 		}
 	}
