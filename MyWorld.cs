@@ -22,25 +22,24 @@ namespace Ambushes {
 		////////////////
 
 		public override void Initialize() {
-			var mymod = (AmbushesMod)this.mod;
 			WorldSize size = WorldHelpers.GetSize();
 
 			switch( size ) {
 			default:
 			case WorldSize.SubSmall:
-				this.MaxAmbushes = mymod.Config.TinyWorldInitialAmbushes;
+				this.MaxAmbushes = AmbushesMod.Config.TinyWorldInitialAmbushes;
 				break;
 			case WorldSize.Small:
-				this.MaxAmbushes = mymod.Config.SmallWorldInitialAmbushes;
+				this.MaxAmbushes = AmbushesMod.Config.SmallWorldInitialAmbushes;
 				break;
 			case WorldSize.Medium:
-				this.MaxAmbushes = mymod.Config.MediumWorldInitialAmbushes;
+				this.MaxAmbushes = AmbushesMod.Config.MediumWorldInitialAmbushes;
 				break;
 			case WorldSize.Large:
-				this.MaxAmbushes = mymod.Config.LargeWorldInitialAmbushes;
+				this.MaxAmbushes = AmbushesMod.Config.LargeWorldInitialAmbushes;
 				break;
 			case WorldSize.SuperLarge:
-				this.MaxAmbushes = mymod.Config.HugeWorldInitialAmbushes;
+				this.MaxAmbushes = AmbushesMod.Config.HugeWorldInitialAmbushes;
 				break;
 			}
 

@@ -11,73 +11,7 @@ using Terraria.Utilities;
 
 namespace Ambushes {
 	partial class AmbushesWorld : ModWorld {
-		internal void InitializeAmbushesAsync( int maxAmbushes ) {
-			this.AmbushMngr.Clear();
-
-			var cts = new CancellationTokenSource();
-
-			Task.Factory.StartNew( () => {
-				for( int i = 0; i < maxAmbushes; i++ ) {
-					this.CreateRandomAmbushAsync();
-					Thread.Sleep( AmbushesMod.Instance.Config.AmbushInitialGenerationSlowness );
-				}
-			}, cts.Token );
-		}
-		
-		////////////////
-
-		private void UpdateAmbushes( int maxAmbushes ) {
-			var mymod = (AmbushesMod)this.mod;
-
-			if( this.AmbushRegenDelay++ < mymod.Config.AmbushRegenTickRate ) {
-				return;
-			}
-
-			this.AmbushRegenDelay = 0;
-
-			if( this.AmbushMngr.Count < maxAmbushes ) {
-				this.CreateRandomAmbushAsync();
-			}
-		}
-
-
-		////////////////
-
-		private void CreateRandomAmbushAsync() {
-			lock( AmbushesWorld.MyLock ) { }
-
-			var cts = new CancellationTokenSource();
-
-			Task.Factory.StartNew( () => {
-				lock( AmbushesWorld.MyLock ) {
-					Ambush ambush = this.CreateNonNeighboringRandomAmbush( 1000 );
-
-					if( ambush != null ) {
-						this.SpawnAmbush( ambush );
-					}
-				}
-			}, cts.Token );
-		}
-
-
-		////////////////
-
-		private Ambush CreateNonNeighboringRandomAmbush( int maxAttempts ) {
-			int attempts = 0;
-
-			do {
-				Ambush ambush = this.CreateRandomAmbush( maxAttempts );
-
-				if( !this.HasNearbyAmbushes(ambush.TileX, ambush.TileY) ) {
-					return ambush;
-				}
-			} while( attempts++ < maxAttempts );
-
-			return null;
-		}
-
-
-		private Ambush CreateRandomAmbush( int maxAttempts ) {
+		private static Ambush CreateRandomAmbush( int maxAttempts ) {
 			int attempts = 0;
 			int randTileX, randTileY;
 			IDictionary<int, ISet<int>> edgeTiles;
@@ -97,12 +31,80 @@ namespace Ambushes {
 			}
 
 			Ambush.AdjustAmbushTileCenter( randTileX, ref randTileY );
-			return Ambush.CreateRandom( randTileX, randTileY, edgeTiles );
+			return Ambush.CreateRandomType( randTileX, randTileY, edgeTiles );
+		}
+
+
+
+		////////////////
+
+		internal void InitializeAmbushesAsync( int maxAmbushes ) {
+			this.AmbushMngr.Clear();
+
+			//Task.Factory.StartNew( () => {
+			Task.Run( () => {
+				for( int i = 0; i < maxAmbushes; i++ ) {
+					this.CreateRandomAmbushAsync();
+					Thread.Sleep( AmbushesMod.Config.AmbushInitialGenerationSlowness );
+				}
+			} );
+		}
+		
+		////////////////
+
+		private void UpdateAmbushes( int maxAmbushes ) {
+			if( this.AmbushRegenDelay++ < AmbushesMod.Config.AmbushRegenTickRate ) {
+				return;
+			}
+
+			this.AmbushRegenDelay = 0;
+
+			if( this.AmbushMngr.Count < maxAmbushes ) {
+				this.CreateRandomAmbushAsync();
+			}
+		}
+
+
+		////////////////
+
+		private void CreateRandomAmbushAsync() {
+			lock( AmbushesWorld.MyLock ) { }
+
+			//var cts = new CancellationTokenSource();
+
+			//Task.Factory.StartNew( () => {
+			Task.Run( () => {
+				lock( AmbushesWorld.MyLock ) {
+					Ambush ambush = this.CreateNonNeighboringRandomAmbush( 1000 );
+
+					if( ambush != null ) {
+						this.SpawnAmbush( ambush );
+					}
+				}
+			} );
+			//}, cts.Token );
+		}
+
+
+		////////////////
+
+		private Ambush CreateNonNeighboringRandomAmbush( int maxAttempts ) {
+			int attempts = 0;
+
+			do {
+				Ambush ambush = AmbushesWorld.CreateRandomAmbush( maxAttempts );
+
+				if( !this.HasNearbyAmbushes(ambush.TileX, ambush.TileY) ) {
+					return ambush;
+				}
+			} while( attempts++ < maxAttempts );
+
+			return null;
 		}
 
 
 		private bool HasNearbyAmbushes( int tileX, int tileY ) {
-			int minTileDist = AmbushesMod.Instance.Config.MinimumAmbushTileSpacing;
+			int minTileDist = AmbushesMod.Config.MinimumAmbushTileSpacing;
 			int minTileDistSqt = minTileDist * minTileDist;
 
 			foreach( Ambush ambush in this.AmbushMngr.GetAllAmbushes() ) {
@@ -123,8 +125,7 @@ namespace Ambushes {
 		////////////////
 
 		private void SpawnAmbush( Ambush ambush ) {
-			var mymod = AmbushesMod.Instance;
-			if( mymod.Config.DebugModeInfo ) {
+			if( AmbushesMod.Config.DebugModeInfo ) {
 				LogHelpers.Log( "Created ambush as " + ambush.TileX + "," + ambush.TileY + " ("+this.AmbushMngr.Count+")" );
 			}
 

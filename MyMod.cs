@@ -1,30 +1,23 @@
 using Terraria.ModLoader;
 using Terraria;
-using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.HUD;
 using HamstarHelpers.Services.Hooks.LoadHooks;
 using HamstarHelpers.Helpers.Debug;
-using System.Collections.Generic;
-using System.Threading;
 using Microsoft.Xna.Framework;
 using ReLogic.Graphics;
 
 
 namespace Ambushes {
 	public class AmbushesMod : Mod {
-		public static AmbushesMod Instance { get; private set; }
-
-		////////////////
-
-
 		public static string GithubUserName => "hamstar0";
 		public static string GithubProjectName => "tml-ambushes-mod";
 
 
-
 		////////////////
 
-		public AmbushesConfig Config => ModContent.GetInstance<AmbushesConfig>();
+		public static AmbushesMod Instance { get; private set; }
+
+		public static AmbushesConfig Config => ModContent.GetInstance<AmbushesConfig>();
 
 
 
@@ -54,7 +47,7 @@ namespace Ambushes {
 		////////////////
 
 		public override void PostDrawFullscreenMap( ref string mouseText ) {
-			if( !this.Config.DebugModeInfoMap ) { return; }
+			if( !AmbushesMod.Config.DebugModeInfoMap ) { return; }
 
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
 

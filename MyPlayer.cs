@@ -50,19 +50,18 @@ namespace Ambushes {
 		}
 
 		private void ApplyBrambleEffects() {
-			var mymod = (AmbushesMod)this.mod;
 			string timerName = "AmbushesCursedBrambleHurt_" + this.player.whoAmI;
 
-			if( this.player.velocity.LengthSquared() > 1f ) {
-				this.player.velocity *= 0.99f;
+			if( this.player.velocity.LengthSquared() > 0.5f ) {
+				this.player.velocity *= 0.91f;
 			}
 				
 			if( Timers.GetTimerTickDuration( timerName ) <= 0 ) {
-				Timers.SetTimer( timerName, mymod.Config.BrambleTicksPerDamage, () => {
+				Timers.SetTimer( timerName, AmbushesMod.Config.BrambleTicksPerDamage, () => {
 					PlayerHelpers.RawHurt(
 						player: this.player,
 						deathReason: PlayerDeathReason.ByCustomReason( " was devoured by cursed brambles" ),
-						damage: AmbushesMod.Instance.Config.BrambleDamage,
+						damage: AmbushesMod.Config.BrambleDamage,
 						direction: 0,
 						pvp: false,
 						quiet: true,

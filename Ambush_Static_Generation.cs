@@ -3,12 +3,13 @@ using HamstarHelpers.Helpers.DotNET.Extensions;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using HamstarHelpers.Helpers.TModLoader;
 
 
 namespace Ambushes {
 	partial class Ambush {
-		public static Ambush CreateRandom( int tileX, int tileY, IDictionary<int, ISet<int>> edgeTiles ) {
-			bool isEntrapping = Main.rand.Next( 4 ) == 0;
+		public static Ambush CreateRandomType( int tileX, int tileY, IDictionary<int, ISet<int>> edgeTiles ) {
+			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
 
 			return new Ambush( tileX, tileY, edgeTiles, isEntrapping );
 		}
@@ -95,7 +96,6 @@ namespace Ambushes {
 		////////////////
 
 		public static void AdjustAmbushTileCenter( int tileX, ref int tileY ) {
-			var mymod = AmbushesMod.Instance;
 			Tile tile;
 			int y = 0;
 
@@ -104,7 +104,7 @@ namespace Ambushes {
 				y++;
 			} while( TileHelpers.IsAir(tile, true, false) );
 
-			tileY = Math.Max( tileY, (tileY + y) - (mymod.Config.AmbushTriggerRadiusTiles / 2) );
+			tileY = Math.Max( tileY, (tileY + y) - (AmbushesMod.Config.AmbushTriggerRadiusTiles / 2) );
 		}
 	}
 }

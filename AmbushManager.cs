@@ -56,8 +56,7 @@ namespace Ambushes {
 		}
 
 		public IList<Ambush> GetAmbushesNear( int tileX, int tileY ) {
-			var mymod = AmbushesMod.Instance;
-			int radius = mymod.Config.AmbushTriggerRadiusTiles;
+			int radius = AmbushesMod.Config.AmbushTriggerRadiusTiles;
 			int segX = tileX / radius;
 			int segY = tileY / radius;
 			var ambushes = new List<Ambush>();
@@ -93,8 +92,7 @@ namespace Ambushes {
 		////////////////
 
 		public void AddAmbush( Ambush ambush ) {
-			var mymod = AmbushesMod.Instance;
-			int radius = mymod.Config.AmbushTriggerRadiusTiles;
+			int radius = AmbushesMod.Config.AmbushTriggerRadiusTiles;
 
 			lock( AmbushManager.MyLock ) {
 				this.Ambushes.Set2D( ambush.TileX, ambush.TileY, ambush );

@@ -11,6 +11,8 @@ namespace Ambushes.Tiles {
 			//Main.tileMergeDirt[this.Type] = true;
 			//Main.tileBlockLight[this.Type] = true;
 			//Main.tileLighted[this.Type] = true;
+			Main.tileNoAttach[this.Type] = true;
+			Main.tileLavaDeath[this.Type] = false;
 			this.dustType = DustID.Granite;
 			this.AddMapEntry( new Color( 128, 64, 128 ) );
 		}
