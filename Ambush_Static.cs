@@ -13,7 +13,7 @@ namespace Ambushes {
 	partial class Ambush {
 		public static void CreateEntrapment( IDictionary<int, ISet<int>> edgeTiles ) {
 			int totalCount = edgeTiles.Count2D();
-			var edgeCloneList = new List<(int TileX, int TileY)>( totalCount );
+			var edgeCloneList = new (int TileX, int TileY)[ totalCount ];
 
 			int i = 0;
 			foreach( (int tileX, ISet<int> tileYs) in edgeTiles ) {
@@ -27,17 +27,14 @@ namespace Ambushes {
 				}
 			}
 
-			Ambush.CreateEntrapmentAsync( edgeCloneList );
+			Ambush.CreateEntrapmentAsync( edgeCloneList, edgeCloneList.Length - 1 );
 		}
 
 
 		////
 
-		private static void CreateEntrapmentAsync( IList<(int TileX, int TileY)> edgeRandTiles ) {
-			int lastIdx = edgeRandTiles.Count - 1;
+		private static void CreateEntrapmentAsync( (int TileX, int TileY)[] edgeRandTiles, int lastIdx ) {
 			(int tileX, int tileY) randTile = edgeRandTiles[ lastIdx ];
-
-			edgeRandTiles.RemoveAt( lastIdx );
 
 			if( TileHelpers.IsAir( Framing.GetTileSafely(randTile.tileX, randTile.tileY) ) ) {
 				int brambleType = ModContent.TileType<CursedBrambleTile>();
@@ -51,7 +48,7 @@ namespace Ambushes {
 					"AmbushesEntrapAsync_" + edgeRandTiles[lastIdx].TileX + "_" + edgeRandTiles[lastIdx].TileY,
 					2,
 					() => {
-						Ambush.CreateEntrapmentAsync( edgeRandTiles );
+						Ambush.CreateEntrapmentAsync( edgeRandTiles, lastIdx );
 						return false;
 					}
 				);

@@ -55,7 +55,7 @@ namespace Ambushes {
 				foreach( Ambush ambush in myworld.AmbushMngr.GetAllAmbushes() ) {
 					this.DrawAmbushOnFullscreenMap( ambush.TileX, ambush.TileY, ambush );
 				}
-			} 
+			}
 		}
 
 		////

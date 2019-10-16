@@ -48,6 +48,6 @@ namespace Ambushes {
 		public int BrambleTicksPerDamage { get; set; } = 6;
 
 		[DefaultValue( 1 )]
-		public int BrambleDamage { get; set; } = 1;
+		public int BrambleDamage { get; set; } = 10;
 	}
 }

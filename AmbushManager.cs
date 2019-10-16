@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Helpers.DotNET.Extensions;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.World;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,30 @@ namespace Ambushes {
 	class AmbushManager {
 		private static object MyLock = new object();
 
+		////////////////
+
+		public static bool IsLocked => !Monitor.TryEnter( AmbushManager.MyLock );
+
+
 
 		////////////////
 
-		public static bool IsLocked => Monitor.TryEnter( AmbushManager.MyLock );
+		private static void GetAmbushesNearInSeg(
+				int tileX,
+				int tileY,
+				int radiusSqr,
+				IList<Ambush> segAmbushes,
+				ref IList<Ambush> foundAmbushes ) {
+			foreach( Ambush ambush in segAmbushes ) {
+				int distX = ambush.TileX - tileX;
+				int distY = ambush.TileY - tileY;
+				int distSqr = ( distX * distX ) + ( distY * distY );
+
+				if( distSqr < radiusSqr ) {
+					foundAmbushes.Add( ambush );
+				}
+			}
+		}
 
 
 
@@ -59,7 +80,7 @@ namespace Ambushes {
 			int radius = AmbushesMod.Config.AmbushTriggerRadiusTiles;
 			int segX = tileX / radius;
 			int segY = tileY / radius;
-			var ambushes = new List<Ambush>();
+			IList<Ambush> ambushes = new List<Ambush>();
 
 			lock( AmbushManager.MyLock ) {
 				if( !this.AmbushSegs.ContainsKey( segX - 1 ) &&
@@ -76,11 +97,7 @@ namespace Ambushes {
 					for( int j = segY - 1; j <= segY + 1; j++ ) {
 						if( !this.AmbushSegs[i].ContainsKey(j) ) { continue; }
 
-						foreach( Ambush ambush in this.AmbushSegs[i][j] ) {
-							if( (ambush.TileX * ambush.TileX) + (ambush.TileY * ambush.TileY) < radiusSqr ) {
-								ambushes.Add( ambush );
-							}
-						}
+						AmbushManager.GetAmbushesNearInSeg( tileX, tileY, radiusSqr, this.AmbushSegs[i][j], ref ambushes );
 					}
 				}
 			}

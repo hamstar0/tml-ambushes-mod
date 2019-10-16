@@ -75,7 +75,7 @@ namespace Ambushes {
 			//Task.Factory.StartNew( () => {
 			Task.Run( () => {
 				lock( AmbushesWorld.MyLock ) {
-					Ambush ambush = this.CreateNonNeighboringRandomAmbush( 1000 );
+					Ambush ambush = this.CreateNonNeighboringRandomAmbush( 10000 );
 
 					if( ambush != null ) {
 						this.SpawnAmbush( ambush );
