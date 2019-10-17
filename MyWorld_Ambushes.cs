@@ -104,7 +104,7 @@ namespace Ambushes {
 
 
 		private bool HasNearbyAmbushes( int tileX, int tileY ) {
-			int minTileDist = AmbushesMod.Config.MinimumAmbushTileSpacing;
+			int minTileDist = AmbushesMod.Config.MinimumAmbushTileSeparation;
 			int minTileDistSqt = minTileDist * minTileDist;
 
 			foreach( Ambush ambush in this.AmbushMngr.GetAllAmbushes() ) {

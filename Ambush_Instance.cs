@@ -32,7 +32,9 @@ namespace Ambushes {
 
 		////////////////
 
-		internal bool Run() {
+		internal void Run( out bool cleanupComplete ) {
+			cleanupComplete = false;
+
 			this.ElapsedTicks++;
 
 			if( this.ElapsedTicks > 60 * 20 ) {
@@ -40,14 +42,36 @@ namespace Ambushes {
 					Main.NewText( "ambush ended" );
 				}
 
-				f
+				int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
+
+				if( this.ElapsedTicks % 60 == 0 ) {
+					this.RunCleanup( ref cleanupComplete );
+				}
 			}
 		}
 
+		private void RunCleanup( ref bool cleanupComplete ) {
+			int tileX = this.TileX;
+			int tileY = this.TileY;
+			int rad = AmbushesMod.Config.AmbushEntrapmentRadius;
+			IList<(int, int)> brambles = CursedBrambleTile.FindBrambles( tileX-rad, tileY-rad, tileX+rad, tileY+rad );
 
-		public void End() {
-
+			if( brambles.Count > 0 ) {
+				if( brambles.Count < 24 ) {
+					foreach( (int x, int y) in brambles ) {
+						CursedBrambleTile.RemoveBrambleAt( x, y );
+					}
+					cleanupComplete = true;
+				}
+			} else {
+				cleanupComplete = true;
+			}
 		}
+
+		////
+
+		public void End() { }
 
 
 		////////////////

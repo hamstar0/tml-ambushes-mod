@@ -104,8 +104,12 @@ namespace Ambushes {
 		////////////////
 		
 		internal void Update() {
+			bool isCleanedUp;
+
 			foreach( Ambush ambush in this.ActiveAmbushes.ToArray() ) {
-				if( !ambush.Run() ) {
+				ambush.Run( out isCleanedUp );
+
+				if( isCleanedUp ) {
 					ambush.End();
 					this.ActiveAmbushes.Remove( ambush );
 				}

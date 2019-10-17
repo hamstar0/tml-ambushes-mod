@@ -55,7 +55,7 @@ namespace Ambushes {
 
 		[Range( 1, 50000 )]
 		[DefaultValue( 64 )]
-		public int MinimumAmbushTileSpacing { get; set; } = 64;
+		public int MinimumAmbushTileSeparation { get; set; } = 64;
 
 		////
 
@@ -64,6 +64,11 @@ namespace Ambushes {
 		[DefaultValue( 8 )]
 		[ReloadRequired]
 		public int AmbushTriggerRadiusTiles { get; set; } = 8;
+
+		[Range( 1, 1000 )]
+		[DefaultValue( 40 )]
+		[ReloadRequired]
+		public int AmbushEntrapmentRadius { get; set; } = 40;
 
 		[Range( 1, 60*60*60*24 )]
 		[DefaultValue( 6 )]
