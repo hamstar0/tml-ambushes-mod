@@ -55,7 +55,9 @@ namespace Ambushes {
 		}
 
 		public override TagCompound Save() {
-			return this.AmbushMngr.Save();
+			var tag = new TagCompound();
+			this.AmbushMngr.Save( tag );
+			return tag;
 		}
 
 

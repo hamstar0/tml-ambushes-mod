@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 
 namespace Ambushes.Tiles {
-	public class CursedBrambleTile : ModTile {
+	public partial class CursedBrambleTile : ModTile {
 		public override void SetDefaults() {
 			//Main.tileSolid[this.Type] = true;
 			//Main.tileMergeDirt[this.Type] = true;

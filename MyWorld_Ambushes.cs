@@ -1,7 +1,6 @@
 ﻿using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.TModLoader;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Terraria;
@@ -14,7 +13,6 @@ namespace Ambushes {
 		private static Ambush CreateRandomWorldAmbush( int maxAttempts ) {
 			int attempts = 0;
 			int randTileX, randTileY;
-			IDictionary<int, ISet<int>> edgeTiles;
 			UnifiedRandom rand = TmlHelpers.SafelyGetRand();
 
 			do {

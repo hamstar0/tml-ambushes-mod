@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Classes.Tiles.TilePattern;
+﻿using Ambushes.Tiles;
+using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Tiles;
 using System;
@@ -14,6 +15,11 @@ namespace Ambushes {
 		public bool IsEntrapping { get; private set; }
 
 
+		////////////////
+
+		private int ElapsedTicks = 0;
+
+
 
 		////////////////
 
@@ -21,6 +27,26 @@ namespace Ambushes {
 			this.TileX = tileX;
 			this.TileY = tileY;
 			this.IsEntrapping = isEntrapping;
+		}
+
+
+		////////////////
+
+		internal bool Run() {
+			this.ElapsedTicks++;
+
+			if( this.ElapsedTicks > 60 * 20 ) {
+				if( this.ElapsedTicks == 60 * 20 ) {
+					Main.NewText( "ambush ended" );
+				}
+
+				f
+			}
+		}
+
+
+		public void End() {
+
 		}
 
 
@@ -36,11 +62,9 @@ namespace Ambushes {
 			int tileY = point.Value.y;
 
 			if( this.IsEntrapping ) {
-				IDictionary<int, ISet<int>> edgeTiles = Ambush.CreateEntrapmentEdges( tileX, tileY );
-				Ambush.CreateEntrapmentUponEdges( edgeTiles );
+				IDictionary<int, ISet<int>> edgeTiles = CursedBrambleTile.CreateBrambleEnclosure( tileX, tileY );
+				CursedBrambleTile.CreateBramblesAt( edgeTiles );
 			}
-
-			//TODO
 		}
 	}
 }
