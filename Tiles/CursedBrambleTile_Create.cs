@@ -11,93 +11,85 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Tiles {
 	public partial class CursedBrambleTile : ModTile {
-		public static IDictionary<int, ISet<int>> CreateBrambleEnclosure( int tileX, int tileY ) {
-			int max = 32;
-			var outerEdgeTiles = new Dictionary<int, ISet<int>>();
-			var edgeTiles = new Dictionary<int, ISet<int>>();
+		public static IDictionary<int, ISet<int>> CreateBrambleEnclosure( int tileX, int tileY, int radius ) {
+			var tilePositionOffets = new Dictionary<int, ISet<int>>();
+			var tilePositions = new Dictionary<int, ISet<int>>();
 
 			// Trace outer rectangle
-			for( int i = 0; i < max; i++ ) {
-				outerEdgeTiles.Set2D( tileX - i, tileY - max );
-				outerEdgeTiles.Set2D( tileX - i, tileY + max );
-				outerEdgeTiles.Set2D( tileX + i, tileY - max );
-				outerEdgeTiles.Set2D( tileX + i, tileY + max );
+			for( int i = 0; i < radius; i++ ) {
+				tilePositionOffets.Set2D( -i, -radius );
+				tilePositionOffets.Set2D( -i, radius );
+				tilePositionOffets.Set2D( i, -radius );
+				tilePositionOffets.Set2D( i, radius );
 			}
-			for( int i = 0; i < max; i++ ) {
-				outerEdgeTiles.Set2D( tileX - max, tileY - i );
-				outerEdgeTiles.Set2D( tileX + max, tileY - i );
-				outerEdgeTiles.Set2D( tileX - max, tileY + i );
-				outerEdgeTiles.Set2D( tileX + max, tileY + i );
+			for( int i = 0; i < radius; i++ ) {
+				tilePositionOffets.Set2D( -radius, -i );
+				tilePositionOffets.Set2D( -radius, i );
+				tilePositionOffets.Set2D( radius, -i );
+				tilePositionOffets.Set2D( radius, i );
 			}
 
 			// Compress rectangle
-			foreach( (int eTileX, ISet<int> eTileYs) in outerEdgeTiles ) {
-				foreach( int eTileY in eTileYs ) {
-					int distX = eTileX - tileX;
-					int distY = eTileY - tileY;
-					double dist = Math.Sqrt( ( distX * distX ) + ( distY * distY ) );
+			foreach( (int offTileX, ISet<int> offTileYs) in tilePositionOffets ) {
+				foreach( int offTileY in offTileYs ) {
+					int distX = offTileX;
+					int distY = offTileY;
+					double dist = Math.Sqrt( (distX * distX) + (distY * distY) );
 
-					double lerp = ( dist - (double)max ) / (double)max;
+					double lerp = (dist - (double)radius ) / (double)radius;
 					lerp *= lerp;
 
-					distX = (int)MathHelper.Lerp( distX, ( distX >= 0 ? max : -max ), (float)lerp );
-					distY = (int)MathHelper.Lerp( distY, ( distY >= 0 ? max : -max ), (float)lerp );
-
-
-					float lerpX = Math.Abs( (float)max / (float)distX );
+					float lerpX = MathHelper.Lerp( distX, (distX >= 0 ? radius : -radius), (float)lerp );
+					float lerpY = MathHelper.Lerp( distY, (distY >= 0 ? radius : -radius), (float)lerp );
 					lerpX *= lerpX;
-					int newX = (int)MathHelper.Lerp( (float)distX, ( distX >= 0 ? max : -max ), lerpX );
+					lerpY *= lerpY;
 
-					float lerpY = (float)distY / max;
-					lerpX *= lerpX;
-					int newY = (int)MathHelper.Lerp( (float)distX, ( distX >= 0 ? max : -max ), lerpX );
-
-					edgeTiles.Set2D( newX, newY );
+					tilePositions.Set2D( tileX + (int)lerpX, tileY + (int)lerpY );
 				}
 			}
 
-			return edgeTiles;
+			return tilePositions;
 		}
 
 
 		////////////////
 
-		public static void CreateBramblesAt( IDictionary<int, ISet<int>> edgeTiles ) {
-			int totalCount = edgeTiles.Count2D();
-			var edgeCloneList = new (int TileX, int TileY)[totalCount];
+		public static void CreateBramblesAt( IDictionary<int, ISet<int>> tilePositions ) {
+			int totalCount = tilePositions.Count2D();
+			var tilePositionList = new (int TileX, int TileY)[totalCount];
 
 			int i = 0;
-			foreach( (int tileX, ISet<int> tileYs) in edgeTiles ) {
+			foreach( (int tileX, ISet<int> tileYs) in tilePositions ) {
 				foreach( int tileY in tileYs ) {
-					edgeCloneList[i++] = (tileX, tileY);
+					tilePositionList[i++] = (tileX, tileY);
 				}
 			}
 
 			for( i = totalCount - 1; i > 0; i-- ) {
 				int rand = TmlHelpers.SafelyGetRand().Next( i );
-				(int, int) tmp = edgeCloneList[i];
+				(int, int) tmp = tilePositionList[i];
 
-				edgeCloneList[i] = edgeCloneList[rand];
-				edgeCloneList[rand] = tmp;
+				tilePositionList[i] = tilePositionList[rand];
+				tilePositionList[rand] = tmp;
 			}
 
-			CursedBrambleTile.CreateBramblesAtAsync( edgeCloneList, edgeCloneList.Length - 1 );
+			CursedBrambleTile.CreateBramblesAtAsync( tilePositionList, tilePositionList.Length - 1 );
 		}
 
 		////
 
-		private static void CreateBramblesAtAsync( (int TileX, int TileY)[] edgeRandTiles, int lastIdx ) {
-			(int tileX, int tileY) randEdgeTile = edgeRandTiles[lastIdx];
+		private static void CreateBramblesAtAsync( (int TileX, int TileY)[] randTilePositions, int lastIdx ) {
+			(int tileX, int tileY) randEdgeTile = randTilePositions[ lastIdx ];
 
 			CursedBrambleTile.CreateBramblePatchAt( randEdgeTile.tileX, randEdgeTile.tileY );
 
 			if( lastIdx > 0 ) {
 				lastIdx--;
 				Timers.SetTimer(
-					"AmbushesEntrapAsync_" + edgeRandTiles[lastIdx].TileX + "_" + edgeRandTiles[lastIdx].TileY,
+					"AmbushesEntrapAsync_" + randTilePositions[lastIdx].TileX + "_" + randTilePositions[lastIdx].TileY,
 					2,
 					() => {
-						CursedBrambleTile.CreateBramblesAtAsync( edgeRandTiles, lastIdx );
+						CursedBrambleTile.CreateBramblesAtAsync( randTilePositions, lastIdx );
 						return false;
 					}
 				);

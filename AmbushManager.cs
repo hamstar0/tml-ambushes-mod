@@ -82,7 +82,7 @@ namespace Ambushes {
 			for( int i=0; i<count; i++ ) {
 				int x = tag.GetInt( "active_ambush_" + i + "_x" );
 				int y = tag.GetInt( "active_ambush_" + i + "_y" );
-				bool isEntrapping = tag.GetBool( "active_ambush_"+i+"_istrap" );
+				bool isEntrapping = tag.GetBool( "active_ambush_" + i + "_istrap" );
 
 				this.ActiveAmbushes.Add( new Ambush(x, y, isEntrapping) );
 			}

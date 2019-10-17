@@ -15,10 +15,10 @@ namespace Ambushes.Tiles {
 			Main.tileNoAttach[this.Type] = true;
 			Main.tileLavaDeath[this.Type] = false;
 			this.dustType = DustID.Granite;
-			this.AddMapEntry( new Color( 128, 64, 128 ) );
+			this.AddMapEntry( new Color(128, 64, 128) );
 		}
 
-		public override void NumDust(int i, int j, bool fail, ref int num) {
+		public override void NumDust( int i, int j, bool fail, ref int num ) {
 			num = fail ? 1 : 3;
 		}
 

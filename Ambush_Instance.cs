@@ -86,7 +86,10 @@ namespace Ambushes {
 			int tileY = point.Value.y;
 
 			if( this.IsEntrapping ) {
-				IDictionary<int, ISet<int>> edgeTiles = CursedBrambleTile.CreateBrambleEnclosure( tileX, tileY );
+Main.NewText("placing brambles at "+tileX+":"+tileY);
+				int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
+				IDictionary<int, ISet<int>> edgeTiles = CursedBrambleTile.CreateBrambleEnclosure( tileX, tileY, radius );
+
 				CursedBrambleTile.CreateBramblesAt( edgeTiles );
 			}
 		}

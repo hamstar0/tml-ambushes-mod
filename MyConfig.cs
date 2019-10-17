@@ -9,6 +9,7 @@ namespace Ambushes {
 
 
 
+
 	public class AmbushesConfig : ModConfig {
 		public override ConfigScope Mode => ConfigScope.ServerSide;
 

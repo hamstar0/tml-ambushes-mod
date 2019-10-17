@@ -1,11 +1,10 @@
-﻿using HamstarHelpers.Helpers.Tiles;
+﻿using HamstarHelpers.Classes.Tiles.TilePattern;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
+using HamstarHelpers.Helpers.Tiles;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using HamstarHelpers.Helpers.TModLoader;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Classes.Tiles.TilePattern;
 
 
 namespace Ambushes {
@@ -20,7 +19,9 @@ namespace Ambushes {
 		////////////////
 
 		public static bool CheckForAmbushElegibility( int tileX, int tileY ) {
-			IDictionary<int, ISet<int>> edgeTiles = new Dictionary<int, ISet<int>> { { tileX, new HashSet<int> { tileY } } };
+			IDictionary<int, ISet<int>> edgeTiles = new Dictionary<int, ISet<int>> {
+				{ tileX, new HashSet<int> { tileY } }
+			};
 
 			var edgeTileQueue = new Dictionary<int, ISet<int>>();
 			var chartedTiles = new Dictionary<int, ISet<int>>();
