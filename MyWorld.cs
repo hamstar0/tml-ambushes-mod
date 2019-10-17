@@ -2,6 +2,7 @@
 using System;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 
 namespace Ambushes {
@@ -44,6 +45,17 @@ namespace Ambushes {
 			}
 
 			this.AmbushMngr = new AmbushManager( size );
+		}
+
+
+		////////////////
+
+		public override void Load( TagCompound tag ) {
+			this.AmbushMngr.Load( tag );
+		}
+
+		public override TagCompound Save() {
+			return this.AmbushMngr.Save();
 		}
 
 

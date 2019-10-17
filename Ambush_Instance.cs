@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Classes.Tiles.TilePattern;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Tiles;
 using System;
 using System.Collections.Generic;
@@ -7,10 +8,6 @@ using Terraria;
 
 namespace Ambushes {
 	partial class Ambush {
-		private IDictionary<int, ISet<int>> EdgeTiles;
-		
-		////
-
 		public int TileX { get; }
 		public int TileY { get; }
 
@@ -20,10 +17,9 @@ namespace Ambushes {
 
 		////////////////
 
-		public Ambush( int tileX, int tileY, IDictionary<int, ISet<int>> edgeTiles, bool isEntrapping ) {
+		public Ambush( int tileX, int tileY, bool isEntrapping ) {
 			this.TileX = tileX;
 			this.TileY = tileY;
-			this.EdgeTiles = edgeTiles;
 			this.IsEntrapping = isEntrapping;
 		}
 
@@ -31,16 +27,20 @@ namespace Ambushes {
 		////////////////
 
 		public void Trigger( Player player ) {
-			if( this.IsEntrapping ) {
-				(int x, int y)? point = TileFinderHelpers.GetNearestTile( this.TileX, this.TileY, TilePattern.AbsoluteAir, 8 );
-
-				if( point.HasValue ) {
-					IDictionary<int, ISet<int>> edgeTiles;
-					if( Ambush.CheckForAmbushElegibility( point.Value.x, point.Value.y, out edgeTiles ) ) {
-						Ambush.CreateEntrapment( this.EdgeTiles );
-					}
-				}
+			(int x, int y)? point = TileFinderHelpers.GetNearestTile( this.TileX, this.TileY, TilePattern.AbsoluteAir, 8 );
+			if( !point.HasValue ) {
+				LogHelpers.Warn( "No empty air for ambush to trigger." );
+				return;
 			}
+			int tileX = point.Value.x;
+			int tileY = point.Value.y;
+
+			if( this.IsEntrapping ) {
+				IDictionary<int, ISet<int>> edgeTiles = Ambush.CreateEntrapmentEdges( tileX, tileY );
+				Ambush.CreateEntrapmentUponEdges( edgeTiles );
+			}
+
+			//TODO
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Ambushes {
 				randTileX = rand.Next( 64, Main.maxTilesX - 64 );
 				randTileY = rand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
 				
-				if( Ambush.CheckForAmbushElegibility( randTileX, randTileY, out edgeTiles ) ) {
+				if( Ambush.CheckForAmbushElegibility( randTileX, randTileY ) ) {
 					break;
 				}
 			} while( attempts++ < maxAttempts );
@@ -31,7 +31,7 @@ namespace Ambushes {
 			}
 			
 			Ambush.AdjustAmbushTileCenter( randTileX, ref randTileY );
-			return Ambush.CreateRandomType( randTileX, randTileY, edgeTiles );
+			return Ambush.CreateRandomType( randTileX, randTileY );
 		}
 
 
@@ -39,7 +39,7 @@ namespace Ambushes {
 		////////////////
 
 		internal void InitializeAmbushesAsync( int maxAmbushes ) {
-			this.AmbushMngr.Clear();
+			this.AmbushMngr.ClearAllAmbushes();
 
 			//Task.Factory.StartNew( () => {
 			Task.Run( () => {

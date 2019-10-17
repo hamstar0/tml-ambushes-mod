@@ -10,17 +10,17 @@ using HamstarHelpers.Classes.Tiles.TilePattern;
 
 namespace Ambushes {
 	partial class Ambush {
-		public static Ambush CreateRandomType( int tileX, int tileY, IDictionary<int, ISet<int>> edgeTiles ) {
-			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+		public static Ambush CreateRandomType( int tileX, int tileY ) {
+			bool isEntrapping = true;//TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
 
-			return new Ambush( tileX, tileY, edgeTiles, isEntrapping );
+			return new Ambush( tileX, tileY, isEntrapping );
 		}
 
 
 		////////////////
 
-		public static bool CheckForAmbushElegibility( int tileX, int tileY, out IDictionary<int, ISet<int>> edgeTiles ) {
-			edgeTiles = new Dictionary<int, ISet<int>> { { tileX, new HashSet<int> { tileY } } };
+		public static bool CheckForAmbushElegibility( int tileX, int tileY ) {
+			IDictionary<int, ISet<int>> edgeTiles = new Dictionary<int, ISet<int>> { { tileX, new HashSet<int> { tileY } } };
 
 			var edgeTileQueue = new Dictionary<int, ISet<int>>();
 			var chartedTiles = new Dictionary<int, ISet<int>>();
@@ -30,7 +30,7 @@ namespace Ambushes {
 				IsActuated = false
 			} );
 			int maxDistSqr = 50 * 50;
-			int minNeededAirTiles = 576;
+			int minNeededAirTiles = 32 * 32;
 			int airTileCount = 0;
 
 			do {

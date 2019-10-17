@@ -152,7 +152,7 @@ namespace Ambushes {
 			}
 		}
 
-		public void Clear() {
+		public void ClearAllAmbushes() {
 			this.Ambushes.Clear();
 			this.AmbushSegs.Clear();
 		}
