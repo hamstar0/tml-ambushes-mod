@@ -7,6 +7,8 @@ using Terraria.ModLoader;
 namespace Ambushes.Tiles {
 	public partial class CursedBrambleTile : ModTile {
 		public static bool ErodeRandomBrambleWithinRadius( int tileX, int tileY, int radius ) {
+			radius += AmbushesMod.Config.BrambleThickness;
+
 			int randX = TmlHelpers.SafelyGetRand().Next( radius * 2 );
 			int randY = TmlHelpers.SafelyGetRand().Next( radius * 2 );
 			int randTileX = tileX + ( randX - radius );
@@ -20,6 +22,10 @@ namespace Ambushes.Tiles {
 			Tile tile = Framing.GetTileSafely( tileX, tileY );
 
 			if( tile.active() && tile.type == ModContent.TileType<CursedBrambleTile>() ) {
+				if( AmbushesMod.Config.DebugModeInfoBrambles ) {
+					Main.NewText( "Removed bramble at "+tileX+", "+tileY );
+				}
+
 				TileHelpers.KillTile( tileX, tileY, false, false );
 				return true;
 			}

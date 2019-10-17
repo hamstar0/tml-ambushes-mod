@@ -1,8 +1,8 @@
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.Tiles;
 using HamstarHelpers.Helpers.TModLoader;
 using HamstarHelpers.Services.Timers;
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -16,17 +16,17 @@ namespace Ambushes.Tiles {
 			var tilePositions = new Dictionary<int, ISet<int>>();
 
 			// Trace outer rectangle
-			for( int i = 0; i < radius; i++ ) {
-				tilePositionOffets.Set2D( -i, -radius );
-				tilePositionOffets.Set2D( -i, radius );
-				tilePositionOffets.Set2D( i, -radius );
-				tilePositionOffets.Set2D( i, radius );
+			for( int x = 0; x < radius; x++ ) {
+				tilePositionOffets.Set2D( -x, -radius );
+				tilePositionOffets.Set2D( -x, radius );
+				tilePositionOffets.Set2D( x, -radius );
+				tilePositionOffets.Set2D( x, radius );
 			}
-			for( int i = 0; i < radius; i++ ) {
-				tilePositionOffets.Set2D( -radius, -i );
-				tilePositionOffets.Set2D( -radius, i );
-				tilePositionOffets.Set2D( radius, -i );
-				tilePositionOffets.Set2D( radius, i );
+			for( int y = 0; y < radius; y++ ) {
+				tilePositionOffets.Set2D( -radius, -y );
+				tilePositionOffets.Set2D( -radius, y );
+				tilePositionOffets.Set2D( radius, -y );
+				tilePositionOffets.Set2D( radius, y );
 			}
 
 			// Compress rectangle
@@ -35,16 +35,11 @@ namespace Ambushes.Tiles {
 					int distX = offTileX;
 					int distY = offTileY;
 					double dist = Math.Sqrt( (distX * distX) + (distY * distY) );
+					double scale = (double)radius / (((dist - radius) * 0.5d) + radius);//radius / dist
+					int offX = (int)((double)distX * scale);
+					int offY = (int)((double)distY * scale);
 
-					double lerp = (dist - (double)radius ) / (double)radius;
-					lerp *= lerp;
-
-					float lerpX = MathHelper.Lerp( distX, (distX >= 0 ? radius : -radius), (float)lerp );
-					float lerpY = MathHelper.Lerp( distY, (distY >= 0 ? radius : -radius), (float)lerp );
-					lerpX *= lerpX;
-					lerpY *= lerpY;
-
-					tilePositions.Set2D( tileX + (int)lerpX, tileY + (int)lerpY );
+					tilePositions.Set2D( tileX + offX, tileY + offY );
 				}
 			}
 
@@ -79,9 +74,13 @@ namespace Ambushes.Tiles {
 		////
 
 		private static void CreateBramblesAtAsync( (int TileX, int TileY)[] randTilePositions, int lastIdx ) {
-			(int tileX, int tileY) randEdgeTile = randTilePositions[ lastIdx ];
+			(int tileX, int tileY) tilePos = randTilePositions[ lastIdx ];
 
-			CursedBrambleTile.CreateBramblePatchAt( randEdgeTile.tileX, randEdgeTile.tileY );
+			int bramblesPlaced = CursedBrambleTile.CreateBramblePatchAt( tilePos.tileX, tilePos.tileY );
+
+			if( AmbushesMod.Config.DebugModeInfoBrambles ) {
+				LogHelpers.Log( "Created " + bramblesPlaced + " brambles in patch " + lastIdx + " of " + randTilePositions.Length );
+			}
 
 			if( lastIdx > 0 ) {
 				lastIdx--;
@@ -99,7 +98,7 @@ namespace Ambushes.Tiles {
 
 		////
 
-		public static bool CreateBramblePatchAt( int tileX, int tileY ) {
+		public static int CreateBramblePatchAt( int tileX, int tileY ) {
 			int brambleTileType = ModContent.TileType<CursedBrambleTile>();
 			int thick = AmbushesMod.Config.BrambleThickness;
 			float dense = AmbushesMod.Config.BrambleDensity;
@@ -107,30 +106,31 @@ namespace Ambushes.Tiles {
 
 			Tile tileAt = Main.tile[tileX, tileY];
 			if( tileAt != null && tileAt.active() && tileAt.type == brambleTileType ) {
-				return false;
+				return 0;
 			}
 
-			bool bramblePlaced = false;
+			int bramblesPlaced = 0;
 
 			int max = thick / 2;
 			int min = -max;
 			for( int i = min; i < max; i++ ) {
 				for( int j = min; j < max; j++ ) {
-					if( rand.NextFloat() > dense ) {
+					if( (1f - rand.NextFloat()) > dense ) {
 						continue;
 					}
 
 					int x = tileX + i;
 					int y = tileY + j;
+					Tile tile = Framing.GetTileSafely( x, y );
 
-					if( TileHelpers.IsAir( Framing.GetTileSafely( x, y ), false, true ) ) {
+					if( tile == null || !tile.active() ) {
 						TileHelpers.PlaceTile( x, y, brambleTileType );
-						bramblePlaced = true;
+						bramblesPlaced++;
 					}
 				}
 			}
 
-			return bramblePlaced;
+			return bramblesPlaced;
 		}
 	}
 }

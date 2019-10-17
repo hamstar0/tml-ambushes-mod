@@ -19,6 +19,7 @@ namespace Ambushes {
 		[Header( "Debug settings" )]
 		public bool DebugModeInfo { get; set; } = false;
 		public bool DebugModeInfoMap { get; set; } = false;
+		public bool DebugModeInfoBrambles { get; set; } = false;
 
 
 		////
@@ -45,14 +46,14 @@ namespace Ambushes {
 		public int HugeWorldInitialAmbushes { get; set; } = 2048;
 
 
-		[Range( 1, 1000000 )]
+		/*[Range( 1, 10000 )]
 		[DefaultValue( 10 )]
-		public int AmbushInitialGenerationSlowness { get; set; } = 10;
+		public int AmbushInitialGenerationSlowness { get; set; } = 10;*/
 
 		[Range( 1, 60 * 60 * 60 * 24 )]
-		[DefaultValue( 60 * 60 * 15 )]
+		[DefaultValue( 60 * 60 * 10 )]
 		[Label( "Duration (in ticks) until a used ambush re-randomizes" )]
-		public int AmbushRegenTickRate { get; set; } = 60 * 60 * 15;    // 15 minutes
+		public int AmbushRegenTickRate { get; set; } = 60 * 60 * 10;    // 10 minutes
 
 		[Range( 1, 50000 )]
 		[DefaultValue( 64 )]
@@ -71,6 +72,7 @@ namespace Ambushes {
 		[ReloadRequired]
 		public int AmbushEntrapmentRadius { get; set; } = 40;
 
+
 		[Range( 1, 60*60*60*24 )]
 		[DefaultValue( 6 )]
 		public int BrambleTicksPerDamage { get; set; } = 6;
@@ -78,6 +80,11 @@ namespace Ambushes {
 		[Range( 1, 9999999 )]
 		[DefaultValue( 10 )]
 		public int BrambleDamage { get; set; } = 10;
+		
+
+		[Range( 1, 60 * 60 * 60 * 24 )]
+		[DefaultValue( 60 * 15 )]
+		public int BrambleTickDurationUntilErosionBegin { get; set; } = 60 * 15;
 
 
 		[Range( 1, 128 )]
@@ -85,8 +92,8 @@ namespace Ambushes {
 		public int BrambleThickness { get; set; } = 8;
 
 		[Range( 0f, 1f )]
-		[DefaultValue( 0.5f )]
+		[DefaultValue( 0.05f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float BrambleDensity { get; set; } = 0.5f;
+		public float BrambleDensity { get; set; } = 0.05f;
 	}
 }

@@ -33,16 +33,25 @@ namespace Ambushes {
 		////////////////
 
 		internal void Run( out bool cleanupComplete ) {
+			int duration = AmbushesMod.Config.BrambleTickDurationUntilErosionBegin;
+
 			cleanupComplete = false;
 
 			this.ElapsedTicks++;
 
-			if( this.ElapsedTicks > 60 * 20 ) {
-				if( this.ElapsedTicks == 60 * 20 ) {
+			if( this.ElapsedTicks > duration ) {
+				if( this.ElapsedTicks == duration ) {
 					Main.NewText( "ambush ended" );
 				}
 
 				int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
 				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
 
 				if( this.ElapsedTicks % 60 == 0 ) {
@@ -54,11 +63,11 @@ namespace Ambushes {
 		private void RunCleanup( ref bool cleanupComplete ) {
 			int tileX = this.TileX;
 			int tileY = this.TileY;
-			int rad = AmbushesMod.Config.AmbushEntrapmentRadius;
+			int rad = AmbushesMod.Config.AmbushEntrapmentRadius + AmbushesMod.Config.BrambleThickness + 1;
 			IList<(int, int)> brambles = CursedBrambleTile.FindBrambles( tileX-rad, tileY-rad, tileX+rad, tileY+rad );
 
 			if( brambles.Count > 0 ) {
-				if( brambles.Count < 24 ) {
+				if( brambles.Count < 48 ) {
 					foreach( (int x, int y) in brambles ) {
 						CursedBrambleTile.RemoveBrambleAt( x, y );
 					}
@@ -66,6 +75,12 @@ namespace Ambushes {
 				}
 			} else {
 				cleanupComplete = true;
+			}
+
+			if( cleanupComplete ) {
+				if( AmbushesMod.Config.DebugModeInfoBrambles ) {
+					Main.NewText( "Brambles at " + tileX + ", " + tileY + " cleaned up." );
+				}
 			}
 		}
 
@@ -86,7 +101,6 @@ namespace Ambushes {
 			int tileY = point.Value.y;
 
 			if( this.IsEntrapping ) {
-Main.NewText("placing brambles at "+tileX+":"+tileY);
 				int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
 				IDictionary<int, ISet<int>> edgeTiles = CursedBrambleTile.CreateBrambleEnclosure( tileX, tileY, radius );
 

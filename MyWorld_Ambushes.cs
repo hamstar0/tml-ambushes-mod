@@ -1,7 +1,6 @@
 ﻿using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.TModLoader;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
@@ -40,25 +39,22 @@ namespace Ambushes {
 			this.AmbushMngr.ClearAllAmbushes();
 
 			//Task.Factory.StartNew( () => {
-			Task.Run( () => {
-				for( int i = 0; i < maxAmbushes; i++ ) {
-					this.CreateRandomWorldAmbushAsync();
-					Thread.Sleep( AmbushesMod.Config.AmbushInitialGenerationSlowness );
-				}
+			//Task.Run( () => {
+			Parallel.For( 0, maxAmbushes, ( i ) => {
+				this.CreateRandomWorldAmbushAsync();
+				//Thread.Sleep( AmbushesMod.Config.AmbushInitialGenerationSlowness );
 			} );
 		}
 		
 		////////////////
 
-		private void UpdateAmbushes( int maxAmbushes ) {
-			if( this.AmbushRegenDelay++ < AmbushesMod.Config.AmbushRegenTickRate ) {
-				return;
-			}
+		private void UpdateAmbushesRegen( int maxAmbushes ) {
+			if( this.AmbushRegenDelay++ >= AmbushesMod.Config.AmbushRegenTickRate ) {
+				this.AmbushRegenDelay = 0;
 
-			this.AmbushRegenDelay = 0;
-
-			if( this.AmbushMngr.Count < maxAmbushes ) {
-				this.CreateRandomWorldAmbushAsync();
+				if( this.AmbushMngr.TotalAmbushes < maxAmbushes ) {
+					this.CreateRandomWorldAmbushAsync();
+				}
 			}
 		}
 
@@ -126,7 +122,7 @@ namespace Ambushes {
 
 		private void SpawnAmbush( Ambush ambush ) {
 			if( AmbushesMod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "Created ambush as " + ambush.TileX + "," + ambush.TileY + " ("+this.AmbushMngr.Count+")" );
+				LogHelpers.Log( "Created ambush as " + ambush.TileX + "," + ambush.TileY + " ("+this.AmbushMngr.TotalAmbushes+")" );
 			}
 
 			this.AmbushMngr.AddAmbush( ambush );

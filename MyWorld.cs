@@ -65,7 +65,8 @@ namespace Ambushes {
 
 		public override void PreUpdate() {
 			if( Main.netMode != 1 ) {
-				this.UpdateAmbushes( this.MaxAmbushes );
+				this.UpdateAmbushesRegen( this.MaxAmbushes );
+				this.AmbushMngr.Update();
 			}
 		}
 	}

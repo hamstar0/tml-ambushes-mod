@@ -53,7 +53,7 @@ namespace Ambushes {
 
 		////////////////
 
-		public int Count {
+		public int TotalAmbushes {
 			get {
 				lock( AmbushManager.MyLock ) {
 					return this.Ambushes.Count2D();
