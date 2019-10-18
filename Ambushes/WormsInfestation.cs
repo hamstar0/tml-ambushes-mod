@@ -17,10 +17,10 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
+		public override void EditSpawnDataWhileRunning( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}
 
-		public override void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 		}
 	}
 }

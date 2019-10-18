@@ -18,19 +18,24 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
+		public abstract int GetRunDuration();
+
+
+		////////////////
+
 		public override bool Run() {
 			bool cleanupComplete = false;
-			int duration = AmbushesMod.Config.BrambleTickDurationUntilErosionBegin;
+			int duration = this.GetRunDuration();
 
 			if( this.ElapsedTicks > duration ) {
 				this.RunErode();
+
 				if( this.ElapsedTicks % 60 == 0 ) {
 					this.RunCleanup( ref cleanupComplete );
 				}
 			}
 
 			this.ElapsedTicks++;
-
 			return cleanupComplete;
 		}
 

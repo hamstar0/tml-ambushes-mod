@@ -19,9 +19,9 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override bool OnActivate( int openTileX, int openTileY ) {
+		public override bool OnActivate( int clearTileX, int clearTileY ) {
 			int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
-			IDictionary<int, ISet<int>> tileTrace = CursedBrambleTile.TraceTileEnclosure( openTileX, openTileY, radius );
+			IDictionary<int, ISet<int>> tileTrace = CursedBrambleTile.TraceTileEnclosure( clearTileX, clearTileY, radius );
 
 			CursedBrambleTile.CreateBramblesAt( tileTrace );
 
@@ -31,6 +31,12 @@ namespace Ambushes.Ambushes {
 		public override void OnDeactivate() {
 		}
 
+
+		////////////////
+
+		public override int GetRunDuration() {
+			return AmbushesMod.Config.BrambleEnclosureTickDurationUntilErosionBegin;
+		}
 
 		////////////////
 

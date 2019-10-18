@@ -10,9 +10,9 @@ namespace Ambushes {
 			switch( TmlHelpers.SafelyGetRand().Next( 6+2 ) ) {
 			default:
 			case 0:
-				return Ambush.CreateRandomFloodType( tileX, tileY );
-			case 1:
 				return Ambush.CreateRandomBrambleWallType( tileX, tileY );
+			case 1:
+				return Ambush.CreateRandomFloodType( tileX, tileY );
 			case 2:
 				return Ambush.CreateRandomFlyerSwarmType( tileX, tileY );
 			case 3:
@@ -34,7 +34,9 @@ namespace Ambushes {
 		}
 
 		public static Ambush CreateRandomBrambleWallType ( int tileX, int tileY ) {
-			return new BrambleWallAmbush( tileX, tileY );
+			bool isHorizontal = TmlHelpers.SafelyGetRand().Next(1) == 0;
+
+			return new BrambleWallAmbush( tileX, tileY, isHorizontal );
 		}
 
 		public static Ambush CreateRandomFlyerSwarmType( int tileX, int tileY ) {

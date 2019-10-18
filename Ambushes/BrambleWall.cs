@@ -7,15 +7,22 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class BrambleWallAmbush : BrambleAmbush {
-		public BrambleWallAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
+		protected bool IsHorizontal;
+
+
+
+		////////////////
+
+		public BrambleWallAmbush( int tileX, int tileY, bool isHorizontal ) : base( tileX, tileY ) {
+			this.IsHorizontal = isHorizontal;
 		}
 
 
 		////////////////
 
-		public override bool OnActivate( int openTileX, int openTileY ) {
+		public override bool OnActivate( int clearTileX, int clearTileY ) {
 			int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
-			IDictionary<int, ISet<int>> tileTrace = CursedBrambleTile.TraceTileEnclosure( openTileX, openTileY, radius );
+			IDictionary<int, ISet<int>> tileTrace = CursedBrambleTile.TraceTileWall( clearTileX, clearTileY, radius, this.IsHorizontal );
 
 			CursedBrambleTile.CreateBramblesAt( tileTrace );
 
@@ -28,6 +35,12 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
+		public override int GetRunDuration() {
+			return AmbushesMod.Config.BrambleWallTickDurationUntilErosionBegin;
+		}
+
+		////////////////
+
 		public override bool Run() {
 			return base.Run();
 		}
@@ -35,10 +48,10 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
+		public override void EditSpawnDataWhileRunning( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}
 
-		public override void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 		}
 	}
 }

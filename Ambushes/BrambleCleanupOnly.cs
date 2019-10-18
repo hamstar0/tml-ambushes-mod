@@ -12,13 +12,19 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override bool OnActivate( int openTileX, int openTileY ) {
+		public override bool OnActivate( int clearTileX, int clearTileY ) {
 			return true;
 		}
 
 		public override void OnDeactivate() {
 		}
 
+
+		////////////////
+
+		public override int GetRunDuration() {
+			return 0;
+		}
 
 		////////////////
 
@@ -29,10 +35,10 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
+		public override void EditSpawnDataWhileRunning( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}
 
-		public override void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 		}
 	}
 }

@@ -9,7 +9,7 @@ namespace Ambushes {
 	partial class AmbushManager {
 		public void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			foreach( Ambush ambush in this.ActiveAmbushes ) {
-				ambush.EditSpawnPool( pool, spawnInfo );
+				ambush.EditSpawnPoolWhileRunning( pool, spawnInfo );
 			}
 		}
 
@@ -17,7 +17,7 @@ namespace Ambushes {
 		public void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 			foreach( Ambush ambush in this.ActiveAmbushes ) {
 				if( ambush.TriggeringPlayer == player.whoAmI ) {
-					ambush.EditSpawnData( player, ref spawnRate, ref maxSpawns );
+					ambush.EditSpawnDataWhileRunning( player, ref spawnRate, ref maxSpawns );
 				}
 			}
 		}

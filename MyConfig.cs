@@ -80,11 +80,15 @@ namespace Ambushes {
 		[Range( 1, 9999999 )]
 		[DefaultValue( 10 )]
 		public int BrambleDamage { get; set; } = 10;
-		
+
+
+		[Range( 1, 60 * 60 * 60 * 24 )]
+		[DefaultValue( 60 * 30 )]
+		public int BrambleWallTickDurationUntilErosionBegin { get; set; } = 60 * 30;
 
 		[Range( 1, 60 * 60 * 60 * 24 )]
 		[DefaultValue( 60 * 15 )]
-		public int BrambleTickDurationUntilErosionBegin { get; set; } = 60 * 15;
+		public int BrambleEnclosureTickDurationUntilErosionBegin { get; set; } = 60 * 15;
 
 
 		[Range( 0f, 1f )]

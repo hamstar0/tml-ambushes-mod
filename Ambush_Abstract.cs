@@ -7,18 +7,20 @@ using Terraria.ModLoader;
 
 namespace Ambushes {
 	abstract partial class Ambush {
-		public abstract bool OnActivate( int openTileX, int openTileY );
+		public abstract bool OnActivate( int clearTileX, int clearTileY );
 
 
 		public abstract void OnDeactivate();
 
 
+		/// <summary></summary>
+		/// <returns>Indicates ambush should deactivate when `true`.</returns>
 		public abstract bool Run();
 
 
-		public abstract void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo );
+		public abstract void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo );
 
 
-		public abstract void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns );
+		public abstract void EditSpawnDataWhileRunning( Player player, ref int spawnRate, ref int maxSpawns );
 	}
 }
