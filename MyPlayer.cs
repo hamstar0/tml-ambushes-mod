@@ -50,11 +50,14 @@ namespace Ambushes {
 			}
 		}
 
+
+		////////////////
+
 		private void ApplyBrambleEffects() {
 			string timerName = "AmbushesCursedBrambleHurt_" + this.player.whoAmI;
-
-			if( this.player.velocity.LengthSquared() > 0.5f ) {
-				this.player.velocity *= 0.9f;
+			
+			if( this.player.velocity.LengthSquared() > 0.1f ) {
+				this.player.velocity *= 1f - AmbushesMod.Config.BrambleStickiness;
 			}
 			
 			if( Timers.GetTimerTickDuration( timerName ) <= 0 ) {

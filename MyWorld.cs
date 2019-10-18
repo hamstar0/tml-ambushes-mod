@@ -13,10 +13,13 @@ namespace Ambushes {
 
 		////////////////
 
-		public int MaxAmbushes { get; private set; }
 		private int AmbushRegenDelay;
 
-		internal AmbushManager AmbushMngr;
+		////
+
+		internal AmbushManager AmbushMngr { get; private set; }
+
+		public int MaxAmbushes { get; private set; }
 
 
 

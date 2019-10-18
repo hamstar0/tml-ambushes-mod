@@ -9,15 +9,6 @@ using Terraria;
 
 namespace Ambushes {
 	partial class Ambush {
-		public static Ambush CreateRandomType( int tileX, int tileY ) {
-			bool isEntrapping = true;//TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
-
-			return new Ambush( tileX, tileY, isEntrapping );
-		}
-
-
-		////////////////
-
 		public static bool CheckForAmbushElegibility( int tileX, int tileY ) {
 			IDictionary<int, ISet<int>> edgeTiles = new Dictionary<int, ISet<int>> {
 				{ tileX, new HashSet<int> { tileY } }

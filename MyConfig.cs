@@ -87,13 +87,17 @@ namespace Ambushes {
 		public int BrambleTickDurationUntilErosionBegin { get; set; } = 60 * 15;
 
 
+		[Range( 0f, 1f )]
+		[DefaultValue( 0.8f )]
+		public float BrambleStickiness { get; set; } = 0.8f;
+
 		[Range( 1, 128 )]
 		[DefaultValue( 4 )]
 		public int BrambleThickness { get; set; } = 4;
 
 		[Range( 0f, 1f )]
-		[DefaultValue( 0.05f )]
+		[DefaultValue( 0.15f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float BrambleDensity { get; set; } = 0.05f;
+		public float BrambleDensity { get; set; } = 0.15f;
 	}
 }

@@ -30,6 +30,12 @@ namespace Ambushes {
 		public override void Load() {
 		}
 
+		public override void Unload() {
+			AmbushesMod.Instance = null;
+		}
+
+		////
+
 		public override void PostSetupContent() {
 			LoadHooks.AddPostWorldLoadEachHook( () => {
 				if( Main.netMode != 1 ) {
@@ -37,10 +43,6 @@ namespace Ambushes {
 					myworld.InitializeAmbushesAsync( myworld.MaxAmbushes );
 				}
 			} );
-		}
-
-		public override void Unload() {
-			AmbushesMod.Instance = null;
 		}
 
 
