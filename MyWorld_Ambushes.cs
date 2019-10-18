@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.TModLoader;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
@@ -39,10 +40,12 @@ namespace Ambushes {
 			this.AmbushMngr.ClearAllAmbushes();
 
 			//Task.Factory.StartNew( () => {
-			//Task.Run( () => {
-			Parallel.For( 0, maxAmbushes, ( i ) => {
-				this.CreateRandomWorldAmbushAsync();
-				//Thread.Sleep( AmbushesMod.Config.AmbushInitialGenerationSlowness );
+			//Parallel.For( 0, maxAmbushes, ( i ) => {
+			Task.Run( () => {
+				for( int i=0; i<maxAmbushes; i++ ) {
+					this.CreateRandomWorldAmbushAsync();
+					Thread.Sleep( 10 );//AmbushesMod.Config.AmbushInitialGenerationSlowness );
+				}
 			} );
 		}
 		

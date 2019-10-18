@@ -38,7 +38,7 @@ namespace Ambushes {
 				int endY = begY + this.player.height;
 
 				for( int j = begY; j < endY; j += 16 ) {
-					if( Framing.GetTileSafely( i >> 4, j >> 4 ).type == brambleType ) {
+					if( Framing.GetTileSafely(i >> 4, j >> 4).type == brambleType ) {
 						enbrambled = true;
 						break;
 					}

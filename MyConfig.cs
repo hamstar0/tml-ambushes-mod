@@ -88,8 +88,8 @@ namespace Ambushes {
 
 
 		[Range( 1, 128 )]
-		[DefaultValue( 8 )]
-		public int BrambleThickness { get; set; } = 8;
+		[DefaultValue( 4 )]
+		public int BrambleThickness { get; set; } = 4;
 
 		[Range( 0f, 1f )]
 		[DefaultValue( 0.05f )]
