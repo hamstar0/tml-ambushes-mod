@@ -12,7 +12,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public BrambleAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
+		protected BrambleAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
 		}
 
 

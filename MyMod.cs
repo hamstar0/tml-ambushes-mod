@@ -28,6 +28,7 @@ namespace Ambushes {
 		}
 
 		public override void Load() {
+			Ambush.OnModsLoad();
 		}
 
 		public override void Unload() {

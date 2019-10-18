@@ -12,7 +12,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public BrambleEnclosureAmbush( int tileX, int tileY, bool isEntrapping ) : base( tileX, tileY ) {
+		protected BrambleEnclosureAmbush( int tileX, int tileY, bool isEntrapping ) : base( tileX, tileY ) {
 			this.IsEntrapping = isEntrapping;
 		}
 

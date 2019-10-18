@@ -7,14 +7,23 @@ using Terraria.ModLoader;
 
 namespace Ambushes {
 	abstract partial class Ambush {
+		public abstract float SpawnWeight { get; }
+
+
+
+		////////////////
+
+		protected abstract Ambush Clone( int tileX, int tileY );
+
+
+		////////////////
+
 		public abstract bool OnActivate( int clearTileX, int clearTileY );
 
 
 		public abstract void OnDeactivate();
 
 
-		/// <summary></summary>
-		/// <returns>Indicates ambush should deactivate when `true`.</returns>
 		public abstract bool Run();
 
 

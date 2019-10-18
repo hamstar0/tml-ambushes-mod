@@ -6,7 +6,19 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class BrambleCleanupOnlyAmbush : BrambleAmbush {
+		public override float SpawnWeight => 0f;
+
+
+
+		////////////////
+
 		public BrambleCleanupOnlyAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
+		}
+
+		////////////////
+
+		protected override Ambush Clone( int tileX, int tileY ) {
+			return new BrambleCleanupOnlyAmbush( tileX, tileY );
 		}
 
 
