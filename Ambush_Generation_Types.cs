@@ -5,7 +5,7 @@ using Terraria;
 
 
 namespace Ambushes {
-	partial class Ambush {
+	abstract partial class Ambush {
 		public static Ambush CreateRandomType( int tileX, int tileY ) {
 			switch( TmlHelpers.SafelyGetRand().Next( 6+2 ) ) {
 			default:

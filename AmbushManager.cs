@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Helpers.Debug;
+﻿using Ambushes.Ambushes;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.World;
 using System;
@@ -42,9 +43,9 @@ namespace Ambushes {
 
 		////////////////
 
-		private IDictionary<int, IDictionary<int, Ambush>> Ambushes
+		private IDictionary<int, IDictionary<int, Ambush>> ArmedAmbushes
 			= new Dictionary<int, IDictionary<int, Ambush>>();
-		private IDictionary<int, IDictionary<int, IList<Ambush>>> AmbushSegs
+		private IDictionary<int, IDictionary<int, IList<Ambush>>> ArmedAmbushSegs
 			= new Dictionary<int, IDictionary<int, IList<Ambush>>>();
 
 		private ISet<Ambush> ActiveAmbushes = new HashSet<Ambush>();
@@ -56,7 +57,7 @@ namespace Ambushes {
 		public int TotalAmbushes {
 			get {
 				lock( AmbushManager.MyLock ) {
-					return this.Ambushes.Count2D();
+					return this.ArmedAmbushes.Count2D();
 				}
 			}
 		}
@@ -82,9 +83,9 @@ namespace Ambushes {
 			for( int i=0; i<count; i++ ) {
 				int x = tag.GetInt( "active_ambush_" + i + "_x" );
 				int y = tag.GetInt( "active_ambush_" + i + "_y" );
-				bool isEntrapping = tag.GetBool( "active_ambush_" + i + "_istrap" );
+				//bool isEntrapping = tag.GetBool( "active_ambush_" + i + "_istrap" );
 
-				this.ActiveAmbushes.Add( new Ambush(x, y, isEntrapping) );
+				this.ActiveAmbushes.Add( new CleanupOnlyAmbush(x, y) );
 			}
 		}
 
@@ -95,7 +96,7 @@ namespace Ambushes {
 			foreach( Ambush ambush in this.ActiveAmbushes ) {
 				tag[ "active_ambush_"+i+"_x" ] = ambush.TileX;
 				tag[ "active_ambush_"+i+"_y" ] = ambush.TileY;
-				tag[ "active_ambush_"+i+"_istrap" ] = ambush.IsEntrapping;
+				//tag[ "active_ambush_"+i+"_istrap" ] = ambush.IsEntrapping;
 				i++;
 			}
 		}

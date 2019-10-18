@@ -37,7 +37,7 @@ namespace Ambushes {
 		////////////////
 
 		internal void InitializeAmbushesAsync( int maxAmbushes ) {
-			this.AmbushMngr.ClearAllAmbushes();
+			this.AmbushMngr.UnarmAllAmbushes();
 
 			//Task.Factory.StartNew( () => {
 			//Parallel.For( 0, maxAmbushes, ( i ) => {
@@ -128,7 +128,7 @@ namespace Ambushes {
 				LogHelpers.Log( "Created ambush as " + ambush.TileX + "," + ambush.TileY + " ("+this.AmbushMngr.TotalAmbushes+")" );
 			}
 
-			this.AmbushMngr.AddAmbush( ambush );
+			this.AmbushMngr.ArmAmbush( ambush );
 		}
 	}
 }

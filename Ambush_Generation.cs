@@ -8,7 +8,7 @@ using Terraria;
 
 
 namespace Ambushes {
-	partial class Ambush {
+	abstract partial class Ambush {
 		public static bool CheckForAmbushElegibility( int tileX, int tileY ) {
 			IDictionary<int, ISet<int>> edgeTiles = new Dictionary<int, ISet<int>> {
 				{ tileX, new HashSet<int> { tileY } }

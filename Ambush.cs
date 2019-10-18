@@ -8,11 +8,13 @@ using Terraria;
 
 
 namespace Ambushes {
-	partial class Ambush {
+	abstract partial class Ambush {
 		public int TileX { get; }
 		public int TileY { get; }
 
-		public bool IsEntrapping { get; private set; }
+		////
+
+		public int TriggerPlayer { get; private set; } = -1;
 
 
 		////////////////
@@ -23,10 +25,9 @@ namespace Ambushes {
 
 		////////////////
 
-		public Ambush( int tileX, int tileY, bool isEntrapping ) {
+		public Ambush( int tileX, int tileY ) {
 			this.TileX = tileX;
 			this.TileY = tileY;
-			this.IsEntrapping = isEntrapping;
 		}
 
 
@@ -91,21 +92,19 @@ namespace Ambushes {
 
 		////////////////
 
-		public void Trigger( Player player ) {
+		public bool Trigger( Player player ) {
 			(int x, int y)? point = TileFinderHelpers.GetNearestTile( this.TileX, this.TileY, TilePattern.AbsoluteAir, 8 );
 			if( !point.HasValue ) {
 				LogHelpers.Warn( "No empty air for ambush to trigger." );
-				return;
+				return false;
 			}
+
+			this.TriggerPlayer = player.whoAmI;
+
 			int tileX = point.Value.x;
 			int tileY = point.Value.y;
 
-			if( this.IsEntrapping ) {
-				int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
-				IDictionary<int, ISet<int>> edgeTiles = CursedBrambleTile.CreateBrambleEnclosure( tileX, tileY, radius );
-
-				CursedBrambleTile.CreateBramblesAt( edgeTiles );
-			}
+			return this.OnActivate( point.Value.x, point.Value.y );
 		}
 	}
 }

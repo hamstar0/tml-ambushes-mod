@@ -10,7 +10,7 @@ namespace Ambushes {
 	partial class AmbushManager {
 		public IEnumerable<Ambush> GetAllAmbushes() {
 			lock( AmbushManager.MyLock ) {
-				foreach( IDictionary<int, Ambush> otherTileYs in this.Ambushes.Values ) {
+				foreach( IDictionary<int, Ambush> otherTileYs in this.ArmedAmbushes.Values ) {
 					foreach( Ambush ambush in otherTileYs.Values ) {
 						yield return ambush;
 					}
@@ -25,21 +25,21 @@ namespace Ambushes {
 			IList<Ambush> ambushes = new List<Ambush>();
 
 			lock( AmbushManager.MyLock ) {
-				if( !this.AmbushSegs.ContainsKey( segX - 1 ) &&
-					!this.AmbushSegs.ContainsKey( segX ) &&
-					!this.AmbushSegs.ContainsKey( segX + 1 ) ) {
+				if( !this.ArmedAmbushSegs.ContainsKey( segX - 1 ) &&
+					!this.ArmedAmbushSegs.ContainsKey( segX ) &&
+					!this.ArmedAmbushSegs.ContainsKey( segX + 1 ) ) {
 					return ambushes;
 				}
 
 				int radiusSqr = radius * radius;
 
 				for( int i = segX - 1; i <= segX + 1; i++ ) {
-					if( !this.AmbushSegs.ContainsKey(i) ) { continue; }
+					if( !this.ArmedAmbushSegs.ContainsKey(i) ) { continue; }
 
 					for( int j = segY - 1; j <= segY + 1; j++ ) {
-						if( !this.AmbushSegs[i].ContainsKey(j) ) { continue; }
+						if( !this.ArmedAmbushSegs[i].ContainsKey(j) ) { continue; }
 
-						AmbushManager.GetAmbushesNearInSeg( tileX, tileY, radiusSqr, this.AmbushSegs[i][j], ref ambushes );
+						AmbushManager.GetAmbushesNearInSeg( tileX, tileY, radiusSqr, this.ArmedAmbushSegs[i][j], ref ambushes );
 					}
 				}
 			}
@@ -50,31 +50,31 @@ namespace Ambushes {
 
 		////////////////
 
-		public void AddAmbush( Ambush ambush ) {
+		public void ArmAmbush( Ambush ambush ) {
 			int radius = AmbushesMod.Config.AmbushTriggerRadiusTiles;
 
 			lock( AmbushManager.MyLock ) {
-				this.Ambushes.Set2D( ambush.TileX, ambush.TileY, ambush );
+				this.ArmedAmbushes.Set2D( ambush.TileX, ambush.TileY, ambush );
 
 				IList<Ambush> segAmbushes;
-				if( this.AmbushSegs.TryGetValue2D(ambush.TileX / radius, ambush.TileY / radius, out segAmbushes) ) {
+				if( this.ArmedAmbushSegs.TryGetValue2D(ambush.TileX / radius, ambush.TileY / radius, out segAmbushes) ) {
 					segAmbushes.Add( ambush );
 				} else {
-					this.AmbushSegs.Set2D( ambush.TileX / radius, ambush.TileY / radius, new List<Ambush> { ambush } );
+					this.ArmedAmbushSegs.Set2D( ambush.TileX / radius, ambush.TileY / radius, new List<Ambush> { ambush } );
 				}
 			}
 		}
 
 		////
 
-		public void RemoveAmbush( Ambush ambush ) {
+		public void UnarmAmbush( Ambush ambush ) {
 			lock( AmbushManager.MyLock ) {
 				bool foundY = false;
-				bool foundX = this.Ambushes.ContainsKey( ambush.TileX );
+				bool foundX = this.ArmedAmbushes.ContainsKey( ambush.TileX );
 				int radius = AmbushesMod.Config.AmbushTriggerRadiusTiles;
 
 				if( foundX ) {
-					foundY = this.Ambushes[ambush.TileX].Remove( ambush.TileY );
+					foundY = this.ArmedAmbushes[ambush.TileX].Remove( ambush.TileY );
 				}
 
 				if( !foundX || !foundY ) {
@@ -87,28 +87,28 @@ namespace Ambushes {
 				int segX = ambush.TileX / radius;
 				int segY = ambush.TileY / radius;
 
-				if( this.AmbushSegs.ContainsKey(segX) ) {
-					this.AmbushSegs[segX].Remove2D( segY, ambush );
+				if( this.ArmedAmbushSegs.ContainsKey(segX) ) {
+					this.ArmedAmbushSegs[segX].Remove2D( segY, ambush );
 				}
 			}
 		}
 
-		public void ClearAllAmbushes() {
-			this.Ambushes.Clear();
-			this.AmbushSegs.Clear();
+		public void UnarmAllAmbushes() {
+			this.ArmedAmbushes.Clear();
+			this.ArmedAmbushSegs.Clear();
 		}
 
 
 		////////////////
 
 		public void TriggerAmbush( Ambush ambush, Player player ) {
-			ambush.Trigger( player );
-
-			lock( AmbushManager.MyLock ) {
-				this.ActiveAmbushes.Add( ambush );
+			if( ambush.Trigger( player ) ) {
+				lock( AmbushManager.MyLock ) {
+					this.ActiveAmbushes.Add( ambush );
+				}
 			}
 
-			this.RemoveAmbush( ambush );
+			this.UnarmAmbush( ambush );
 		}
 	}
 }
