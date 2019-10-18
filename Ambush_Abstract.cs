@@ -13,6 +13,9 @@ namespace Ambushes {
 		public abstract void OnDeactivate();
 
 
+		public abstract bool Run();
+
+
 		public abstract void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo );
 
 

@@ -85,7 +85,7 @@ namespace Ambushes {
 				int y = tag.GetInt( "active_ambush_" + i + "_y" );
 				//bool isEntrapping = tag.GetBool( "active_ambush_" + i + "_istrap" );
 
-				this.ActiveAmbushes.Add( new CleanupOnlyAmbush(x, y) );
+				this.ActiveAmbushes.Add( new BrambleCleanupOnlyAmbush( x, y) );
 			}
 		}
 
@@ -105,13 +105,9 @@ namespace Ambushes {
 		////////////////
 		
 		internal void Update() {
-			bool isCleanedUp;
-
 			foreach( Ambush ambush in this.ActiveAmbushes.ToArray() ) {
-				ambush.Run( out isCleanedUp );
-
-				if( isCleanedUp ) {
-					ambush.End();
+				if( ambush.Run() ) {
+					ambush.OnDeactivate();
 					this.ActiveAmbushes.Remove( ambush );
 				}
 			}

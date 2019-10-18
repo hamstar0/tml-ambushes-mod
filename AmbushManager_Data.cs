@@ -16,7 +16,7 @@ namespace Ambushes {
 
 		public void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 			foreach( Ambush ambush in this.ActiveAmbushes ) {
-				if( ambush.TriggerPlayer == player.whoAmI ) {
+				if( ambush.TriggeringPlayer == player.whoAmI ) {
 					ambush.EditSpawnData( player, ref spawnRate, ref maxSpawns );
 				}
 			}

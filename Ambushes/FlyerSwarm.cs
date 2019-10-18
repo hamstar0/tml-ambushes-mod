@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class FlyerSwarmAmbush : BrambleEnclosureAmbush {
-		public FlyerSwarmAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
+		public FlyerSwarmAmbush( int tileX, int tileY, bool isEntrapping ) : base( tileX, tileY, isEntrapping ) {
 		}
 
 
@@ -15,7 +15,7 @@ namespace Ambushes.Ambushes {
 		public override void OnDeactivate() {
 		}
 
-		////
+		////////////////
 
 		public override void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}

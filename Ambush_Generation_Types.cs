@@ -1,7 +1,7 @@
-﻿using HamstarHelpers.Helpers.Debug;
+﻿using Ambushes.Ambushes;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.TModLoader;
 using System;
-using Terraria;
 
 
 namespace Ambushes {
@@ -29,27 +29,34 @@ namespace Ambushes {
 
 		public static Ambush CreateRandomFloodType( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+
+			return new FloodAmbush( tileX, tileY, isEntrapping );
 		}
 
 		public static Ambush CreateRandomBrambleWallType ( int tileX, int tileY ) {
-			bool isEntrapping = false;
+			return new BrambleWallAmbush( tileX, tileY );
 		}
 
 		public static Ambush CreateRandomFlyerSwarmType( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+
+			return new FlyerSwarmAmbush( tileX, tileY, isEntrapping );
 		}
 
 		public static Ambush CreateRandomWormsInfestationType( int tileX, int tileY ) {
-
+			return new WormsInfestationAmbush( tileX, tileY, false );
 		}
 
 		public static Ambush CreateRandomSkeletonRaidersType( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
 
+			return new SkeletonRaidersAmbush( tileX, tileY, isEntrapping );
 		}
 
 		public static Ambush CreateRandomMinibossType( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+
+			return new MinibossAmbush( tileX, tileY, isEntrapping );
 
 		}
 	}

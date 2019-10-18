@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class BrambleWallAmbush : Ambush {
+	class BrambleWallAmbush : BrambleAmbush {
 		public BrambleWallAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
 		}
 
@@ -25,7 +25,15 @@ namespace Ambushes.Ambushes {
 		public override void OnDeactivate() {
 		}
 
-		////
+
+		////////////////
+
+		public override bool Run() {
+			return base.Run();
+		}
+
+
+		////////////////
 
 		public override void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}

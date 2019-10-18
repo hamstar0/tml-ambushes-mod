@@ -1,13 +1,12 @@
-﻿using Ambushes.Tiles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class CleanupOnlyAmbush : Ambush {
-		public CleanupOnlyAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
+	class BrambleCleanupOnlyAmbush : BrambleAmbush {
+		public BrambleCleanupOnlyAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
 		}
 
 
@@ -20,7 +19,15 @@ namespace Ambushes.Ambushes {
 		public override void OnDeactivate() {
 		}
 
-		////
+
+		////////////////
+
+		public override bool Run() {
+			return base.Run();
+		}
+
+
+		////////////////
 
 		public override void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}

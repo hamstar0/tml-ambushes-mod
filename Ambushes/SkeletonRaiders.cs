@@ -6,16 +6,16 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class SkeletonRaidersAmbush : BrambleEnclosureAmbush {
-		public SkeletonRaidersAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
+		public SkeletonRaidersAmbush( int tileX, int tileY, bool isEntrapping ) : base( tileX, tileY, isEntrapping ) {
 		}
 
 
-		////
+		////////////////
 
 		public override void OnDeactivate() {
 		}
 
-		////
+		////////////////
 
 		public override void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}

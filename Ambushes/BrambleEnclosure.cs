@@ -2,12 +2,18 @@
 using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class BrambleEnclosureAmbush : Ambush {
-		public BrambleEnclosureAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
+	abstract class BrambleEnclosureAmbush : BrambleAmbush {
+		public bool IsEntrapping { get; private set; }
+
+
+
+		////////////////
+
+		public BrambleEnclosureAmbush( int tileX, int tileY, bool isEntrapping ) : base( tileX, tileY ) {
+			this.IsEntrapping = isEntrapping;
 		}
 
 
@@ -25,12 +31,15 @@ namespace Ambushes.Ambushes {
 		public override void OnDeactivate() {
 		}
 
-		////
 
-		public override void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
-		}
+		////////////////
 
-		public override void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override bool Run() {
+			if( !this.IsEntrapping ) {
+				return true;
+			}
+
+			return base.Run();
 		}
 	}
 }
