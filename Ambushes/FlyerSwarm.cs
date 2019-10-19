@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
@@ -47,6 +48,33 @@ namespace Ambushes.Ambushes {
 		}
 
 		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+			pool.Clear();
+
+			if( spawnInfo.player.ZoneCorrupt ) {
+				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.CaveBat;
+				pool[npcid] = 5f;
+			} else if( spawnInfo.player.ZoneCrimson ) {
+				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.CaveBat;
+				pool[npcid] = 5f;
+			} else if( spawnInfo.player.ZoneHoly ) {
+				int npcid = Main.hardMode ? NPCID.IlluminantBat : NPCID.GiantBat;
+				pool[npcid] = 5f;
+			} else if( spawnInfo.player.ZoneJungle ) {
+				int npcid = Main.hardMode ? NPCID.GiantFlyingFox : NPCID.JungleBat;
+				pool[npcid] = 5f;
+			} else if( spawnInfo.player.ZoneSnow ) {
+				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.IceBat;
+				pool[npcid] = 5f;
+			} else if( spawnInfo.player.ZoneUndergroundDesert ) {
+				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.CaveBat;
+				pool[npcid] = 5f;
+			} else if( spawnInfo.player.ZoneUnderworldHeight ) {
+				int npcid = Main.hardMode ? NPCID.Lavabat : NPCID.Hellbat;
+				pool[npcid] = 5f;
+			} else {
+				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.CaveBat;
+				pool[npcid] = 5f;
+			}
 		}
 	}
 }

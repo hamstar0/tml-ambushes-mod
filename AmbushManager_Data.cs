@@ -9,7 +9,9 @@ namespace Ambushes {
 	partial class AmbushManager {
 		public void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			foreach( Ambush ambush in this.ActiveAmbushes ) {
-				ambush.EditSpawnPoolWhileRunning( pool, spawnInfo );
+				if( ambush.TriggeringPlayer == spawnInfo.player?.whoAmI ) {
+					ambush.EditSpawnPoolWhileRunning( pool, spawnInfo );
+				}
 			}
 		}
 
