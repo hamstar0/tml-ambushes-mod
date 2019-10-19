@@ -81,7 +81,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			pool.Clear();
 
 			if( !Main.expertMode ) {
@@ -122,7 +122,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		public override void PreAI( NPC npc ) {
+		public override void NPCPreAI( NPC npc ) {
 			if( SkeletonRaidersAmbush.AllSkeletons.Contains(npc.type) ) {
 				if( !this.ValidateRaider(npc) ) {
 					NPCHelpers.Remove( npc );

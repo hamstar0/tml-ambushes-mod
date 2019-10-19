@@ -43,7 +43,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditSpawnDataWhileRunning( Player player, ref int spawnRate, ref int maxSpawns ) {
+		public override void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 			spawnRate /= 15;
 			maxSpawns *= 15;
 		}

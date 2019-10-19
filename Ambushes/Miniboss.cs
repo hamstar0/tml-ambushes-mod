@@ -8,6 +8,11 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class MinibossAmbush : BrambleEnclosureAmbush {
+		private NPC Miniboss;
+
+
+		////////////////
+
 		public override float SpawnWeight => 0.25f;
 
 
@@ -38,6 +43,39 @@ namespace Ambushes.Ambushes {
 		}
 
 		public override void OnDeactivate() {
+		}
+
+
+		////////////////
+
+		public override void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
+			if( this.Miniboss == null ) {
+				spawnRate = 30;
+			}
+		}
+
+		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+			if( this.Miniboss == null ) {
+				return;
+			}
+
+			pool.Clear();
+			pool[ this.Miniboss.type ] = 1f;
+		}
+
+		public override void NPCPreAI( NPC npc ) {
+			if( this.Miniboss == null ) {
+				this.Miniboss = npc;
+
+				float sizeScale = 3f;
+				float lifeScale = 6f;
+				float damageScale = 3f;
+
+				npc.scale *= sizeScale;
+				npc.lifeMax = (int)( (float)npc.lifeMax * lifeScale );
+				npc.life = (int)( (float)npc.life * lifeScale );
+				npc.damage = (int)( (float)npc.damage * damageScale );
+			}
 		}
 	}
 }

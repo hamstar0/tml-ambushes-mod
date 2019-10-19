@@ -11,7 +11,7 @@ namespace Ambushes {
 		public void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			foreach( Ambush ambush in this.ActiveAmbushes ) {
 				if( ambush.TriggeringPlayer == spawnInfo.player?.whoAmI ) {
-					ambush.EditSpawnPoolWhileRunning( pool, spawnInfo );
+					ambush.EditNPCSpawnPool( pool, spawnInfo );
 				}
 			}
 		}
@@ -20,7 +20,7 @@ namespace Ambushes {
 		public void EditSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 			foreach( Ambush ambush in this.ActiveAmbushes ) {
 				if( ambush.TriggeringPlayer == player.whoAmI ) {
-					ambush.EditSpawnDataWhileRunning( player, ref spawnRate, ref maxSpawns );
+					ambush.EditNPCSpawnData( player, ref spawnRate, ref maxSpawns );
 				}
 			}
 		}
@@ -38,7 +38,7 @@ namespace Ambushes {
 				);
 
 				if( diff.LengthSquared() < minDistSqr ) {
-					ambush.PreAI( npc );
+					ambush.NPCPreAI( npc );
 				}
 			}
 		}

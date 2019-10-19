@@ -43,7 +43,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			int npcid;
 
 			pool.Clear();

@@ -29,12 +29,12 @@ namespace Ambushes {
 
 		////////////////
 
-		public virtual void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) { }
+		public virtual void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) { }
 
 
-		public virtual void EditSpawnDataWhileRunning( Player player, ref int spawnRate, ref int maxSpawns ) { }
+		public virtual void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) { }
 
 
-		public virtual void PreAI( NPC npc ) { }
+		public virtual void NPCPreAI( NPC npc ) { }
 	}
 }
