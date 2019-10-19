@@ -47,8 +47,5 @@ namespace Ambushes.Ambushes {
 			spawnRate /= 15;
 			maxSpawns *= 15;
 		}
-
-		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
-		}
 	}
 }

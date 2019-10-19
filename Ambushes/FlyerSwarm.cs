@@ -44,16 +44,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditSpawnDataWhileRunning( Player player, ref int spawnRate, ref int maxSpawns ) {
-		}
-
 		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			int npcid;
 
 			pool.Clear();
 
 			if( spawnInfo.player.ZoneCorrupt ) {
-				npcid = NPCID.CaveBat;
+				npcid = NPCID.Slimer;
 			} else if( spawnInfo.player.ZoneCrimson ) {
 				npcid = NPCID.CaveBat;
 			} else if( spawnInfo.player.ZoneHoly ) {
