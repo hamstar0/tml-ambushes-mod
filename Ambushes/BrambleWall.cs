@@ -59,12 +59,6 @@ namespace Ambushes.Ambushes {
 			return AmbushesMod.Config.BrambleWallTickDurationUntilErosionBegin;
 		}
 
-		////////////////
-
-		public override bool Run() {
-			return base.Run();
-		}
-
 
 		////////////////
 

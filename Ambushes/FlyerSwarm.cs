@@ -48,32 +48,50 @@ namespace Ambushes.Ambushes {
 		}
 
 		public override void EditSpawnPoolWhileRunning( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+			int npcid;
+
 			pool.Clear();
 
 			if( spawnInfo.player.ZoneCorrupt ) {
-				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.CaveBat;
-				pool[npcid] = 5f;
+				npcid = NPCID.CaveBat;
 			} else if( spawnInfo.player.ZoneCrimson ) {
-				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.CaveBat;
-				pool[npcid] = 5f;
+				npcid = NPCID.CaveBat;
 			} else if( spawnInfo.player.ZoneHoly ) {
-				int npcid = Main.hardMode ? NPCID.IlluminantBat : NPCID.GiantBat;
-				pool[npcid] = 5f;
+				npcid = NPCID.GiantBat;
 			} else if( spawnInfo.player.ZoneJungle ) {
-				int npcid = Main.hardMode ? NPCID.GiantFlyingFox : NPCID.JungleBat;
-				pool[npcid] = 5f;
+				npcid = NPCID.JungleBat;
 			} else if( spawnInfo.player.ZoneSnow ) {
-				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.IceBat;
-				pool[npcid] = 5f;
+				npcid = NPCID.IceBat;
 			} else if( spawnInfo.player.ZoneUndergroundDesert ) {
-				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.CaveBat;
-				pool[npcid] = 5f;
+				npcid = NPCID.CaveBat;
 			} else if( spawnInfo.player.ZoneUnderworldHeight ) {
-				int npcid = Main.hardMode ? NPCID.Lavabat : NPCID.Hellbat;
-				pool[npcid] = 5f;
+				npcid = NPCID.Hellbat;
 			} else {
-				int npcid = Main.hardMode ? NPCID.GiantBat : NPCID.CaveBat;
-				pool[npcid] = 5f;
+				npcid = NPCID.CaveBat;
+			}
+
+			pool[npcid] = Main.hardMode ? 4f : 5f;
+
+			if( Main.hardMode ) {
+				if( spawnInfo.player.ZoneCorrupt ) {
+					npcid = NPCID.GiantBat;
+				} else if( spawnInfo.player.ZoneCrimson ) {
+					npcid = NPCID.GiantBat;
+				} else if( spawnInfo.player.ZoneHoly ) {
+					npcid = NPCID.IlluminantBat;
+				} else if( spawnInfo.player.ZoneJungle ) {
+					npcid = NPCID.GiantFlyingFox;
+				} else if( spawnInfo.player.ZoneSnow ) {
+					npcid = NPCID.GiantBat;
+				} else if( spawnInfo.player.ZoneUndergroundDesert ) {
+					npcid = NPCID.GiantBat;
+				} else if( spawnInfo.player.ZoneUnderworldHeight ) {
+					npcid = NPCID.Lavabat;
+				} else {
+					npcid = NPCID.GiantBat;
+				}
+
+				pool[npcid] = 1f;
 			}
 		}
 	}
