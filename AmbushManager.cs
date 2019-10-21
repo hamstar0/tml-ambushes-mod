@@ -107,7 +107,7 @@ namespace Ambushes {
 		internal void Update() {
 			foreach( Ambush ambush in this.ActiveAmbushes.ToArray() ) {
 				if( ambush.Run() ) {
-					ambush.OnDeactivate();
+					ambush.Deactivate();
 					this.ActiveAmbushes.Remove( ambush );
 				}
 			}

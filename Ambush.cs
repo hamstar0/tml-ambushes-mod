@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Tiles;
+using HamstarHelpers.Services.OverlaySounds;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -14,6 +15,8 @@ namespace Ambushes {
 		////
 
 		public int TriggeringPlayer { get; private set; } = -1;
+
+		public bool IsEnded { get; internal set; } = false;
 
 		////
 
@@ -31,6 +34,14 @@ namespace Ambushes {
 
 		////////////////
 
+		internal void Deactivate() {
+			this.IsEnded = true;
+			this.OnDeactivate();
+		}
+
+
+		////////////////
+
 		public bool Trigger( Player player ) {
 			(int x, int y)? point = TileFinderHelpers.GetNearestTile( this.TileX, this.TileY, TilePattern.AbsoluteAir, 8 );
 			if( !point.HasValue ) {
@@ -39,6 +50,10 @@ namespace Ambushes {
 			}
 
 			this.TriggeringPlayer = player.whoAmI;
+
+			if( player.whoAmI == Main.myPlayer ) {
+				OverlaySound.Create( "Sounds/LowAmbushBGM", 60, 463, 0, -1, () => (1f, this.IsEnded) );
+			}
 
 			return this.OnActivate( point.Value.x, point.Value.y );
 		}
