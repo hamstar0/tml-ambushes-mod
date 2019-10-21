@@ -5,6 +5,7 @@ using HamstarHelpers.Helpers.Tiles;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 
 
 namespace Ambushes {
@@ -16,10 +17,14 @@ namespace Ambushes {
 
 			var edgeTileQueue = new Dictionary<int, ISet<int>>();
 			var chartedTiles = new Dictionary<int, ISet<int>>();
+			var dungeonWalls = new HashSet<int>( TileWallHelpers.UnsafeDungeonWallTypes );
+			dungeonWalls.Add( WallID.LihzahrdBrickUnsafe );
 
 			TilePattern pattern = new TilePattern( new TilePatternBuilder {
 				IsSolid = false,
-				IsActuated = false
+				IsActuated = false,
+				MaximumBrightness = 0.5f,
+				CustomCheck = (x, y) => !dungeonWalls.Contains(Main.tile[x,y].wall)
 			} );
 			int maxDistSqr = 50 * 50;
 			int minNeededAirTiles = 32 * 32;
@@ -34,8 +39,6 @@ namespace Ambushes {
 						if( ((distX * distX) + (distY * distY)) > maxDistSqr ) {
 							continue;
 						}
-
-						var eTile = Framing.GetTileSafely( eTileX, eTileY );
 
 						if( pattern.Check(eTileX, eTileY) ) {
 							if( !chartedTiles.ContainsKey(eTileX) || !chartedTiles[eTileX].Contains(eTileY) ) {

@@ -32,6 +32,7 @@ namespace Ambushes {
 		}
 
 		public override void Unload() {
+			Ambush.OnModsUnload();
 			AmbushesMod.Instance = null;
 		}
 
