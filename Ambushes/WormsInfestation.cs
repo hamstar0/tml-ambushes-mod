@@ -1,5 +1,4 @@
-﻿using HamstarHelpers.Helpers.TModLoader;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -8,7 +7,7 @@ using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class WormsInfestationAmbush : BrambleEnclosureAmbush {
+	class WormsInfestationAmbush : MobAmbush {
 		public override float SpawnWeight => 0.5f;
 
 
@@ -31,6 +30,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
+		public override int GetSpawnsDuration() {
+			return this.GetBrambleDuration();
+		}
+
+
+		////////////////
+
 		public override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "The earth trembles...", Color.DarkOrange );
 
@@ -43,7 +49,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditNPCSpawnPoolForMobs( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			int npcid;
 
 			pool.Clear();

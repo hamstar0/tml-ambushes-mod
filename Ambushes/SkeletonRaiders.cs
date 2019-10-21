@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class SkeletonRaidersAmbush : BrambleEnclosureAmbush {
+	class SkeletonRaidersAmbush : MobAmbush {
 		public static readonly ISet<int> NormalPreHardModeSkeletons;
 		public static readonly ISet<int> ExpertPreHardModeSkeletons;
 		public static readonly ISet<int> HardModeSkeletons;
@@ -69,6 +69,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
+		public override int GetSpawnsDuration() {
+			return this.GetBrambleDuration();
+		}
+
+
+		////////////////
+
 		public override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "Death from above!", Color.DarkOrange );
 
@@ -81,7 +88,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditNPCSpawnPoolForMobs( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			pool.Clear();
 
 			if( !Main.expertMode ) {
@@ -122,7 +129,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		public override void NPCPreAI( NPC npc ) {
+		public override void NPCPreAIForMobs( NPC npc ) {
 			if( SkeletonRaidersAmbush.AllSkeletons.Contains(npc.type) ) {
 				if( !this.ValidateRaider(npc) ) {
 					NPCHelpers.Remove( npc );

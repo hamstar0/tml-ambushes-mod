@@ -1,13 +1,11 @@
 ﻿using HamstarHelpers.Helpers.TModLoader;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using Terraria;
-using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class FloodAmbush : BrambleEnclosureAmbush {
+	class FloodAmbush : MobAmbush {
 		public override float SpawnWeight => 2f;
 
 
@@ -31,6 +29,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
+		public override int GetSpawnsDuration() {
+			return this.GetBrambleDuration();
+		}
+
+
+		////////////////
+
 		public override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "The locals are alerted to your presence.", Color.DarkOrange );
 
@@ -43,7 +48,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
+		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
 			spawnRate /= 15;
 			maxSpawns *= 15;
 		}

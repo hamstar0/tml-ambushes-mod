@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class MinibossAmbush : BrambleEnclosureAmbush {
+	class MinibossAmbush : MobAmbush {
 		private NPC Miniboss;
 
 
@@ -36,6 +36,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
+		public override int GetSpawnsDuration() {
+			return this.GetBrambleDuration();
+		}
+
+
+		////////////////
+
 		public override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "An imposing presence approaches...", Color.DarkOrange );
 
@@ -48,13 +55,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
+		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
 			if( this.Miniboss == null ) {
 				spawnRate = 30;
 			}
 		}
 
-		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditNPCSpawnPoolForMobs( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			if( this.Miniboss == null ) {
 				return;
 			}
@@ -63,7 +70,7 @@ namespace Ambushes.Ambushes {
 			pool[ this.Miniboss.type ] = 1f;
 		}
 
-		public override void NPCPreAI( NPC npc ) {
+		public override void NPCPreAIForMobs( NPC npc ) {
 			if( this.Miniboss == null ) {
 				this.Miniboss = npc;
 

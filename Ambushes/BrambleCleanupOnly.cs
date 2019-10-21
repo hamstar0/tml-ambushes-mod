@@ -12,6 +12,9 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
+		public BrambleCleanupOnlyAmbush() : base( 0, 0 ) {
+		}
+
 		public BrambleCleanupOnlyAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
 		}
 
@@ -34,7 +37,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override int GetRunDuration() {
+		public override int GetBrambleDuration() {
 			return 0;
 		}
 

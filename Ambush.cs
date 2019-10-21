@@ -4,6 +4,7 @@ using HamstarHelpers.Helpers.DotNET;
 using HamstarHelpers.Helpers.DotNET.Reflection;
 using HamstarHelpers.Helpers.Tiles;
 using HamstarHelpers.Helpers.TModLoader;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace Ambushes {
 		////////////////
 
 		internal static void OnModsLoad() {
-			IEnumerable<Type> ambushTypes = ReflectionHelpers.GetAllAvailableSubTypesFromMods( typeof(Ambush) );
+			IEnumerable<Type> ambushTypes = ReflectionHelpers.GetAllAvailableSubTypesFromMods( typeof(Ambush) )
+				.Where( t => !t.IsAbstract );
 
 			Ambush.StaticInstances = ambushTypes.SafeSelect(
 				ambushType => (Ambush)Activator.CreateInstance(ambushType, true)
@@ -59,6 +61,10 @@ namespace Ambushes {
 		////
 
 		public int TriggeringPlayer { get; private set; } = -1;
+
+		////
+
+		public Vector2 WorldPosition => new Vector2( this.TileX << 4, this.TileY << 4 );
 
 
 

@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class FlyerSwarmAmbush : BrambleEnclosureAmbush {
+	class FlyerSwarmAmbush : MobAmbush {
 		public override float SpawnWeight => 0.5f;
 
 
@@ -32,6 +32,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
+		public override int GetSpawnsDuration() {
+			return this.GetBrambleDuration();
+		}
+
+
+		////////////////
+
 		public override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "The air beats wildly with the flapping of wings...", Color.DarkOrange );
 
@@ -44,7 +51,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+		public override void EditNPCSpawnPoolForMobs( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			int npcid;
 
 			pool.Clear();

@@ -55,7 +55,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override int GetRunDuration() {
+		public override int GetBrambleDuration() {
 			return AmbushesMod.Config.BrambleWallTickDurationUntilErosionBegin;
 		}
 	}

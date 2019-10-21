@@ -18,14 +18,14 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public abstract int GetRunDuration();
+		public abstract int GetBrambleDuration();
 
 
 		////////////////
 
 		public override bool Run() {
 			bool cleanupComplete = false;
-			int duration = this.GetRunDuration();
+			int duration = this.GetBrambleDuration();
 
 			if( this.ElapsedTicks > duration ) {
 				this.RunErode();
