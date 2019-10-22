@@ -20,8 +20,7 @@ namespace Ambushes.Ambushes {
 		protected WormsInfestationAmbush( int tileX, int tileY, bool isEntrapping ) : base( tileX, tileY, isEntrapping ) {
 		}
 
-
-		////////////////
+		////
 
 		protected override Ambush Clone( int tileX, int tileY ) {
 			return new WormsInfestationAmbush( tileX, tileY, false );

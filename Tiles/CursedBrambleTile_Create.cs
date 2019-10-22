@@ -6,6 +6,7 @@ using HamstarHelpers.Services.Timers;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
@@ -46,14 +47,12 @@ namespace Ambushes.Tiles {
 
 			if( lastIdx > 0 ) {
 				lastIdx--;
-				Timers.SetTimer(
-					"AmbushesEntrapAsync_" + randTilePositions[lastIdx].TileX + "_" + randTilePositions[lastIdx].TileY,
-					2,
-					() => {
-						CursedBrambleTile.CreateBramblesAtAsync( randTilePositions, lastIdx );
-						return false;
-					}
-				);
+
+				string timerName = "AmbushesEntrapAsync_" + randTilePositions[lastIdx].TileX + "_" + randTilePositions[lastIdx].TileY;
+				Timers.SetTimer( timerName, 2, () => {
+					CursedBrambleTile.CreateBramblesAtAsync( randTilePositions, lastIdx );
+					return false;
+				} );
 			}
 		}
 
@@ -86,8 +85,18 @@ namespace Ambushes.Tiles {
 					Tile tile = Framing.GetTileSafely( x, y );
 
 					if( tile == null || !tile.active() ) {
-						TileHelpers.PlaceTile( x, y, brambleTileType );
-						bramblesPlaced++;
+						if( TileHelpers.PlaceTile(x, y, brambleTileType) ) {
+							Tile newTile = Main.tile[x, y];
+							newTile.wire( tile.wire() );
+							newTile.wire2( tile.wire2() );
+							newTile.wire3( tile.wire3() );
+							newTile.wire4( tile.wire4() );
+							newTile.liquid = tile.liquid;
+							newTile.liquidType( tile.liquidType() );
+							NetMessage.SendData( MessageID.TileChange, -1, -1, null, 1, (float)x, (float)y, (float)brambleTileType, 0, 0, 0 );
+
+							bramblesPlaced++;
+						}
 					}
 				}
 			}

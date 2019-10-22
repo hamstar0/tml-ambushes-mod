@@ -51,7 +51,7 @@ namespace Ambushes {
 		////////////////
 
 		public override void PostDrawFullscreenMap( ref string mouseText ) {
-			if( !AmbushesMod.Config.DebugModeInfoMap ) { return; }
+			if( !AmbushesMod.Config.DebugModeMapCheat ) { return; }
 
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
 

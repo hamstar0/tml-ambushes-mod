@@ -14,13 +14,17 @@ namespace Ambushes.Tiles {
 
 			if( horizontal ) {
 				for( int x = 0; x < halfLen; x++ ) {
-					tilePositions.Set2D( x, tileY );
-					tilePositions.Set2D( -x, tileY );
+					int y = x < 5 ? -3 : 0;
+
+					tilePositions.Set2D( tileX + x, tileY + y );
+					tilePositions.Set2D( tileX - x, tileY + y );
 				}
 			} else {
 				for( int y = 0; y < halfLen; y++ ) {
-					tilePositions.Set2D( tileX, y );
-					tilePositions.Set2D( tileX, -y );
+					int x = y < 5 ? -3 : 0;
+
+					tilePositions.Set2D( tileX + x, tileY + y );
+					tilePositions.Set2D( tileX + x, tileY - y );
 				}
 			}
 

@@ -1,4 +1,5 @@
 ﻿using Ambushes.Tiles;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Players;
 using HamstarHelpers.Services.Timers;
 using System;
@@ -15,6 +16,7 @@ namespace Ambushes {
 		public override void PreUpdate() {
 			if( Main.netMode == 1 ) { return; }
 
+DebugHelpers.Print("mybright", Lighting.Brightness((int)(player.Center.X/16), (int)(player.Center.Y/16))+"", 20);
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
 			IList<Ambush> ambushes = myworld.AmbushMngr.GetAmbushesNear(
 				(int)this.player.position.X >> 4,

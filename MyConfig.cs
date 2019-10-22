@@ -18,8 +18,9 @@ namespace Ambushes {
 
 		[Header( "Debug settings" )]
 		public bool DebugModeInfo { get; set; } = false;
-		public bool DebugModeInfoMap { get; set; } = false;
+		public bool DebugModeMapCheat { get; set; } = false;
 		public bool DebugModeInfoBrambles { get; set; } = false;
+		public bool DebugModeInfoSpawns { get; set; } = false;
 
 
 		////
@@ -96,8 +97,8 @@ namespace Ambushes {
 
 
 		[Range( 0f, 1f )]
-		[DefaultValue( 0.8f )]
-		public float BrambleStickiness { get; set; } = 0.8f;
+		[DefaultValue( 0.65f )]
+		public float BrambleStickiness { get; set; } = 0.65f;
 
 		[Range( 1, 128 )]
 		[DefaultValue( 4 )]

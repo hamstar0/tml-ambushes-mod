@@ -50,11 +50,11 @@ namespace Ambushes {
 			}
 
 			this.TriggeringPlayer = player.whoAmI;
-
+			
 			if( player.whoAmI == Main.myPlayer ) {
-				OverlaySound.Create( "Sounds/LowAmbushBGM", 60, 463, 0, -1, () => (1f, this.IsEnded) );
+				//OverlaySound.Create( "Sounds/LowAmbushBGM", 60, 463, 0, -1, () => (1f, this.IsEnded) );
 			}
-
+			
 			return this.OnActivate( point.Value.x, point.Value.y );
 		}
 	}

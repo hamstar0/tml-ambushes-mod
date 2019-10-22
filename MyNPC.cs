@@ -1,5 +1,7 @@
-﻿using System;
+﻿using HamstarHelpers.Helpers.Debug;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -21,12 +23,26 @@ namespace Ambushes {
 		public override void EditSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
 			myworld.AmbushMngr.EditSpawnPool( pool, spawnInfo );
+
+			if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+				DebugHelpers.Print(
+					"SpawnsInfo",
+					string.Join(", ", pool.Select( kv=>kv.Key+": "+kv.Value.ToString("N3") ) ),
+					20 );
+			}
 		}
 
 
 		public override void EditSpawnRate( Player player, ref int spawnRate, ref int maxSpawns ) {
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
 			myworld.AmbushMngr.EditSpawnData( player, ref spawnRate, ref maxSpawns );
+
+			if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+				DebugHelpers.Print(
+					"SpawnsRates_"+player.whoAmI+" ("+player.name+")",
+					"Rate: "+spawnRate+", max: "+maxSpawns,
+					20 );
+			}
 		}
 
 		////

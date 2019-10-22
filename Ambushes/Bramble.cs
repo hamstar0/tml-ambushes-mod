@@ -42,15 +42,15 @@ namespace Ambushes.Ambushes {
 		////
 
 		private void RunErode() {
-			int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, radius );
+			int rad = AmbushesMod.Config.AmbushEntrapmentRadius + AmbushesMod.Config.BrambleThickness + 1;
+			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
 		}
 
 		private void RunCleanup( ref bool cleanupComplete ) {

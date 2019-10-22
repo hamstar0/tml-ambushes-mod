@@ -56,7 +56,7 @@ namespace Ambushes.Ambushes {
 
 		public sealed override void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
 			if( this.ElapsedTicks < this.GetSpawnsDuration() ) {
-				this.EditNPCSpawnData( player, ref spawnRate, ref maxSpawns );
+				this.EditNPCSpawnDataForMobs( player, ref spawnRate, ref maxSpawns );
 			}
 		}
 

@@ -1,37 +1,37 @@
 ﻿using Ambushes.Tiles;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.TModLoader;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
 	class BrambleWallAmbush : BrambleAmbush {
 		protected bool IsHorizontal;
 
+
 		////////////////
 
-		public override float SpawnWeight => 3f;
+		public override float SpawnWeight => 2f;
 
 
 
 		////////////////
 
 		private BrambleWallAmbush() : base( 0, 0 ) {
-			this.IsHorizontal = false;
+			this.IsHorizontal = TmlHelpers.SafelyGetRand().NextBool();
 		}
 
 		protected BrambleWallAmbush( int tileX, int tileY, bool isHorizontal ) : base( tileX, tileY ) {
 			this.IsHorizontal = isHorizontal;
 		}
 
-
-		////////////////
+		////
 
 		protected override Ambush Clone( int tileX, int tileY ) {
-			bool isHorizontal = TmlHelpers.SafelyGetRand().Next( 1 ) == 0;
+			bool isHorizontal = TmlHelpers.SafelyGetRand().NextBool();
 			return new BrambleWallAmbush( tileX, tileY, isHorizontal );
 		}
 

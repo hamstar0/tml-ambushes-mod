@@ -9,13 +9,19 @@ using Terraria;
 namespace Ambushes {
 	partial class AmbushManager {
 		public IEnumerable<Ambush> GetAllAmbushes() {
+			IList<Ambush> ambushes;
+
 			lock( AmbushManager.MyLock ) {
+				ambushes = new List<Ambush>( this.ArmedAmbushes.Count );
+
 				foreach( IDictionary<int, Ambush> otherTileYs in this.ArmedAmbushes.Values ) {
 					foreach( Ambush ambush in otherTileYs.Values ) {
-						yield return ambush;
+						ambushes.Add( ambush );
 					}
 				}
 			}
+
+			return ambushes;
 		}
 
 		public IList<Ambush> GetAmbushesNear( int tileX, int tileY ) {
@@ -23,7 +29,7 @@ namespace Ambushes {
 			int segX = tileX / radius;
 			int segY = tileY / radius;
 			IList<Ambush> ambushes = new List<Ambush>();
-
+			
 			lock( AmbushManager.MyLock ) {
 				if( !this.ArmedAmbushSegs.ContainsKey( segX - 1 ) &&
 					!this.ArmedAmbushSegs.ContainsKey( segX ) &&
@@ -52,7 +58,7 @@ namespace Ambushes {
 
 		public void ArmAmbush( Ambush ambush ) {
 			int radius = AmbushesMod.Config.AmbushTriggerRadiusTiles;
-
+			
 			lock( AmbushManager.MyLock ) {
 				this.ArmedAmbushes.Set2D( ambush.TileX, ambush.TileY, ambush );
 
@@ -74,13 +80,14 @@ namespace Ambushes {
 				int radius = AmbushesMod.Config.AmbushTriggerRadiusTiles;
 
 				if( foundX ) {
-					foundY = this.ArmedAmbushes[ambush.TileX].Remove( ambush.TileY );
+					foundY = this.ArmedAmbushes[ambush.TileX]
+						.Remove( ambush.TileY );
 				}
 
 				if( !foundX || !foundY ) {
 					if( AmbushesMod.Config.DebugModeInfo ) {
-						LogHelpers.WarnOnce( "Isolated ambush triggered at " + ambush.TileX + ":" + ambush.TileY + " (" + foundX + "," + foundY + ")" );
-						Main.NewText( "Isolated ambush triggered at " + ambush.TileX + ":" + ambush.TileY, Color.Yellow );
+						LogHelpers.WarnOnce( "Isolated ambush found at " + ambush.TileX + ":" + ambush.TileY + " (" + foundX + "," + foundY + ")" );
+						Main.NewText( "Isolated ambush found at " + ambush.TileX + ":" + ambush.TileY, Color.Yellow );
 					}
 				}
 
@@ -107,7 +114,7 @@ namespace Ambushes {
 					this.ActiveAmbushes.Add( ambush );
 				}
 			}
-
+			
 			this.UnarmAmbush( ambush );
 		}
 	}

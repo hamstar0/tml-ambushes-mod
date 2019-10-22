@@ -18,8 +18,7 @@ namespace Ambushes.Ambushes {
 		protected FloodAmbush( int tileX, int tileY, bool isEntrapping ) : base( tileX, tileY, isEntrapping ) {
 		}
 
-
-		////////////////
+		////
 
 		protected override Ambush Clone( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
