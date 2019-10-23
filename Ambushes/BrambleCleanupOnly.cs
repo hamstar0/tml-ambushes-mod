@@ -6,6 +6,8 @@ namespace Ambushes.Ambushes {
 	class BrambleCleanupOnlyAmbush : BrambleAmbush {
 		public override float SpawnWeight => 0f;
 
+		public override bool PlaysMusic => false;
+
 
 
 		////////////////

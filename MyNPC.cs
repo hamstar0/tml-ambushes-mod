@@ -13,6 +13,10 @@ namespace Ambushes {
 
 		////////////////
 
+		public bool IsMiniboss { get; private set; }
+
+		////
+
 		public override bool InstancePerEntity => true;
 		public override bool CloneNewInstances => false;
 
@@ -55,7 +59,33 @@ namespace Ambushes {
 				myworld.AmbushMngr.PreAI( npc );
 			}
 
+			if( AmbushesMod.Config.DebugModeMapCheat ) {
+				if( this.IsMiniboss ) {
+					AmbushesMod.Instance.LatestMinibossWho = npc.whoAmI;
+				}
+			}
+
 			return true;
+		}
+
+
+		////////////////
+
+		public void SetAsMiniboss( NPC npc ) {
+			if( this.IsMiniboss ) {
+				LogHelpers.Warn( "NPC "+npc.TypeName+" is already a miniboss." );
+				return;
+			}
+			this.IsMiniboss = true;
+
+			float sizeScale = 3f;
+			float lifeScale = 6f;
+			float damageScale = 3f;
+
+			npc.scale *= sizeScale;
+			npc.lifeMax = (int)( (float)npc.lifeMax * lifeScale );
+			npc.life = (int)( (float)npc.life * lifeScale );
+			npc.damage = (int)( (float)npc.damage * damageScale );
 		}
 	}
 }

@@ -4,10 +4,17 @@ using HamstarHelpers.Helpers.HUD;
 using HamstarHelpers.Helpers.Debug;
 using Microsoft.Xna.Framework;
 using ReLogic.Graphics;
+using System;
 
 
 namespace Ambushes {
 	public partial class AmbushesMod : Mod {
+		internal int LatestMinibossWho = -1;
+
+
+
+		////////////////
+
 		public override void PostDrawFullscreenMap( ref string mouseText ) {
 			if( !AmbushesMod.Config.DebugModeMapCheat ) { return; }
 
@@ -33,6 +40,25 @@ namespace Ambushes {
 					overMapData.Item1,
 					Color.Red
 				);
+			}
+
+			if( this.LatestMinibossWho != -1 ) {
+				NPC npc = Main.npc[this.LatestMinibossWho];
+
+				if( npc == null || !npc.active ) {
+					this.LatestMinibossWho = -1;
+				} else {
+					Tuple<Vector2, bool> minibossPosData = HUDMapHelpers.GetFullMapScreenPosition( npc.position );
+
+					if( minibossPosData.Item2 ) {
+						Main.spriteBatch.DrawString(
+							Main.fontMouseText,
+							"X",
+							minibossPosData.Item1,
+							Color.Green
+						);
+					}
+				}
 			}
 		}
 	}

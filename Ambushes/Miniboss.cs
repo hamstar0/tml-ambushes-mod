@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Helpers.TModLoader;
+using HamstarHelpers.Helpers.World;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -7,13 +8,18 @@ using Terraria.ModLoader;
 
 
 namespace Ambushes.Ambushes {
-	class MinibossAmbush : MobAmbush {
-		private NPC Miniboss;
+	class MinibossAmbush : BrambleEnclosureAmbush {
+		private int MinibossWho = -1;
 
 
 		////////////////
 
+		public bool IsEncountered { get; private set; } = false;
+
+		////
+
 		public override float SpawnWeight => 0.25f;
+		public override bool PlaysMusic => this.IsEncountered;
 
 
 
@@ -29,21 +35,28 @@ namespace Ambushes.Ambushes {
 
 		protected override Ambush CloneRandomized( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+			isEntrapping = isEntrapping && !WorldHelpers.IsWithinUnderworld( new Vector2( tileX << 4, tileY << 4 ) );
+
 			return new MinibossAmbush( tileX, tileY, isEntrapping );
 		}
 
 
 		////////////////
 
-		public override int GetSpawnsDuration() {
-			return this.GetBrambleDuration();
+		protected override bool RunUntil() {
+			NPC npc = null;
+			if( this.MinibossWho != -1 ) {
+				npc = Main.npc[ this.MinibossWho ];
+			}
+
+			return (this.MinibossWho != -1 && !npc.active) && base.RunUntil();
 		}
 
 
 		////////////////
 
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
-			Main.NewText( "An imposing presence approaches...", Color.DarkOrange );
+			Main.NewText( "An imposing presence lurks somewhere nearby...", Color.DarkOrange );
 
 			return base.OnActivate( clearTileX, clearTileY );
 		}
@@ -54,33 +67,54 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
-			if( this.Miniboss == null ) {
+		public override void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
+			if( this.MinibossWho == -1 ) {
 				spawnRate = 30;
 			}
 		}
 
-		public override void EditNPCSpawnPoolForMobs( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
-			if( this.Miniboss == null ) {
+		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {
+			if( this.MinibossWho == -1 ) {
 				return;
 			}
 
-			pool.Clear();
-			pool[ this.Miniboss.type ] = 1f;
+			NPC npc = Main.npc[this.MinibossWho];
+
+			if( npc != null && npc.active && npc.GetGlobalNPC<AmbushesNPC>().IsMiniboss ) {
+				pool.Clear();
+				pool[npc.type] = 1f;
+			}
 		}
 
-		public override void NPCPreAIForMobs( NPC npc ) {
-			if( this.Miniboss == null ) {
-				this.Miniboss = npc;
+		protected override void NPCPreAI( NPC npc ) {
+			if( this.MinibossWho == -1 ) {
+				this.MinibossWho = npc.whoAmI;
+				npc.GetGlobalNPC<AmbushesNPC>().SetAsMiniboss( npc );
+			}
 
-				float sizeScale = 3f;
-				float lifeScale = 6f;
-				float damageScale = 3f;
+			if( this.MinibossWho == npc.whoAmI ) {
+				this.CheckPlayerEncounter( npc );
+			}
+		}
 
-				npc.scale *= sizeScale;
-				npc.lifeMax = (int)( (float)npc.lifeMax * lifeScale );
-				npc.life = (int)( (float)npc.life * lifeScale );
-				npc.damage = (int)( (float)npc.damage * damageScale );
+
+		////
+
+		private void CheckPlayerEncounter( NPC npc ) {
+			if( this.IsEncountered ) {
+				return;
+			}
+
+			Player player = Main.player[this.TriggeringPlayer];
+			if( player == null || !player.active || player.dead ) {
+				return;
+			}
+
+			int maxDistSqr = 24 * 16;
+			maxDistSqr *= maxDistSqr;
+
+			if( Vector2.DistanceSquared(npc.Center, player.Center) < maxDistSqr ) {
+				this.IsEncountered = true;
 			}
 		}
 	}

@@ -28,8 +28,7 @@ namespace Ambushes {
 			}
 			
 			Ambush.AdjustAmbushTileCenter( randTileX, ref randTileY );
-			Ambush ambush = Ambush.CreateRandomType( randTileX, randTileY );
-			return ambush;
+			return Ambush.CreateRandomType( randTileX, randTileY );
 		}
 
 
@@ -111,6 +110,8 @@ namespace Ambushes {
 				if( !this.HasNearbyAmbushes(ambush.TileX, ambush.TileY) ) {
 					break;
 				}
+
+				ambush = null;
 			} while( attempts++ < maxNonNeighborAttempts );
 
 			return ambush;

@@ -7,6 +7,12 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	abstract class MobAmbush : BrambleEnclosureAmbush {
+		public override bool PlaysMusic => this.IsEntrapping;
+
+
+
+		////////////////
+
 		protected MobAmbush( int tileX, int tileY, bool isEntrapping ) : base( tileX, tileY, isEntrapping ) {
 		}
 
@@ -85,7 +91,7 @@ namespace Ambushes.Ambushes {
 		public virtual void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}
 
-		public virtual void NPCPreAIForMobs( NPC npc ) {
+		protected virtual void NPCPreAIForMobs( NPC npc ) {
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Tiles;
+using HamstarHelpers.Services.OverlaySounds;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -63,8 +64,9 @@ namespace Ambushes {
 
 			this.TriggeringPlayer = player.whoAmI;
 			
-			if( player.whoAmI == Main.myPlayer ) {
-				//OverlaySound.Create( "Sounds/LowAmbushBGM", 60, 463, 0, -1, () => (1f, this.IsEnded) );
+			if( player.whoAmI == Main.myPlayer && this.PlaysMusic ) {
+				OverlaySound sound = OverlaySound.Create( "Sounds/LowAmbushBGM", 60, 463, 0, -1, () => (1f, this.IsEnded) );
+				sound.Play();
 			}
 			
 			return this.OnActivate( point.Value.x, point.Value.y );

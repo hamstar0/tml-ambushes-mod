@@ -16,6 +16,8 @@ namespace Ambushes.Ambushes {
 
 		public override float SpawnWeight => 2f;
 
+		public override bool PlaysMusic => false;
+
 
 
 		////////////////

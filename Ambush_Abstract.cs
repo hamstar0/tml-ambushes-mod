@@ -9,6 +9,8 @@ namespace Ambushes {
 	abstract partial class Ambush {
 		public abstract float SpawnWeight { get; }
 
+		public abstract bool PlaysMusic { get; }
+
 
 
 		////////////////

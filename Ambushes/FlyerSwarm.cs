@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Helpers.TModLoader;
+using HamstarHelpers.Helpers.World;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Ambushes.Ambushes {
 
 		protected override Ambush CloneRandomized( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+			isEntrapping = isEntrapping && !WorldHelpers.IsWithinUnderworld( new Vector2(tileX<<4, tileY<<4) );
+
 			return new FlyerSwarmAmbush( tileX, tileY, isEntrapping );
 		}
 
