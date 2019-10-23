@@ -30,19 +30,19 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		public override int GetSpawnsDuration() {
-			return this.GetBrambleDuration();
+			return this.GetBrambleDuration() / 2;
 		}
 
 
 		////////////////
 
-		public override bool OnActivate( int clearTileX, int clearTileY ) {
+		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "The earth trembles...", Color.DarkOrange );
 
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
-		public override void OnDeactivate() {
+		protected override void OnDeactivate() {
 		}
 
 

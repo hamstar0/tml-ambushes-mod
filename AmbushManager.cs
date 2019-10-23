@@ -16,8 +16,15 @@ namespace Ambushes {
 
 		////////////////
 
-		public static bool IsLocked => !Monitor.TryEnter( AmbushManager.MyLock );
-
+		public static bool IsLocked {
+			get {
+				if( Monitor.TryEnter( AmbushManager.MyLock ) ) {
+					Monitor.Exit( AmbushManager.MyLock );
+					return true;
+				}
+				return false;
+			}
+		}
 
 
 		////////////////
@@ -49,18 +56,6 @@ namespace Ambushes {
 			= new Dictionary<int, IDictionary<int, IList<Ambush>>>();
 
 		private ISet<Ambush> ActiveAmbushes = new HashSet<Ambush>();
-
-
-
-		////////////////
-
-		public int TotalAmbushes {
-			get {
-				lock( AmbushManager.MyLock ) {
-					return this.ArmedAmbushes.Count2D();
-				}
-			}
-		}
 
 
 
@@ -103,10 +98,19 @@ namespace Ambushes {
 
 
 		////////////////
-		
+
+		public int CountTotalAmbushes() {
+			lock( AmbushManager.MyLock ) {
+				return this.ArmedAmbushes.Count2D();
+			}
+		}
+
+
+		////////////////
+
 		internal void Update() {
 			foreach( Ambush ambush in this.ActiveAmbushes.ToArray() ) {
-				if( ambush.Run() ) {
+				if( ambush.InternalRunUntil() ) {
 					ambush.Deactivate();
 					this.ActiveAmbushes.Remove( ambush );
 				}

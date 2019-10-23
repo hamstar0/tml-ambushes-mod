@@ -97,8 +97,8 @@ namespace Ambushes {
 
 
 		[Range( 0f, 1f )]
-		[DefaultValue( 0.65f )]
-		public float BrambleStickiness { get; set; } = 0.65f;
+		[DefaultValue( 0.18f )]
+		public float BrambleStickiness { get; set; } = 0.18f;
 
 		[Range( 1, 128 )]
 		[DefaultValue( 4 )]

@@ -35,13 +35,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override bool OnActivate( int clearTileX, int clearTileY ) {
+		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "The locals are alerted to your presence.", Color.DarkOrange );
 
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
-		public override void OnDeactivate() {
+		protected override void OnDeactivate() {
 		}
 
 

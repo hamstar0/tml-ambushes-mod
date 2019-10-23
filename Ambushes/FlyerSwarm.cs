@@ -38,13 +38,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override bool OnActivate( int clearTileX, int clearTileY ) {
+		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "The air beats wildly with the flapping of wings...", Color.DarkOrange );
 
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
-		public override void OnDeactivate() {
+		protected override void OnDeactivate() {
 		}
 
 

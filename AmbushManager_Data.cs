@@ -38,7 +38,7 @@ namespace Ambushes {
 				);
 
 				if( diff.LengthSquared() < minDistSqr ) {
-					ambush.NPCPreAI( npc );
+					ambush.InternalNPCPreAI( npc );
 				}
 			}
 		}

@@ -26,7 +26,7 @@ namespace Ambushes {
 
 			if( AmbushesMod.Config.DebugModeInfoSpawns ) {
 				DebugHelpers.Print(
-					"SpawnsInfo",
+					"SpawnsInfo_"+spawnInfo.player.whoAmI+" ("+spawnInfo.player.name+")",
 					string.Join(", ", pool.Select( kv=>kv.Key+": "+kv.Value.ToString("N3") ) ),
 					20 );
 			}

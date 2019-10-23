@@ -48,7 +48,7 @@ namespace Ambushes {
 				}
 				counted += ambush.SpawnWeight;
 			}
-
+			
 			return randAmbush?.Clone( tileX, tileY );
 		}
 	}

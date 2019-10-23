@@ -1,4 +1,5 @@
 ﻿using Ambushes.Tiles;
+using HamstarHelpers.Helpers.Debug;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -23,11 +24,18 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override bool Run() {
+		protected override bool RunUntil() {
 			bool cleanupComplete = false;
 			int duration = this.GetBrambleDuration();
 
+DebugHelpers.Print( "Bramble.RunUntil_"+this.GetHashCode(), "duration: "+duration+", elapsed: "+this.ElapsedTicks, 20 );
 			if( this.ElapsedTicks > duration ) {
+				if( AmbushesMod.Config.DebugModeInfoBrambles ) {
+					if( this.ElapsedTicks == (duration + 1) ) {
+						Main.NewText( "Begun bramble cleanup at " + this.TileX + "," + this.TileY );
+					}
+				}
+
 				this.RunErode();
 
 				if( this.ElapsedTicks % 60 == 0 ) {
@@ -36,8 +44,10 @@ namespace Ambushes.Ambushes {
 			}
 
 			this.ElapsedTicks++;
+
 			return cleanupComplete;
 		}
+
 
 		////
 

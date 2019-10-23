@@ -76,13 +76,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override bool OnActivate( int clearTileX, int clearTileY ) {
+		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "Death from above!", Color.DarkOrange );
 
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
-		public override void OnDeactivate() {
+		protected override void OnDeactivate() {
 		}
 
 

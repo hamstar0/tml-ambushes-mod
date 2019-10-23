@@ -18,9 +18,19 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override bool Run() {
-			return base.Run()
-				|| (this.ElapsedTicks < this.GetSpawnsDuration() && this.ArePlayersNearby() );
+		protected override bool RunUntil() {
+			if( !base.RunUntil() ) {
+				return false;
+			}
+
+			bool spawnsEnded = (this.ElapsedTicks >= this.GetSpawnsDuration()) || !this.ArePlayersNearby();
+			if( spawnsEnded ) {
+				if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+					Main.NewText( "Ambush "+this.GetType().Name+" at "+this.TileX+","+this.TileY+" ended." );
+				}
+			}
+
+			return spawnsEnded;
 		}
 
 
@@ -60,9 +70,9 @@ namespace Ambushes.Ambushes {
 			}
 		}
 
-		public sealed override void NPCPreAI( NPC npc ) {
+		protected sealed override void NPCPreAI( NPC npc ) {
 			if( this.ElapsedTicks < this.GetSpawnsDuration() ) {
-				this.NPCPreAI( npc );
+				this.NPCPreAIForMobs( npc );
 			}
 		}
 

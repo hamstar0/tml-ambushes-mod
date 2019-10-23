@@ -18,13 +18,13 @@ namespace Ambushes {
 
 		////////////////
 
-		public abstract bool OnActivate( int clearTileX, int clearTileY );
+		protected abstract bool OnActivate( int clearTileX, int clearTileY );
 
 
-		public abstract void OnDeactivate();
+		protected abstract void OnDeactivate();
 
 
-		public abstract bool Run();
+		protected abstract bool RunUntil();
 
 
 		////////////////
@@ -35,6 +35,6 @@ namespace Ambushes {
 		public virtual void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) { }
 
 
-		public virtual void NPCPreAI( NPC npc ) { }
+		protected virtual void NPCPreAI( NPC npc ) { }
 	}
 }

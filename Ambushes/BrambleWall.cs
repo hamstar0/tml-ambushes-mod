@@ -38,7 +38,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override bool OnActivate( int clearTileX, int clearTileY ) {
+		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "Look out!", Color.Red );
 
 			int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
@@ -49,7 +49,7 @@ namespace Ambushes.Ambushes {
 			return true;
 		}
 
-		public override void OnDeactivate() {
+		protected override void OnDeactivate() {
 		}
 
 

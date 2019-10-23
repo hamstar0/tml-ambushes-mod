@@ -1,7 +1,6 @@
 ﻿using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Tiles;
-using HamstarHelpers.Services.OverlaySounds;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -37,6 +36,19 @@ namespace Ambushes {
 		internal void Deactivate() {
 			this.IsEnded = true;
 			this.OnDeactivate();
+		}
+
+
+		////////////////
+
+		internal bool InternalRunUntil() {
+			return this.RunUntil();
+		}
+
+		////
+
+		internal void InternalNPCPreAI( NPC npc ) {
+			this.NPCPreAI( npc );
 		}
 
 
