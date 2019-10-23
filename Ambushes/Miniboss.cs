@@ -27,7 +27,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		protected override Ambush Clone( int tileX, int tileY ) {
+		protected override Ambush CloneRandomized( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
 			return new MinibossAmbush( tileX, tileY, isEntrapping );
 		}

@@ -18,7 +18,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		protected override Ambush Clone( int tileX, int tileY ) {
+		protected override Ambush CloneRandomized( int tileX, int tileY ) {
 			return new BrambleCleanupOnlyAmbush( tileX, tileY );
 		}
 

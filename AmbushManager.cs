@@ -20,9 +20,9 @@ namespace Ambushes {
 			get {
 				if( Monitor.TryEnter( AmbushManager.MyLock ) ) {
 					Monitor.Exit( AmbushManager.MyLock );
-					return true;
+					return false;
 				}
-				return false;
+				return true;
 			}
 		}
 
@@ -110,7 +110,10 @@ namespace Ambushes {
 
 		internal void Update() {
 			foreach( Ambush ambush in this.ActiveAmbushes.ToArray() ) {
-				if( ambush.InternalRunUntil() ) {
+				bool isDone;
+				ambush.InternalRun( out isDone );
+
+				if( isDone ) {
 					ambush.Deactivate();
 					this.ActiveAmbushes.Remove( ambush );
 				}

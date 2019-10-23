@@ -21,10 +21,12 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
-			int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
-			IDictionary<int, ISet<int>> tileTrace = CursedBrambleTile.TraceTileEnclosure( clearTileX, clearTileY, radius );
+			if( this.IsEntrapping ) {
+				int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
+				IDictionary<int, ISet<int>> tileTrace = CursedBrambleTile.TraceTileEnclosure( clearTileX, clearTileY, radius );
 
-			CursedBrambleTile.CreateBramblesAt( tileTrace );
+				CursedBrambleTile.CreateBramblesAt( tileTrace );
+			}
 
 			return true;
 		}
@@ -42,11 +44,8 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool RunUntil() {
-			if( !this.IsEntrapping ) {
-				return true;
-			}
-
-			return base.RunUntil();
+			bool isBramblesDone = base.RunUntil();
+			return isBramblesDone || !this.IsEntrapping;
 		}
 	}
 }

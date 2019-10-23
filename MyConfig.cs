@@ -83,7 +83,7 @@ namespace Ambushes {
 		public int BrambleTicksPerDamage { get; set; } = 6;
 
 		[Range( 1, 9999999 )]
-		[DefaultValue( 10 )]
+		[DefaultValue( 20 )]
 		public int BrambleDamage { get; set; } = 10;
 
 
@@ -97,8 +97,8 @@ namespace Ambushes {
 
 
 		[Range( 0f, 1f )]
-		[DefaultValue( 0.18f )]
-		public float BrambleStickiness { get; set; } = 0.18f;
+		[DefaultValue( 0.2f )]
+		public float BrambleStickiness { get; set; } = 0.2f;
 
 		[Range( 1, 128 )]
 		[DefaultValue( 4 )]

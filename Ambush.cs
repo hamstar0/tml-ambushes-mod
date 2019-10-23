@@ -41,8 +41,8 @@ namespace Ambushes {
 
 		////////////////
 
-		internal bool InternalRunUntil() {
-			return this.RunUntil();
+		internal void InternalRun( out bool isDone ) {
+			isDone = this.RunUntil();
 		}
 
 		////

@@ -9,14 +9,11 @@ using Terraria.Utilities;
 
 namespace Ambushes {
 	partial class AmbushesWorld : ModWorld {
-private static int _CRWA = 0;
 		private static Ambush CreateRandomWorldAmbush( int maxAttempts ) {
 			int attempts = 0;
 			int randTileX, randTileY;
 			UnifiedRandom rand = TmlHelpers.SafelyGetRand();
 			
-LogHelpers.Log("1111 "+_CRWA);
-try {
 			do {
 				randTileX = rand.Next( 64, Main.maxTilesX - 64 );
 				randTileY = rand.Next( (int)Main.worldSurface, Main.maxTilesY - 220 );
@@ -25,18 +22,13 @@ try {
 					break;
 				}
 			} while( attempts++ < maxAttempts );
-} catch( Exception e ) { LogHelpers.Log( "2222 a - " + e.ToString() ); return null; }
-LogHelpers.Log("2222b "+_CRWA+", "+attempts);
 			
 			if( attempts >= maxAttempts ) {
-LogHelpers.Log("2222c "+_CRWA);
 				return null;
 			}
 			
 			Ambush.AdjustAmbushTileCenter( randTileX, ref randTileY );
-LogHelpers.Log("3333 "+_CRWA+", "+randTileX+","+randTileY);
 			Ambush ambush = Ambush.CreateRandomType( randTileX, randTileY );
-LogHelpers.Log("4444 "+_CRWA+", "+randTileX+","+randTileY);
 			return ambush;
 		}
 
@@ -50,14 +42,18 @@ LogHelpers.Log("4444 "+_CRWA+", "+randTileX+","+randTileY);
 			//Task.Factory.StartNew( () => {
 			//Parallel.For( 0, maxAmbushes, ( i ) => {
 			Task.Run( () => {
+				int ambushCount = 0;
+
 				for( int i = 0; i < maxAmbushes; i++ ) {
-					try {
-						this.CreateRandomWorldAmbush();
-					} catch( Exception e ) {
-						LogHelpers.Warn( e.ToString() );
+					if( this.CreateRandomWorldAmbush() ) {
+						ambushCount++;
 					}
 					//this.CreateRandomWorldAmbushAsync();
 					//Thread.Sleep( 10 );//AmbushesMod.Config.AmbushInitialGenerationSlowness
+				}
+
+				if( AmbushesMod.Config.DebugModeInfo ) {
+					Main.NewText( "Initialization complete. "+ambushCount+" of "+maxAmbushes+" ambushes initialized." );
 				}
 			} );
 		}
@@ -82,26 +78,21 @@ LogHelpers.Log("4444 "+_CRWA+", "+randTileX+","+randTileY);
 			//Task.Factory.StartNew( () => {
 
 			Task.Run( () => {
-				try {
-					this.CreateRandomWorldAmbush();
-				} catch( Exception e ) {
-					LogHelpers.Warn( e.ToString() );
-				}
+				this.CreateRandomWorldAmbush();
 			} );
 			//}, cts.Token );
 		}
 		
-		private void CreateRandomWorldAmbush() {
-LogHelpers.Log("-1111 "+_CRWA);
+		private bool CreateRandomWorldAmbush() {
 			lock( AmbushesWorld.MyLock ) {
 				Ambush ambush = this.CreateNonNeighboringRandomWorldAmbush( 50, 10000 );
 
 				if( ambush != null ) {
 					this.SpawnAmbush( ambush );
+					return true;
 				}
 			}
-LogHelpers.Log("6666 "+_CRWA);
-_CRWA++;
+			return false;
 		}
 
 
@@ -111,7 +102,6 @@ _CRWA++;
 			Ambush ambush = null;
 			int attempts = 0;
 
-LogHelpers.Log("0000 "+_CRWA);
 			do {
 				ambush = AmbushesWorld.CreateRandomWorldAmbush( maxCreateAttempts );
 				if( ambush == null ) {
@@ -122,7 +112,6 @@ LogHelpers.Log("0000 "+_CRWA);
 					break;
 				}
 			} while( attempts++ < maxNonNeighborAttempts );
-LogHelpers.Log("5555 "+_CRWA+" ambush?"+(ambush!=null));
 
 			return ambush;
 		}
@@ -134,7 +123,6 @@ LogHelpers.Log("5555 "+_CRWA+" ambush?"+(ambush!=null));
 			int minTileDistSqt = minTileDist * minTileDist;
 			bool found = false;
 			
-LogHelpers.Log("4444bb "+_CRWA);
 			foreach( Ambush ambush in this.AmbushMngr.GetAllAmbushes() ) {
 				int xDist = ambush.TileX - tileX;
 				int yDist = ambush.TileY - tileY;
@@ -146,7 +134,6 @@ LogHelpers.Log("4444bb "+_CRWA);
 					break;
 				}
 			}
-LogHelpers.Log("4444c "+_CRWA);
 
 			return found;
 		}

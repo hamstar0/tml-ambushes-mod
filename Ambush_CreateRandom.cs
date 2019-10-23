@@ -49,7 +49,7 @@ namespace Ambushes {
 				counted += ambush.SpawnWeight;
 			}
 			
-			return randAmbush?.Clone( tileX, tileY );
+			return randAmbush?.CloneRandomized( tileX, tileY );
 		}
 	}
 }

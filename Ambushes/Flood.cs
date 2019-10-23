@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Helpers.TModLoader;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.TModLoader;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -20,7 +21,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		protected override Ambush Clone( int tileX, int tileY ) {
+		protected override Ambush CloneRandomized( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
 			return new FloodAmbush( tileX, tileY, isEntrapping );
 		}

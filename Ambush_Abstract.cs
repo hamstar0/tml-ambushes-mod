@@ -13,7 +13,7 @@ namespace Ambushes {
 
 		////////////////
 
-		protected abstract Ambush Clone( int tileX, int tileY );
+		protected abstract Ambush CloneRandomized( int tileX, int tileY );
 
 
 		////////////////

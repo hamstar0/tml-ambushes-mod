@@ -30,7 +30,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		protected override Ambush Clone( int tileX, int tileY ) {
+		protected override Ambush CloneRandomized( int tileX, int tileY ) {
 			bool isHorizontal = TmlHelpers.SafelyGetRand().NextBool();
 			return new BrambleWallAmbush( tileX, tileY, isHorizontal );
 		}

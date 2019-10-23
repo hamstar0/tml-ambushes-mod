@@ -22,7 +22,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		protected override Ambush Clone( int tileX, int tileY ) {
+		protected override Ambush CloneRandomized( int tileX, int tileY ) {
 			return new WormsInfestationAmbush( tileX, tileY, false );
 		}
 
@@ -30,7 +30,7 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		public override int GetSpawnsDuration() {
-			return this.GetBrambleDuration() / 2;
+			return this.GetBrambleDuration() * 2;
 		}
 
 
@@ -94,6 +94,11 @@ namespace Ambushes.Ambushes {
 
 				pool[npcid] = 1f;
 			}
+		}
+
+		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
+			spawnRate *= 10;
+			maxSpawns *= 10;
 		}
 	}
 }

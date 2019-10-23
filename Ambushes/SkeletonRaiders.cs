@@ -61,7 +61,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		protected override Ambush Clone( int tileX, int tileY ) {
+		protected override Ambush CloneRandomized( int tileX, int tileY ) {
 			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
 			return new SkeletonRaidersAmbush( tileX, tileY, isEntrapping );
 		}
@@ -125,6 +125,11 @@ namespace Ambushes.Ambushes {
 					}
 				}
 			}
+		}
+
+		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
+			spawnRate *= 30;
+			maxSpawns *= 30;
 		}
 
 		////
