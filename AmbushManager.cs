@@ -2,6 +2,7 @@
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
 using HamstarHelpers.Helpers.World;
+using HamstarHelpers.Services.OverlaySounds;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,8 @@ namespace Ambushes {
 			= new Dictionary<int, IDictionary<int, IList<Ambush>>>();
 
 		private ISet<Ambush> ActiveAmbushes = new HashSet<Ambush>();
+
+		private OverlaySound RecentMusic = null;
 
 
 
@@ -118,6 +121,26 @@ namespace Ambushes {
 					this.ActiveAmbushes.Remove( ambush );
 				}
 			}
+		}
+
+
+		////////////////
+
+		public void PlayMusic( Ambush ambush ) {
+			if( this.RecentMusic != null ) {
+				if( !this.RecentMusic.IsFadingOut ) {
+					return;
+				}
+			}
+
+			this.RecentMusic = OverlaySound.Create(
+				sourceMod: AmbushesMod.Instance,
+				soundPath: "Sounds/LowAmbushBGM",
+				fadeTicks: 60,
+				playDurationTicks: -1,
+				customCondition: () => (0.8f, ambush.IsEnded)
+			);
+			this.RecentMusic.Play();
 		}
 	}
 }

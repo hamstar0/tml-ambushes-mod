@@ -137,9 +137,9 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		protected override void NPCPreAIForMobs( NPC npc ) {
-			if( SkeletonRaidersAmbush.AllSkeletons.Contains(npc.type) ) {
-				if( !this.ValidateRaider(npc) ) {
+		protected override void OnClaimNPC( NPC npc ) {
+			if( SkeletonRaidersAmbush.AllSkeletons.Contains( npc.type ) ) {
+				if( !this.ValidateRaider( npc ) ) {
 					NPCHelpers.Remove( npc );
 				}
 			}

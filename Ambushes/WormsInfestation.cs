@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 namespace Ambushes.Ambushes {
 	class WormsInfestationAmbush : MobAmbush {
 		public override float SpawnWeight => AmbushesMod.Config.WormsInfestationAmbushPriorityWeight;
+		public override bool PlaysMusic => true;
 
 
 

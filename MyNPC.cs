@@ -8,12 +8,7 @@ using Terraria.ModLoader;
 
 namespace Ambushes {
 	class AmbushesNPC : GlobalNPC {
-		private bool IsAmbushChecked = false;
-
-
-		////////////////
-
-		public bool IsMiniboss { get; private set; }
+		public bool IsMiniboss { get; internal set; }
 
 		////
 
@@ -52,12 +47,8 @@ namespace Ambushes {
 		////
 
 		public override bool PreAI( NPC npc ) {
-			if( !this.IsAmbushChecked ) {
-				this.IsAmbushChecked = true;
-
-				var myworld = ModContent.GetInstance<AmbushesWorld>();
-				myworld.AmbushMngr.PreAI( npc );
-			}
+			var myworld = ModContent.GetInstance<AmbushesWorld>();
+			myworld.AmbushMngr.UpdateNPCForAllAmbushes( npc );
 
 			if( AmbushesMod.Config.DebugModeMapCheat ) {
 				if( this.IsMiniboss ) {
@@ -66,26 +57,6 @@ namespace Ambushes {
 			}
 
 			return true;
-		}
-
-
-		////////////////
-
-		public void SetAsMiniboss( NPC npc ) {
-			if( this.IsMiniboss ) {
-				LogHelpers.Warn( "NPC "+npc.TypeName+" is already a miniboss." );
-				return;
-			}
-			this.IsMiniboss = true;
-
-			float sizeScale = 3f;
-			float lifeScale = 6f;
-			float damageScale = 3f;
-
-			npc.scale *= sizeScale;
-			npc.lifeMax = (int)( (float)npc.lifeMax * lifeScale );
-			npc.life = (int)( (float)npc.life * lifeScale );
-			npc.damage = (int)( (float)npc.damage * damageScale );
 		}
 	}
 }

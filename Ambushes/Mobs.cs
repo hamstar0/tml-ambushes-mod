@@ -41,7 +41,10 @@ namespace Ambushes.Ambushes {
 				return false;
 			}
 
-			bool spawnsEnded = (this.ElapsedTicks >= this.GetSpawnsDuration()) || !this.ArePlayersNearby();
+			int nearbyRadius = AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius;
+			bool spawnsEnded = this.ElapsedTicks >= this.GetSpawnsDuration()
+				|| !this.ArePlayersNearby( nearbyRadius );
+
 			if( spawnsEnded ) {
 				if( AmbushesMod.Config.DebugModeInfoSpawns ) {
 					Main.NewText( "Ambush "+this.GetType().Name+" at "+this.TileX+","+this.TileY+" ended." );
@@ -49,28 +52,6 @@ namespace Ambushes.Ambushes {
 			}
 
 			return spawnsEnded;
-		}
-
-
-		////
-
-		private bool ArePlayersNearby() {
-			int minDistSqr = AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius << 4;
-			minDistSqr *= minDistSqr;
-
-			int plrMax = Main.player.Length - 1;
-			for( int i=0; i<plrMax; i++ ) {
-				Player plr = Main.player[i];
-				if( plr==null || !plr.active || plr.dead ) {
-					continue;
-				}
-
-				if( Vector2.DistanceSquared(plr.Center, this.WorldPosition) < minDistSqr ) {
-					return true;
-				}
-			}
-
-			return false;
 		}
 
 
@@ -88,9 +69,9 @@ namespace Ambushes.Ambushes {
 			}
 		}
 
-		protected sealed override void NPCPreAI( NPC npc ) {
+		protected override void UpdateNPCForAmbush( NPC npc ) {
 			if( this.ElapsedTicks < this.GetSpawnsDuration() ) {
-				this.NPCPreAIForMobs( npc );
+				this.UpdateNPCForAmbushForMobs( npc );
 			}
 		}
 
@@ -103,7 +84,7 @@ namespace Ambushes.Ambushes {
 		public virtual void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
 		}
 
-		protected virtual void NPCPreAIForMobs( NPC npc ) {
+		protected virtual void UpdateNPCForAmbushForMobs( NPC npc ) {
 		}
 	}
 }

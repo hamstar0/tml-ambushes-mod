@@ -36,7 +36,10 @@ namespace Ambushes {
 
 		public virtual void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) { }
 
+		////
 
-		protected virtual void NPCPreAI( NPC npc ) { }
+		protected virtual void OnClaimNPC( NPC npc ) { }
+
+		protected virtual void UpdateNPCForAmbush( NPC npc ) { }
 	}
 }

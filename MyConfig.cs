@@ -50,6 +50,10 @@ namespace Ambushes {
 		[DefaultValue( 80 )]
 		public int AmbushPlayerNearbyNeededTileRadius { get; set; } = 80;
 
+		[Range( 0, 10000 )]
+		[DefaultValue( 80 )]
+		public int MinibossAmbushPlayerNearbyNeededTileRadius { get; set; } = 40;
+
 
 		/*[Range( 1, 10000 )]
 		[DefaultValue( 10 )]
@@ -137,16 +141,17 @@ namespace Ambushes {
 		public float SkeletonRaidersAmbushPriorityWeight { get; set; } = 0.25f;
 
 		[Range( 0f, 10f )]
-		[DefaultValue( 0.5f )]
+		[DefaultValue( 0.25f )]
 		[ReloadRequired]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float WormsInfestationAmbushPriorityWeight { get; set; } = 0.5f;
+		public float WormsInfestationAmbushPriorityWeight { get; set; } = 0.25f;
 
 		[Range( 0f, 10f )]
-		[DefaultValue( 0.125f )]
+		[DefaultValue( 0.25f )]
+		//[DefaultValue( 25f )]
 		[ReloadRequired]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float MinibossAmbushPriorityWeight { get; set; } = 0.125f;
+		public float MinibossAmbushPriorityWeight { get; set; } = 0.25f;//25f;
 
 
 		[Range(0f, 100f)]
@@ -165,8 +170,8 @@ namespace Ambushes {
 		public float SkeletonRaidersAmbushSpawnWeight { get; set; } = 10f;
 
 		[Range( 0f, 100f )]
-		[DefaultValue( 10f )]
+		[DefaultValue( 5f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float WormsInfestationAmbushSpawnWeight { get; set; } = 10f;
+		public float WormsInfestationAmbushSpawnWeight { get; set; } = 5f;
 	}
 }

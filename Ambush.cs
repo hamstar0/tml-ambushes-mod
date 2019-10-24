@@ -1,14 +1,20 @@
 ﻿using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Tiles;
-using HamstarHelpers.Services.OverlaySounds;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.ModLoader;
 
 
 namespace Ambushes {
 	abstract partial class Ambush {
+		private ISet<int> ClaimedNpcWhos = new HashSet<int>();
+
+
+		////////////////
+
 		public int TileX { get; }
 		public int TileY { get; }
 
@@ -44,12 +50,25 @@ namespace Ambushes {
 
 		internal void InternalRun( out bool isDone ) {
 			isDone = this.RunUntil();
+
+			if( !isDone ) {
+				if( this.PlaysMusic && this.TriggeringPlayer == Main.myPlayer ) {
+					ModContent.GetInstance<AmbushesWorld>()?
+						.AmbushMngr
+						.PlayMusic( this );
+				}
+
+				this.FlushDeadNPCs();
+			}
 		}
 
-		////
-
-		internal void InternalNPCPreAI( NPC npc ) {
-			this.NPCPreAI( npc );
+		internal void InternalUpdateNPCForAmbush( NPC npc ) {
+			if( !this.ClaimedNpcWhos.Contains(npc.whoAmI) && this.AttemptClaimNPC(npc) ) {
+				this.OnClaimNPC( npc );
+			}
+			if( this.ClaimedNpcWhos.Contains(npc.whoAmI) ) {
+				this.UpdateNPCForAmbush( npc );
+			}
 		}
 
 
@@ -64,18 +83,29 @@ namespace Ambushes {
 
 			this.TriggeringPlayer = player.whoAmI;
 			
-			if( player.whoAmI == Main.myPlayer && this.PlaysMusic ) {
-				OverlaySound sound = OverlaySound.Create(
-					sourceMod: AmbushesMod.Instance,
-					soundPath: "Sounds/LowAmbushBGM",
-					fadeTicks: 60,
-					playDurationTicks: -1,
-					customCondition: () => (0.8f, this.IsEnded)
-				);
-				sound.Play();
-			}
-			
 			return this.OnActivate( point.Value.x, point.Value.y );
+		}
+
+
+		////////////////
+
+		public bool ArePlayersNearby( int tileRadius ) {
+			int minDistSqr = tileRadius << 4;
+			minDistSqr *= minDistSqr;
+
+			int plrMax = Main.player.Length - 1;
+			for( int i = 0; i < plrMax; i++ ) {
+				Player plr = Main.player[i];
+				if( plr == null || !plr.active || plr.dead ) {
+					continue;
+				}
+
+				if( Vector2.DistanceSquared( plr.Center, this.WorldPosition ) < minDistSqr ) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 }
