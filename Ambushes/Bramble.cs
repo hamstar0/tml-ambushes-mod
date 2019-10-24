@@ -28,7 +28,6 @@ namespace Ambushes.Ambushes {
 			bool cleanupComplete = false;
 			int duration = this.GetBrambleDuration();
 
-DebugHelpers.Print( "Bramble.RunUntil_"+this.GetHashCode(), "duration: "+duration+", elapsed: "+this.ElapsedTicks, 20 );
 			if( this.ElapsedTicks > duration ) {
 				if( AmbushesMod.Config.DebugModeInfoBrambles ) {
 					if( this.ElapsedTicks == (duration + 1) ) {

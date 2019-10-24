@@ -1,5 +1,4 @@
 ﻿using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.TModLoader;
 using HamstarHelpers.Helpers.World;
 using Microsoft.Xna.Framework;
 using System;
@@ -8,7 +7,7 @@ using Terraria;
 
 namespace Ambushes.Ambushes {
 	class FloodAmbush : MobAmbush {
-		public override float SpawnWeight => 2f;
+		public override float SpawnWeight => AmbushesMod.Config.FloodAmbushPriorityWeight;
 
 
 
@@ -23,7 +22,7 @@ namespace Ambushes.Ambushes {
 		////
 
 		protected override Ambush CloneRandomized( int tileX, int tileY ) {
-			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+			bool isEntrapping = true;//TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
 			isEntrapping = isEntrapping && !WorldHelpers.IsWithinUnderworld( new Vector2(tileX<<4, tileY<<4) );
 
 			return new FloodAmbush( tileX, tileY, isEntrapping );
@@ -52,8 +51,8 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
-			spawnRate /= 15;
-			maxSpawns *= 15;
+			spawnRate = (int)( (float)spawnRate / AmbushesMod.Config.FloodAmbushSpawnWeight );
+			maxSpawns = (int)( (float)maxSpawns * AmbushesMod.Config.FloodAmbushSpawnWeight );
 		}
 	}
 }

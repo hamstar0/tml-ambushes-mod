@@ -108,5 +108,65 @@ namespace Ambushes {
 		[DefaultValue( 0.15f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float BrambleDensity { get; set; } = 0.15f;
+
+		////
+
+		[Header( "Ambush type settings" )]
+		[Range( 0f, 10f )]
+		[DefaultValue( 2f )]
+		[ReloadRequired]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float FloodAmbushPriorityWeight { get; set; } = 2f;
+
+		[Range( 0f, 10f )]
+		[DefaultValue( 2f )]
+		[ReloadRequired]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float BrambleWallAmbushPriorityWeight { get; set; } = 2f;
+
+		[Range( 0f, 10f )]
+		[DefaultValue( 0.25f )]
+		[ReloadRequired]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float FlyerSwarmAmbushPriorityWeight { get; set; } = 0.25f;
+
+		[Range( 0f, 10f )]
+		[DefaultValue( 0.25f )]
+		[ReloadRequired]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float SkeletonRaidersAmbushPriorityWeight { get; set; } = 0.25f;
+
+		[Range( 0f, 10f )]
+		[DefaultValue( 0.5f )]
+		[ReloadRequired]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float WormsInfestationAmbushPriorityWeight { get; set; } = 0.5f;
+
+		[Range( 0f, 10f )]
+		[DefaultValue( 0.125f )]
+		[ReloadRequired]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float MinibossAmbushPriorityWeight { get; set; } = 0.125f;
+
+
+		[Range(0f, 100f)]
+		[DefaultValue( 10f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float FloodAmbushSpawnWeight { get; set; } = 10f;
+
+		[Range( 0f, 100f )]
+		[DefaultValue( 10f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float FlyerswarmAmbushSpawnWeight { get; set; } = 10f;
+
+		[Range( 0f, 100f )]
+		[DefaultValue( 10f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float SkeletonRaidersAmbushSpawnWeight { get; set; } = 10f;
+
+		[Range( 0f, 100f )]
+		[DefaultValue( 10f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float WormsInfestationAmbushSpawnWeight { get; set; } = 10f;
 	}
 }

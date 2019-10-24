@@ -23,7 +23,7 @@ namespace Ambushes {
 			TilePattern pattern = new TilePattern( new TilePatternBuilder {
 				IsSolid = false,
 				IsActuated = false,
-				MaximumBrightness = 0.5f,
+				MaximumBrightness = 0.25f,
 				CustomCheck = (x, y) => !dungeonWalls.Contains(Main.tile[x,y].wall)
 			} );
 			int maxDistSqr = 50 * 50;

@@ -31,12 +31,12 @@ namespace Ambushes.Tiles {
 				tilePositionList[rand] = tmp;
 			}
 
-			CursedBrambleTile.CreateBramblesAtAsync( tilePositionList, tilePositionList.Length - 1 );
+			CursedBrambleTile.CreateBramblesAtIntervals( tilePositionList, tilePositionList.Length - 1 );
 		}
 
 		////
 
-		private static void CreateBramblesAtAsync( (int TileX, int TileY)[] randTilePositions, int lastIdx ) {
+		private static void CreateBramblesAtIntervals( (int TileX, int TileY)[] randTilePositions, int lastIdx ) {
 			(int tileX, int tileY) tilePos = randTilePositions[ lastIdx ];
 
 			int bramblesPlaced = CursedBrambleTile.CreateBramblePatchAt( tilePos.tileX, tilePos.tileY );
@@ -50,7 +50,7 @@ namespace Ambushes.Tiles {
 
 				string timerName = "AmbushesEntrapAsync_" + randTilePositions[lastIdx].TileX + "_" + randTilePositions[lastIdx].TileY;
 				Timers.SetTimer( timerName, 2, () => {
-					CursedBrambleTile.CreateBramblesAtAsync( randTilePositions, lastIdx );
+					CursedBrambleTile.CreateBramblesAtIntervals( randTilePositions, lastIdx );
 					return false;
 				} );
 			}

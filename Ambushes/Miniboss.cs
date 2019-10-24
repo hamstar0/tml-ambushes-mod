@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.Helpers.TModLoader;
 using HamstarHelpers.Helpers.World;
+using HamstarHelpers.Services.Timers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		public override float SpawnWeight => 0.25f;
+		public override float SpawnWeight => AmbushesMod.Config.MinibossAmbushPriorityWeight;
 		public override bool PlaysMusic => this.IsEncountered;
 
 
@@ -58,6 +59,11 @@ namespace Ambushes.Ambushes {
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 			Main.NewText( "An imposing presence lurks somewhere nearby...", Color.DarkOrange );
 
+			Timers.SetTimer( "SpawnPoolUpdate", 2, () => {
+				NPC.SpawnNPC();
+				return false;
+			} );
+
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
@@ -68,9 +74,9 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		public override void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) {
-			if( this.MinibossWho == -1 ) {
-				spawnRate = 30;
-			}
+			//if( this.MinibossWho == -1 ) {
+			//	spawnRate = (int)( (float)spawnRate / 30f );
+			//}
 		}
 
 		public override void EditNPCSpawnPool( IDictionary<int, float> pool, NPCSpawnInfo spawnInfo ) {

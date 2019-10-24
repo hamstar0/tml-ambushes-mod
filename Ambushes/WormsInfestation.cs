@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class WormsInfestationAmbush : MobAmbush {
-		public override float SpawnWeight => 0.5f;
+		public override float SpawnWeight => AmbushesMod.Config.WormsInfestationAmbushPriorityWeight;
 
 
 
@@ -97,8 +97,8 @@ namespace Ambushes.Ambushes {
 		}
 
 		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
-			spawnRate *= 10;
-			maxSpawns *= 10;
+			spawnRate = (int)( (float)spawnRate / AmbushesMod.Config.WormsInfestationAmbushSpawnWeight );
+			maxSpawns = (int)( (float)maxSpawns * AmbushesMod.Config.WormsInfestationAmbushSpawnWeight );
 		}
 	}
 }

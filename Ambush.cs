@@ -56,7 +56,7 @@ namespace Ambushes {
 		////////////////
 
 		public bool Trigger( Player player ) {
-			(int x, int y)? point = TileFinderHelpers.GetNearestTile( this.TileX, this.TileY, TilePattern.AbsoluteAir, 8 );
+			(int x, int y)? point = TileFinderHelpers.GetNearestTile( this.TileX, this.TileY, TilePattern.NonSolid, 12 );
 			if( !point.HasValue ) {
 				LogHelpers.Warn( "No empty air for ambush to trigger." );
 				return false;
@@ -65,7 +65,13 @@ namespace Ambushes {
 			this.TriggeringPlayer = player.whoAmI;
 			
 			if( player.whoAmI == Main.myPlayer && this.PlaysMusic ) {
-				OverlaySound sound = OverlaySound.Create( "Sounds/LowAmbushBGM", 60, 463, 0, -1, () => (1f, this.IsEnded) );
+				OverlaySound sound = OverlaySound.Create(
+					sourceMod: AmbushesMod.Instance,
+					soundPath: "Sounds/LowAmbushBGM",
+					fadeTicks: 60,
+					playDurationTicks: -1,
+					customCondition: () => (0.8f, this.IsEnded)
+				);
 				sound.Play();
 			}
 			

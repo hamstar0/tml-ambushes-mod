@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class FlyerSwarmAmbush : MobAmbush {
-		public override float SpawnWeight => 0.5f;
+		public override float SpawnWeight => AmbushesMod.Config.FlyerSwarmAmbushPriorityWeight;
 
 
 
@@ -42,7 +42,7 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
-			Main.NewText( "The air beats wildly with the flapping of wings...", Color.DarkOrange );
+			Main.NewText( "A rush of wings can be heard...", Color.DarkOrange );
 
 			return base.OnActivate( clearTileX, clearTileY );
 		}
@@ -102,8 +102,8 @@ namespace Ambushes.Ambushes {
 		}
 
 		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
-			spawnRate *= 10;
-			maxSpawns *= 10;
+			spawnRate = (int)( (float)spawnRate / AmbushesMod.Config.FlyerswarmAmbushSpawnWeight );
+			maxSpawns = (int)( (float)maxSpawns * AmbushesMod.Config.FlyerswarmAmbushSpawnWeight );
 		}
 	}
 }

@@ -48,7 +48,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override float SpawnWeight => 0.5f;
+		public override float SpawnWeight => AmbushesMod.Config.SkeletonRaidersAmbushPriorityWeight;
 
 
 
@@ -131,8 +131,8 @@ namespace Ambushes.Ambushes {
 		}
 
 		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
-			spawnRate *= 30;
-			maxSpawns *= 30;
+			spawnRate = (int)( (float)spawnRate / AmbushesMod.Config.SkeletonRaidersAmbushSpawnWeight );
+			maxSpawns = (int)( (float)maxSpawns * AmbushesMod.Config.SkeletonRaidersAmbushSpawnWeight );
 		}
 
 		////

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.Services.Timers;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -21,6 +22,17 @@ namespace Ambushes.Ambushes {
 
 		public abstract int GetSpawnsDuration();
 
+
+		////////////////
+
+		protected override bool OnActivate( int clearTileX, int clearTileY ) {
+			Timers.SetTimer( "SpawnPoolUpdate", 2, () => {
+				NPC.SpawnNPC();
+				return false;
+			} );
+
+			return base.OnActivate( clearTileX, clearTileY );
+		}
 
 		////////////////
 
