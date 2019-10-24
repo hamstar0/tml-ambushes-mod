@@ -10,10 +10,9 @@ using Terraria.ModLoader;
 
 namespace Ambushes {
 	abstract partial class Ambush {
-		private ISet<int> ClaimedNpcWhos = new HashSet<int>();
+		protected ISet<int> ClaimedNpcWhos { get; } = new HashSet<int>();
 
-
-		////////////////
+		////
 
 		public int TileX { get; }
 		public int TileY { get; }

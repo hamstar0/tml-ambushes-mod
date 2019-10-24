@@ -25,7 +25,9 @@ namespace Ambushes.Ambushes {
 		////
 
 		protected override Ambush CloneRandomized( int tileX, int tileY ) {
-			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+			bool isEntrapping = AmbushesMod.Config.AmbushEntrapmentOdds <= 0
+				? false
+				: TmlHelpers.SafelyGetRand().Next( AmbushesMod.Config.AmbushEntrapmentOdds ) == 0;
 			isEntrapping = isEntrapping && !WorldHelpers.IsWithinUnderworld( new Vector2(tileX<<4, tileY<<4) );
 
 			return new FlyerSwarmAmbush( tileX, tileY, isEntrapping );
@@ -38,12 +40,14 @@ namespace Ambushes.Ambushes {
 			return this.GetBrambleDuration();
 		}
 
+		public override void ShowMessage() {
+			Main.NewText( "A rush of wings can be heard...", Color.DarkOrange );
+		}
+
 
 		////////////////
 
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
-			Main.NewText( "A rush of wings can be heard...", Color.DarkOrange );
-
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 

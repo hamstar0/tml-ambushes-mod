@@ -34,12 +34,14 @@ namespace Ambushes.Ambushes {
 			return this.GetBrambleDuration() * 2;
 		}
 
+		public override void ShowMessage() {
+			Main.NewText( "The earth trembles...", Color.DarkOrange );
+		}
+
 
 		////////////////
 
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
-			Main.NewText( "The earth trembles...", Color.DarkOrange );
-
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 

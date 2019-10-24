@@ -81,6 +81,11 @@ namespace Ambushes {
 		[ReloadRequired]
 		public int AmbushEntrapmentRadius { get; set; } = 40;
 
+		[Range( 0, 1000 )]
+		[DefaultValue( 4 )]
+		[ReloadRequired]
+		public int AmbushEntrapmentOdds { get; set; } = 4;
+
 
 		[Range( 1, 60*60*60*24 )]
 		[DefaultValue( 6 )]
@@ -173,5 +178,11 @@ namespace Ambushes {
 		[DefaultValue( 5f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float WormsInfestationAmbushSpawnWeight { get; set; } = 5f;
+
+
+		[Range( 0f, 10f )]
+		[DefaultValue( 0.5f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float MobAmbushLifeScale { get; set; } = 0.5f;
 	}
 }

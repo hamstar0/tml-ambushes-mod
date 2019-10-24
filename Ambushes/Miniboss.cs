@@ -14,13 +14,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public bool IsEncountered { get; private set; } = false;
+		public bool HasEncounterBegun { get; private set; } = false;
 
 		////
 
 		public override float SpawnWeight => AmbushesMod.Config.MinibossAmbushPriorityWeight;
 
-		public override bool PlaysMusic => this.IsEncountered && this.IsEntrapping;
+		public override bool PlaysMusic => this.IsEntrapping && this.HasEncounterBegun;
 
 
 
@@ -35,7 +35,9 @@ namespace Ambushes.Ambushes {
 		////
 
 		protected override Ambush CloneRandomized( int tileX, int tileY ) {
-			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+			bool isEntrapping = AmbushesMod.Config.AmbushEntrapmentOdds <= 0
+				? false
+				: TmlHelpers.SafelyGetRand().Next( AmbushesMod.Config.AmbushEntrapmentOdds ) == 0;
 			isEntrapping = isEntrapping && !WorldHelpers.IsWithinUnderworld( new Vector2( tileX << 4, tileY << 4 ) );
 
 			return new MinibossAmbush( tileX, tileY, isEntrapping );
@@ -48,8 +50,13 @@ namespace Ambushes.Ambushes {
 			bool runBramblesUntil = base.RunUntil();
 			int nearbyRadius = AmbushesMod.Config.MinibossAmbushPlayerNearbyNeededTileRadius;
 
-			if( this.MinibossWho == -1 && !this.ArePlayersNearby(nearbyRadius) ) {
-				return true;
+			if( this.MinibossWho == -1 ) {
+				if( !this.ArePlayersNearby(nearbyRadius) ) {
+					return true;
+				}
+				if( this.ElapsedTicks > 600 ) {
+					return true;
+				}
 			}
 
 			NPC npc = null;
@@ -64,8 +71,6 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
-			Main.NewText( "An imposing presence lurks somewhere nearby...", Color.DarkOrange );
-
 			Timers.SetTimer( "SpawnPoolUpdate", 2, () => {
 				NPC.SpawnNPC();
 				return false;

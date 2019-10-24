@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Services.Timers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Ambushes.Ambushes {
 
 			npc.scale *= sizeScale;
 			npc.lifeMax = (int)( (float)npc.lifeMax * lifeScale );
-			npc.life = (int)( (float)npc.life * lifeScale );
+			npc.life = (int)( (float)npc.lifeMax * lifeScale );
 			npc.damage = (int)( (float)npc.damage * damageScale );
 		}
 
@@ -54,8 +55,16 @@ namespace Ambushes.Ambushes {
 
 		protected override void OnClaimNPC( NPC npc ) {
 			if( this.MinibossWho == -1 && npc.damage > 0 && !npc.friendly && !npc.immortal ) {
+				Main.NewText( "An imposing presence lurks somewhere nearby...", Color.DarkOrange );
+
 				this.MinibossWho = npc.whoAmI;
 				MinibossAmbush.SetAsMiniboss( npc );
+
+				// Set spawns only to the miniboss's type
+				Timers.SetTimer( "SpawnPoolUpdate", 2, () => {
+					NPC.SpawnNPC();
+					return false;
+				} );
 			}
 		}
 
@@ -69,7 +78,7 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		private void UpdatePlayerEncounter( NPC npc ) {
-			if( this.IsEncountered ) {
+			if( this.HasEncounterBegun ) {
 				return;
 			}
 
@@ -82,7 +91,7 @@ namespace Ambushes.Ambushes {
 			maxDistSqr *= maxDistSqr;
 
 			if( Vector2.DistanceSquared(npc.Center, player.Center) < maxDistSqr ) {
-				this.IsEncountered = true;
+				this.HasEncounterBegun = true;
 			}
 		}
 	}

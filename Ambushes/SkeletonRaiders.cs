@@ -63,7 +63,9 @@ namespace Ambushes.Ambushes {
 		////
 
 		protected override Ambush CloneRandomized( int tileX, int tileY ) {
-			bool isEntrapping = TmlHelpers.SafelyGetRand().Next( 4 ) == 0;
+			bool isEntrapping = AmbushesMod.Config.AmbushEntrapmentOdds <= 0
+				? false
+				: TmlHelpers.SafelyGetRand().Next( AmbushesMod.Config.AmbushEntrapmentOdds ) == 0;
 			isEntrapping = isEntrapping && !WorldHelpers.IsWithinUnderworld( new Vector2(tileX<<4, tileY<<4) );
 
 			return new SkeletonRaidersAmbush( tileX, tileY, isEntrapping );
@@ -76,12 +78,14 @@ namespace Ambushes.Ambushes {
 			return this.GetBrambleDuration();
 		}
 
+		public override void ShowMessage() {
+			Main.NewText( "Death from above!", Color.DarkOrange );
+		}
+
 
 		////////////////
 
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
-			Main.NewText( "Death from above!", Color.DarkOrange );
-
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
@@ -137,10 +141,12 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		protected override void OnClaimNPC( NPC npc ) {
+		protected override void OnClaimNPCForMobs( NPC npc ) {
 			if( SkeletonRaidersAmbush.AllSkeletons.Contains( npc.type ) ) {
 				if( !this.ValidateRaider( npc ) ) {
 					NPCHelpers.Remove( npc );
+				} else {
+					base.OnClaimNPCForMobs( npc );
 				}
 			}
 		}

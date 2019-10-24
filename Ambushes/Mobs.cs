@@ -1,5 +1,4 @@
 ﻿using HamstarHelpers.Services.Timers;
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -8,7 +7,12 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	abstract class MobAmbush : BrambleEnclosureAmbush {
-		public override bool PlaysMusic => this.IsEntrapping;
+		private bool HasEncounterBegun = false;
+
+
+		////////////////
+
+		public override bool PlaysMusic => this.IsEntrapping && this.HasEncounterBegun;
 
 
 
@@ -22,6 +26,8 @@ namespace Ambushes.Ambushes {
 
 		public abstract int GetSpawnsDuration();
 
+		public abstract void ShowMessage();
+
 
 		////////////////
 
@@ -34,9 +40,17 @@ namespace Ambushes.Ambushes {
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
+
 		////////////////
 
 		protected override bool RunUntil() {
+			if( this.ClaimedNpcWhos.Count > 5 ) {
+				if( !this.HasEncounterBegun ) {
+					this.HasEncounterBegun = true;
+					this.ShowMessage();
+				}
+			}
+
 			if( !base.RunUntil() ) {
 				return false;
 			}
@@ -69,7 +83,13 @@ namespace Ambushes.Ambushes {
 			}
 		}
 
-		protected override void UpdateNPCForAmbush( NPC npc ) {
+		protected sealed override void OnClaimNPC( NPC npc ) {
+			if( this.ElapsedTicks < this.GetSpawnsDuration() ) {
+				this.OnClaimNPCForMobs( npc );
+			}
+		}
+
+		protected sealed override void UpdateNPCForAmbush( NPC npc ) {
 			if( this.ElapsedTicks < this.GetSpawnsDuration() ) {
 				this.UpdateNPCForAmbushForMobs( npc );
 			}
@@ -82,6 +102,11 @@ namespace Ambushes.Ambushes {
 		}
 
 		public virtual void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
+		}
+
+		protected virtual void OnClaimNPCForMobs( NPC npc ) {
+			npc.life = (int)((float)npc.life * AmbushesMod.Config.MobAmbushLifeScale);
+			npc.lifeMax = (int)((float)npc.lifeMax * AmbushesMod.Config.MobAmbushLifeScale);
 		}
 
 		protected virtual void UpdateNPCForAmbushForMobs( NPC npc ) {
