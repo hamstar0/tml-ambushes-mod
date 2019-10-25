@@ -56,5 +56,12 @@ namespace Ambushes.Ambushes {
 		public override void ShowMessage() {
 			Main.NewText( "The locals are alerted to your presence.", Color.DarkOrange );
 		}
+
+
+		////////////////
+
+		protected override bool PreClaimNPC( NPC npc ) {
+			return npc.damage > 0 && !npc.friendly && !npc.immortal;
+		}
 	}
 }

@@ -47,6 +47,10 @@ namespace Ambushes {
 		////
 
 		public override bool PreAI( NPC npc ) {
+			if( npc.friendly || npc.damage == 0 || npc.immortal ) {
+				return true;
+			}
+
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
 			myworld.AmbushMngr.UpdateNPCForAllAmbushes( npc );
 

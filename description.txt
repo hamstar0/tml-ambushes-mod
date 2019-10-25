@@ -1,1 +1,4 @@
 Populates your worlds with random enemy ambushes. Some may be difficult to escape from. Configurable.
+
+Credits:
+	Rising Tide (faster) - Kevin MacLeod (Incompetech)

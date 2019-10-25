@@ -38,7 +38,7 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		public override float WorldGenWeight => AmbushesMod.Config.WormsInfestationAmbushPriorityWeight;
-		public override bool PlaysMusic => true;
+		public override bool PlaysMusic => false;
 
 
 

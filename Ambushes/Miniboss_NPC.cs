@@ -17,14 +17,13 @@ namespace Ambushes.Ambushes {
 			}
 
 			mynpc.IsMiniboss = true;
-
-			float sizeScale = 3f;
-			float lifeScale = 6f;
-			float damageScale = 3f;
+			
+			float sizeScale = AmbushesMod.Config.MinibossSizeScale;//3f;
+			float lifeScale = AmbushesMod.Config.MinibossLifeScale;//6f;
+			float damageScale = AmbushesMod.Config.MinibossDamageScale;//3f;
 
 			npc.scale *= sizeScale;
-			npc.lifeMax = (int)( (float)npc.lifeMax * lifeScale );
-			npc.life = (int)( (float)npc.lifeMax * lifeScale );
+			npc.life = npc.lifeMax = (int)( (float)npc.lifeMax * lifeScale );
 			npc.damage = (int)( (float)npc.damage * damageScale );
 		}
 
@@ -55,13 +54,20 @@ namespace Ambushes.Ambushes {
 
 		protected override bool PreClaimNPC( NPC npc ) {
 			// Not currently implemented for any use:
-			return this.MinibossWho != -1 && Main.npc[this.MinibossWho].active
-				? Main.npc[this.MinibossWho].type == npc.type
-				: false;
+			if( this.MinibossWho != -1 ) {
+				if( Main.npc[this.MinibossWho].active ) {
+					return Main.npc[this.MinibossWho].type == npc.type;
+				}
+			}
+			return false;
 		}
 
 		protected override void OnClaimNPC( NPC npc ) {
-			if( this.MinibossWho == -1 && npc.damage > 0 && !npc.friendly && !npc.immortal ) {
+			if( this.MinibossWho == -1 ) {
+				if( npc.damage == 0 || npc.friendly || npc.immortal ) {
+					return;
+				}
+
 				Main.NewText( "An imposing presence nears...", Color.DarkOrange );
 
 				this.MinibossWho = npc.whoAmI;
@@ -79,16 +85,30 @@ namespace Ambushes.Ambushes {
 		}
 
 		protected override void UpdateNPCForAmbush( NPC npc ) {
-			if( this.MinibossWho == npc.whoAmI ) {
-				this.UpdatePlayerEncounter( npc );
+			if( this.MinibossWho != npc.whoAmI ) {
+				return;
 			}
+
+			var mynpc = npc.GetGlobalNPC<AmbushesNPC>();
+
+			// Account for mismatched minibosses
+			if( !mynpc.IsMiniboss ) {
+				for( int i=Main.npc.Length-1; i>0; i++ ) {
+					if( Main.npc[i] == null || !Main.npc[i].active ) {
+						this.MinibossWho = i;
+						break;
+					}
+				}
+			}
+
+			this.UpdatePlayerEncounter( npc );
 		}
 
 
 		////////////////
 
 		private void UpdatePlayerEncounter( NPC npc ) {
-			if( this.HasEncounterBegun ) {
+			if( this.HasCloseEncounterBegun ) {
 				return;
 			}
 
@@ -101,7 +121,7 @@ namespace Ambushes.Ambushes {
 			maxDistSqr *= maxDistSqr;
 
 			if( Vector2.DistanceSquared(npc.Center, player.Center) < maxDistSqr ) {
-				this.HasEncounterBegun = true;
+				this.HasCloseEncounterBegun = true;
 			}
 		}
 	}

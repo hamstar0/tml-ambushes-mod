@@ -40,6 +40,10 @@ namespace Ambushes.Ambushes {
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
+		protected override void OnDeactivate() {
+			this.HasEncounterBegun = false;
+		}
+
 
 		////////////////
 
@@ -47,11 +51,26 @@ namespace Ambushes.Ambushes {
 			if( !this.HasEncounterBegun ) {
 				// Time out after 10 seconds of "encounter"
 				if( this.ElapsedTicks > 600 ) {
+					if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+						Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " aborted: Timed out." );
+					}
 					return true;
 				}
 				// Abort if player leaves
-				if( !this.ArePlayersNearby(AmbushesMod.Config.UnencounteredAmbushPlayerNearbyNeededTileRadius) ) {
-					return true;
+				if( this.IsEntrapping ) {
+					if( !this.ArePlayersNearby( (int)((float)AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius * 0.75f) ) ) {
+						if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+							Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " aborted: No one nearby (1)." );
+						}
+						return true;
+					}
+				} else {
+					if( !this.ArePlayersNearby( AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius ) ) {
+						if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+							Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " aborted: No one nearby (2)." );
+						}
+						return true;
+					}
 				}
 			}
 
@@ -76,16 +95,19 @@ namespace Ambushes.Ambushes {
 				return false;
 			}
 
-			bool spawnsEnded = this.ElapsedTicks >= this.GetNPCSpawnsDuration()
-				|| !this.ArePlayersNearby( AmbushesMod.Config.EncounteredAmbushPlayerNearbyNeededTileRadius );
+			// End when timer expires or no players nearby
+			bool spawnsEnded = this.ElapsedTicks >= this.GetNPCSpawnsDuration();
+			bool alone = !this.ArePlayersNearby( AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius );
 
-			if( spawnsEnded ) {
-				if( AmbushesMod.Config.DebugModeInfoSpawns ) {
-					Main.NewText( "Ambush "+this.GetType().Name+" at "+this.TileX+","+this.TileY+" ended." );
+			if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+				if( spawnsEnded ) {
+					Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " ended: Time's up." );
+				} else if( alone ) {
+					Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " ended: No one nearby." );
 				}
 			}
 
-			return spawnsEnded;
+			return spawnsEnded || alone;
 		}
 
 

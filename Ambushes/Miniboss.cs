@@ -14,13 +14,13 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public bool HasEncounterBegun { get; private set; } = false;
+		public bool HasCloseEncounterBegun { get; private set; } = false;
 
 		////
 
 		public override float WorldGenWeight => AmbushesMod.Config.MinibossAmbushPriorityWeight;
 
-		public override bool PlaysMusic => this.IsEntrapping && this.HasEncounterBegun;
+		public override bool PlaysMusic => this.IsEntrapping && this.HasCloseEncounterBegun;
 
 
 
@@ -47,13 +47,18 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool RunUntil() {
-			int nearbyRadius = AmbushesMod.Config.MinibossAmbushPlayerNearbyNeededTileRadius;
-
 			if( this.MinibossWho == -1 ) {
-				if( !this.ArePlayersNearby(nearbyRadius) ) {
+				if( this.ElapsedTicks > 600 ) {
+					if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+						Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " aborted: Timed out." );
+					}
 					return true;
 				}
-				if( this.ElapsedTicks > 600 ) {
+
+				if( !this.ArePlayersNearby( AmbushesMod.Config.MinibossAmbushPlayerNearbyNeededTileRadius ) ) {
+					if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+						Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " aborted: No one nearby." );
+					}
 					return true;
 				}
 
@@ -61,10 +66,18 @@ namespace Ambushes.Ambushes {
 				return false;
 			}
 
-			bool runBramblesUntil = base.RunUntil();
-			NPC npc = Main.npc[ this.MinibossWho ];
+			NPC npc = Main.npc[this.MinibossWho];
+			bool isMinibossDead = this.MinibossWho != -1 && !npc.active;
+			bool runBramblesUntil = base.RunUntil();	// Runs brambles also, if any
 
-			return (this.MinibossWho != -1 && !npc.active) && runBramblesUntil;
+			if( isMinibossDead && runBramblesUntil ) {
+				if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+					Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " ended: Miniboss dead, brambles gone." );
+				}
+				return true;
+			}
+
+			return false;
 		}
 
 
@@ -80,6 +93,7 @@ namespace Ambushes.Ambushes {
 		}
 
 		protected override void OnDeactivate() {
+			this.MinibossWho = -1;
 		}
 	}
 }

@@ -47,12 +47,8 @@ namespace Ambushes {
 		public int HugeWorldInitialAmbushes { get; set; } = 2048;
 
 		[Range( 0, 10000 )]
-		[DefaultValue( 50 )]
-		public int UnencounteredAmbushPlayerNearbyNeededTileRadius { get; set; } = 50;
-
-		[Range( 0, 10000 )]
 		[DefaultValue( 80 )]
-		public int EncounteredAmbushPlayerNearbyNeededTileRadius { get; set; } = 80;
+		public int AmbushPlayerNearbyNeededTileRadius { get; set; } = 80;
 
 
 		/*[Range( 1, 10000 )]
@@ -222,5 +218,17 @@ namespace Ambushes {
 		[Range( 0, 10000 )]
 		[DefaultValue( 80 )]
 		public int MinibossAmbushPlayerNearbyNeededTileRadius { get; set; } = 40;
+
+		[Range( 0f, 10f )]
+		[DefaultValue( 3f )]
+		public float MinibossSizeScale { get; set; } = 3f;
+
+		[Range( 0f, 20f )]
+		[DefaultValue( 6f )]
+		public float MinibossLifeScale { get; set; } = 6f;
+
+		[Range( 0f, 20f )]
+		[DefaultValue( 3f )]
+		public float MinibossDamageScale { get; set; } = 3f;
 	}
 }
