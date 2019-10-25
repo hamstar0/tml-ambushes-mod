@@ -14,7 +14,7 @@ namespace Ambushes {
 		public override ConfigScope Mode => ConfigScope.ServerSide;
 
 
-		////
+		////////////////
 
 		[Header( "Debug settings" )]
 		public bool DebugModeInfo { get; set; } = false;
@@ -49,10 +49,6 @@ namespace Ambushes {
 		[Range( 0, 10000 )]
 		[DefaultValue( 80 )]
 		public int AmbushPlayerNearbyNeededTileRadius { get; set; } = 80;
-
-		[Range( 0, 10000 )]
-		[DefaultValue( 80 )]
-		public int MinibossAmbushPlayerNearbyNeededTileRadius { get; set; } = 40;
 
 
 		/*[Range( 1, 10000 )]
@@ -120,59 +116,91 @@ namespace Ambushes {
 
 		////
 
-		[Header( "Ambush type settings" )]
+		[Header( "Ambush types settings" )]
+		[Range( 0f, 20f )]
+		[DefaultValue( 0.5f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float MobAmbushLifeScale { get; set; } = 0.5f;
+
+		[Range( 0f, 20f )]
+		[DefaultValue( 0.25f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float DefaultNPCSpawnWeight { get; set; } = 0.25f;
+
+		[Range( 0f, 20f )]
+		[DefaultValue( 1.25f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float DefaultNPCSpawnWeightPerDepthPercent { get; set; } = 1.25f;
+
+		[Range( 0f, 20f )]
+		[DefaultValue( 1f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float DefaultNPCSpawnWeightPerHardMode { get; set; } = 1f;
+
+		[Range( 0f, 20f )]
+		[DefaultValue( 1.25f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float DefaultNPCSpawnWeightPostPlantera { get; set; } = 1.25f;
+
+		[Range( 0f, 20f )]
+		[DefaultValue( 1.5f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float DefaultNPCSpawnWeightPostMoonLord { get; set; } = 1.5f;
+		
+
+		[Header( "Ambush flood type settings" )]
 		[Range( 0f, 10f )]
 		[DefaultValue( 2f )]
 		[ReloadRequired]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float FloodAmbushPriorityWeight { get; set; } = 2f;
 
+		[Range( 0f, 100f )]
+		[DefaultValue( 10f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float FloodAmbushSpawnWeight { get; set; } = 10f;
+
+
+		[Header( "Ambush bramble wall type settings" )]
 		[Range( 0f, 10f )]
 		[DefaultValue( 2f )]
 		[ReloadRequired]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float BrambleWallAmbushPriorityWeight { get; set; } = 2f;
 
+
+		[Header( "Ambush flyer swarm type settings" )]
 		[Range( 0f, 10f )]
 		[DefaultValue( 0.25f )]
 		[ReloadRequired]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float FlyerSwarmAmbushPriorityWeight { get; set; } = 0.25f;
 
+		[Range( 0f, 100f )]
+		[DefaultValue( 10f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float FlyerswarmAmbushSpawnWeight { get; set; } = 10f;
+
+
+		[Header( "Ambush skeleton raiders type settings" )]
 		[Range( 0f, 10f )]
 		[DefaultValue( 0.25f )]
 		[ReloadRequired]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float SkeletonRaidersAmbushPriorityWeight { get; set; } = 0.25f;
 
+		[Range( 0f, 100f )]
+		[DefaultValue( 10f )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float SkeletonRaidersAmbushSpawnWeight { get; set; } = 10f;
+
+
+		[Header( "Ambush worms infestation type settings" )]
 		[Range( 0f, 10f )]
 		[DefaultValue( 0.25f )]
 		[ReloadRequired]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float WormsInfestationAmbushPriorityWeight { get; set; } = 0.25f;
-
-		[Range( 0f, 10f )]
-		[DefaultValue( 0.25f )]
-		//[DefaultValue( 25f )]
-		[ReloadRequired]
-		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float MinibossAmbushPriorityWeight { get; set; } = 0.25f;//25f;
-
-
-		[Range(0f, 100f)]
-		[DefaultValue( 10f )]
-		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float FloodAmbushSpawnWeight { get; set; } = 10f;
-
-		[Range( 0f, 100f )]
-		[DefaultValue( 10f )]
-		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float FlyerswarmAmbushSpawnWeight { get; set; } = 10f;
-
-		[Range( 0f, 100f )]
-		[DefaultValue( 10f )]
-		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float SkeletonRaidersAmbushSpawnWeight { get; set; } = 10f;
 
 		[Range( 0f, 100f )]
 		[DefaultValue( 5f )]
@@ -180,9 +208,15 @@ namespace Ambushes {
 		public float WormsInfestationAmbushSpawnWeight { get; set; } = 5f;
 
 
+		[Header( "Ambush miniboss type settings" )]
 		[Range( 0f, 10f )]
-		[DefaultValue( 0.5f )]
+		[DefaultValue( 0.25f )]//25f
+		[ReloadRequired]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float MobAmbushLifeScale { get; set; } = 0.5f;
+		public float MinibossAmbushPriorityWeight { get; set; } = 0.25f;//25f;
+
+		[Range( 0, 10000 )]
+		[DefaultValue( 80 )]
+		public int MinibossAmbushPlayerNearbyNeededTileRadius { get; set; } = 40;
 	}
 }

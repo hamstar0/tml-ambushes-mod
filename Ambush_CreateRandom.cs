@@ -24,8 +24,8 @@ namespace Ambushes {
 			Ambush.StaticInstances = ambushTypes.SafeSelect(
 				ambushType => (Ambush)Activator.CreateInstance(ambushType, true)
 			).SafeOrderBy( a => {
-				Ambush.TotalWeight += a.SpawnWeight;
-				return a.SpawnWeight;
+				Ambush.TotalWeight += a.WorldGenWeight;
+				return a.WorldGenWeight;
 			} ).ToList();
 		}
 
@@ -42,11 +42,11 @@ namespace Ambushes {
 
 			float counted = 0f;
 			foreach( Ambush ambush in Ambush.StaticInstances ) {
-				if( rand >= counted && rand < ( ambush.SpawnWeight + counted ) ) {
+				if( rand >= counted && rand < ( ambush.WorldGenWeight + counted ) ) {
 					randAmbush = ambush;
 					break;
 				}
-				counted += ambush.SpawnWeight;
+				counted += ambush.WorldGenWeight;
 			}
 			
 			return randAmbush?.CloneRandomized( tileX, tileY );

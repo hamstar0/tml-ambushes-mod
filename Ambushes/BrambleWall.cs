@@ -14,7 +14,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override float SpawnWeight => AmbushesMod.Config.BrambleWallAmbushPriorityWeight;
+		public override float WorldGenWeight => AmbushesMod.Config.BrambleWallAmbushPriorityWeight;
 
 		public override bool PlaysMusic => false;
 

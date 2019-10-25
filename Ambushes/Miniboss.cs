@@ -18,7 +18,7 @@ namespace Ambushes.Ambushes {
 
 		////
 
-		public override float SpawnWeight => AmbushesMod.Config.MinibossAmbushPriorityWeight;
+		public override float WorldGenWeight => AmbushesMod.Config.MinibossAmbushPriorityWeight;
 
 		public override bool PlaysMusic => this.IsEntrapping && this.HasEncounterBegun;
 

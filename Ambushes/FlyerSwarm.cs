@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class FlyerSwarmAmbush : MobAmbush {
-		public override float SpawnWeight => AmbushesMod.Config.FlyerSwarmAmbushPriorityWeight;
+		public override float WorldGenWeight => AmbushesMod.Config.FlyerSwarmAmbushPriorityWeight;
 
 
 
@@ -36,22 +36,26 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override int GetSpawnsDuration() {
-			return this.GetBrambleDuration();
-		}
-
-		public override void ShowMessage() {
-			Main.NewText( "A rush of wings can be heard...", Color.DarkOrange );
-		}
-
-
-		////////////////
-
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
 		protected override void OnDeactivate() {
+		}
+
+
+		////////////////
+
+		public override int GetNPCSpawnsDuration() {
+			return this.GetBrambleDuration();
+		}
+
+		public override float GetNPCSpawnWeight() {
+			return base.GetNPCSpawnWeight() * AmbushesMod.Config.FlyerswarmAmbushSpawnWeight;
+		}
+
+		public override void ShowMessage() {
+			Main.NewText( "A rush of wings can be heard...", Color.DarkOrange );
 		}
 
 
@@ -103,11 +107,6 @@ namespace Ambushes.Ambushes {
 
 				pool[npcid] = 1f;
 			}
-		}
-
-		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
-			spawnRate = (int)( (float)spawnRate / AmbushesMod.Config.FlyerswarmAmbushSpawnWeight );
-			maxSpawns = (int)( (float)maxSpawns * AmbushesMod.Config.FlyerswarmAmbushSpawnWeight );
 		}
 	}
 }

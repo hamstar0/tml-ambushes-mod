@@ -19,11 +19,6 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public abstract int GetBrambleDuration();
-
-
-		////////////////
-
 		protected override bool RunUntil() {
 			bool cleanupComplete = false;
 			int duration = this.GetBrambleDuration();
@@ -85,5 +80,10 @@ namespace Ambushes.Ambushes {
 				}
 			}
 		}
+
+
+		////////////////
+
+		public abstract int GetBrambleDuration();
 	}
 }

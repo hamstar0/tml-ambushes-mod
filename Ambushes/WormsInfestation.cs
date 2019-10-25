@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class WormsInfestationAmbush : MobAmbush {
-		public override float SpawnWeight => AmbushesMod.Config.WormsInfestationAmbushPriorityWeight;
+		public override float WorldGenWeight => AmbushesMod.Config.WormsInfestationAmbushPriorityWeight;
 		public override bool PlaysMusic => true;
 
 
@@ -30,22 +30,26 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override int GetSpawnsDuration() {
-			return this.GetBrambleDuration() * 2;
-		}
-
-		public override void ShowMessage() {
-			Main.NewText( "The earth trembles...", Color.DarkOrange );
-		}
-
-
-		////////////////
-
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 			return base.OnActivate( clearTileX, clearTileY );
 		}
 
 		protected override void OnDeactivate() {
+		}
+
+
+		////////////////
+
+		public override int GetNPCSpawnsDuration() {
+			return this.GetBrambleDuration() * 2;
+		}
+
+		public override float GetNPCSpawnWeight() {
+			return base.GetNPCSpawnWeight() * AmbushesMod.Config.WormsInfestationAmbushSpawnWeight;
+		}
+
+		public override void ShowMessage() {
+			Main.NewText( "The earth trembles...", Color.DarkOrange );
 		}
 
 
@@ -97,11 +101,6 @@ namespace Ambushes.Ambushes {
 
 				pool[npcid] = 1f;
 			}
-		}
-
-		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
-			spawnRate = (int)( (float)spawnRate / AmbushesMod.Config.WormsInfestationAmbushSpawnWeight );
-			maxSpawns = (int)( (float)maxSpawns * AmbushesMod.Config.WormsInfestationAmbushSpawnWeight );
 		}
 	}
 }

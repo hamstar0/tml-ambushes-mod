@@ -8,7 +8,7 @@ using Terraria;
 
 namespace Ambushes.Ambushes {
 	class FloodAmbush : MobAmbush {
-		public override float SpawnWeight => AmbushesMod.Config.FloodAmbushPriorityWeight;
+		public override float WorldGenWeight => AmbushesMod.Config.FloodAmbushPriorityWeight;
 
 
 
@@ -34,17 +34,6 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override int GetSpawnsDuration() {
-			return this.GetBrambleDuration();
-		}
-
-		public override void ShowMessage() {
-			Main.NewText( "The locals are alerted to your presence.", Color.DarkOrange );
-		}
-
-
-		////////////////
-
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
 
 			return base.OnActivate( clearTileX, clearTileY );
@@ -56,9 +45,16 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		public override void EditNPCSpawnDataForMobs( Player player, ref int spawnRate, ref int maxSpawns ) {
-			spawnRate = (int)( (float)spawnRate / AmbushesMod.Config.FloodAmbushSpawnWeight );
-			maxSpawns = (int)( (float)maxSpawns * AmbushesMod.Config.FloodAmbushSpawnWeight );
+		public override int GetNPCSpawnsDuration() {
+			return this.GetBrambleDuration();
+		}
+
+		public override float GetNPCSpawnWeight() {
+			return base.GetNPCSpawnWeight() * AmbushesMod.Config.FloodAmbushSpawnWeight;
+		}
+
+		public override void ShowMessage() {
+			Main.NewText( "The locals are alerted to your presence.", Color.DarkOrange );
 		}
 	}
 }

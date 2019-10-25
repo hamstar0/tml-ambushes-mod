@@ -29,18 +29,18 @@ namespace Ambushes.Ambushes {
 		protected override void OnDeactivate() {
 		}
 
-
-		////////////////
-
-		public override int GetBrambleDuration() {
-			return AmbushesMod.Config.BrambleEnclosureTickDurationUntilErosionBegin;
-		}
-
 		////////////////
 
 		protected override bool RunUntil() {
 			bool isBramblesDone = base.RunUntil();
 			return isBramblesDone || !this.IsEntrapping;
+		}
+
+
+		////////////////
+
+		public override int GetBrambleDuration() {
+			return AmbushesMod.Config.BrambleEnclosureTickDurationUntilErosionBegin;
 		}
 
 
