@@ -53,14 +53,24 @@ namespace Ambushes.Ambushes {
 
 		////
 
+		protected override bool PreClaimNPC( NPC npc ) {
+			// Not currently implemented for any use:
+			return this.MinibossWho != -1 && Main.npc[this.MinibossWho].active
+				? Main.npc[this.MinibossWho].type == npc.type
+				: false;
+		}
+
 		protected override void OnClaimNPC( NPC npc ) {
 			if( this.MinibossWho == -1 && npc.damage > 0 && !npc.friendly && !npc.immortal ) {
-				Main.NewText( "An imposing presence lurks somewhere nearby...", Color.DarkOrange );
+				Main.NewText( "An imposing presence nears...", Color.DarkOrange );
 
 				this.MinibossWho = npc.whoAmI;
 				MinibossAmbush.SetAsMiniboss( npc );
 
-				// Set spawns only to the miniboss's type
+				// Reset ticks
+				this.ElapsedTicks = 1;
+
+				// Refresh spawns so only to the miniboss's type now appears
 				Timers.SetTimer( "SpawnPoolUpdate", 2, () => {
 					NPC.SpawnNPC();
 					return false;

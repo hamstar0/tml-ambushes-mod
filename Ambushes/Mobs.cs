@@ -44,20 +44,40 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool RunUntil() {
-			if( this.ClaimedNpcWhos.Count > 5 ) {
-				if( !this.HasEncounterBegun ) {
-					this.HasEncounterBegun = true;
-					this.ShowMessage();
+			if( !this.HasEncounterBegun ) {
+				// Time out after 10 seconds of "encounter"
+				if( this.ElapsedTicks > 600 ) {
+					return true;
+				}
+				// Abort if player leaves
+				if( !this.ArePlayersNearby(AmbushesMod.Config.UnencounteredAmbushPlayerNearbyNeededTileRadius) ) {
+					return true;
 				}
 			}
 
+			// Minimum nearby NPCs? Begin "encounter"
+			if( this.ClaimedNpcWhos.Count >= 4 ) {
+				if( !this.HasEncounterBegun ) {
+					this.HasEncounterBegun = true;
+					this.ShowMessage();
+
+					// Reset ticks
+					this.ElapsedTicks = 1;
+				}
+			}
+
+			// No encounter? Hold everything
+			if( !this.HasEncounterBegun ) {
+				return false;
+			}
+
+			// Give priority to bramble enclosure
 			if( !base.RunUntil() ) {
 				return false;
 			}
 
-			int nearbyRadius = AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius;
 			bool spawnsEnded = this.ElapsedTicks >= this.GetNPCSpawnsDuration()
-				|| !this.ArePlayersNearby( nearbyRadius );
+				|| !this.ArePlayersNearby( AmbushesMod.Config.EncounteredAmbushPlayerNearbyNeededTileRadius );
 
 			if( spawnsEnded ) {
 				if( AmbushesMod.Config.DebugModeInfoSpawns ) {
@@ -118,6 +138,7 @@ namespace Ambushes.Ambushes {
 		protected virtual void OnClaimNPCForMobs( NPC npc ) {
 			npc.life = (int)((float)npc.life * AmbushesMod.Config.MobAmbushLifeScale);
 			npc.lifeMax = (int)((float)npc.lifeMax * AmbushesMod.Config.MobAmbushLifeScale);
+			npc.value = npc.value * AmbushesMod.Config.MobAmbushLifeScale;
 		}
 
 		protected virtual void UpdateNPCForAmbushForMobs( NPC npc ) {

@@ -93,7 +93,7 @@ namespace Ambushes.Ambushes {
 		}
 
 		public override void ShowMessage() {
-			Main.NewText( "Death from above!", Color.DarkOrange );
+			Main.NewText( "Skeleton raiders nearby!", Color.DarkOrange );
 		}
 
 
@@ -139,6 +139,10 @@ namespace Ambushes.Ambushes {
 		}
 
 		////
+
+		protected override bool PreClaimNPC( NPC npc ) {
+			return SkeletonRaidersAmbush.AllSkeletons.Contains( npc.type );
+		}
 
 		protected override void OnClaimNPCForMobs( NPC npc ) {
 			if( SkeletonRaidersAmbush.AllSkeletons.Contains( npc.type ) ) {

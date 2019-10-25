@@ -33,6 +33,7 @@ namespace Ambushes.Ambushes {
 
 		protected override bool RunUntil() {
 			bool isBramblesDone = base.RunUntil();
+
 			return isBramblesDone || !this.IsEntrapping;
 		}
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.Classes.DataStructures;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -8,6 +9,34 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class WormsInfestationAmbush : MobAmbush {
+		public static readonly ISet<int> PreHardModeWorms;
+		public static readonly ISet<int> HardModeWorms;
+		private static readonly ISet<int> AllWorms;
+
+		////
+
+		static WormsInfestationAmbush() {
+			WormsInfestationAmbush.PreHardModeWorms = new ReadOnlySet<int>( new HashSet<int> {
+				NPCID.DevourerHead,
+				NPCID.GiantWormHead,
+				NPCID.TombCrawlerHead,
+				NPCID.BoneSerpentHead
+			} );
+			WormsInfestationAmbush.HardModeWorms = new ReadOnlySet<int>( new HashSet<int> {
+				NPCID.SeekerHead,
+				NPCID.DiggerHead,
+				NPCID.DuneSplicerHead,
+				NPCID.BoneSerpentHead
+			} );
+
+			WormsInfestationAmbush.AllWorms = new HashSet<int>( WormsInfestationAmbush.PreHardModeWorms );
+			WormsInfestationAmbush.AllWorms.UnionWith( WormsInfestationAmbush.HardModeWorms );
+		}
+
+
+
+		////////////////
+
 		public override float WorldGenWeight => AmbushesMod.Config.WormsInfestationAmbushPriorityWeight;
 		public override bool PlaysMusic => true;
 
@@ -94,13 +123,20 @@ namespace Ambushes.Ambushes {
 				} else if( spawnInfo.player.ZoneUndergroundDesert ) {
 					npcid = NPCID.DuneSplicerHead;
 				} else if( spawnInfo.player.ZoneUnderworldHeight ) {
-					npcid = NPCID.DiggerHead;
+					npcid = NPCID.BoneSerpentHead;
 				} else {
 					npcid = NPCID.DiggerHead;
 				}
 
 				pool[npcid] = 1f;
 			}
+		}
+
+
+		////////////////
+
+		protected override bool PreClaimNPC( NPC npc ) {
+			return WormsInfestationAmbush.AllWorms.Contains( npc.type );
 		}
 	}
 }

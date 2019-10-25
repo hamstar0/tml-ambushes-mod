@@ -47,8 +47,12 @@ namespace Ambushes {
 		public int HugeWorldInitialAmbushes { get; set; } = 2048;
 
 		[Range( 0, 10000 )]
+		[DefaultValue( 50 )]
+		public int UnencounteredAmbushPlayerNearbyNeededTileRadius { get; set; } = 50;
+
+		[Range( 0, 10000 )]
 		[DefaultValue( 80 )]
-		public int AmbushPlayerNearbyNeededTileRadius { get; set; } = 80;
+		public int EncounteredAmbushPlayerNearbyNeededTileRadius { get; set; } = 80;
 
 
 		/*[Range( 1, 10000 )]
@@ -123,14 +127,14 @@ namespace Ambushes {
 		public float MobAmbushLifeScale { get; set; } = 0.5f;
 
 		[Range( 0f, 20f )]
-		[DefaultValue( 0.25f )]
+		[DefaultValue( 0.35f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float DefaultNPCSpawnWeight { get; set; } = 0.25f;
+		public float DefaultNPCSpawnWeight { get; set; } = 0.35f;
 
 		[Range( 0f, 20f )]
 		[DefaultValue( 1.25f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float DefaultNPCSpawnWeightPerDepthPercent { get; set; } = 1.25f;
+		public float DefaultNPCSpawnWeightAddedAsDepthPercent { get; set; } = 1.25f;
 
 		[Range( 0f, 20f )]
 		[DefaultValue( 1f )]
@@ -190,9 +194,9 @@ namespace Ambushes {
 		public float SkeletonRaidersAmbushPriorityWeight { get; set; } = 0.25f;
 
 		[Range( 0f, 100f )]
-		[DefaultValue( 10f )]
+		[DefaultValue( 5f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float SkeletonRaidersAmbushSpawnWeight { get; set; } = 10f;
+		public float SkeletonRaidersAmbushSpawnWeight { get; set; } = 5f;
 
 
 		[Header( "Ambush worms infestation type settings" )]

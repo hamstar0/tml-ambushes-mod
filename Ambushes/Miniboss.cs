@@ -47,7 +47,6 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool RunUntil() {
-			bool runBramblesUntil = base.RunUntil();
 			int nearbyRadius = AmbushesMod.Config.MinibossAmbushPlayerNearbyNeededTileRadius;
 
 			if( this.MinibossWho == -1 ) {
@@ -57,12 +56,13 @@ namespace Ambushes.Ambushes {
 				if( this.ElapsedTicks > 600 ) {
 					return true;
 				}
+
+				// Delay brambles and other run behavior until miniboss "encounter"
+				return false;
 			}
 
-			NPC npc = null;
-			if( this.MinibossWho != -1 ) {
-				npc = Main.npc[ this.MinibossWho ];
-			}
+			bool runBramblesUntil = base.RunUntil();
+			NPC npc = Main.npc[ this.MinibossWho ];
 
 			return (this.MinibossWho != -1 && !npc.active) && runBramblesUntil;
 		}

@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Helpers.TModLoader;
+﻿using HamstarHelpers.Classes.DataStructures;
+using HamstarHelpers.Helpers.TModLoader;
 using HamstarHelpers.Helpers.World;
 using Microsoft.Xna.Framework;
 using System;
@@ -10,6 +11,36 @@ using Terraria.ModLoader;
 
 namespace Ambushes.Ambushes {
 	class FlyerSwarmAmbush : MobAmbush {
+		public static readonly ISet<int> PreHardModeFlyers;
+		public static readonly ISet<int> HardModeFlyers;
+		private static readonly ISet<int> AllFlyers;
+
+		////
+
+		static FlyerSwarmAmbush() {
+			FlyerSwarmAmbush.PreHardModeFlyers = new ReadOnlySet<int>( new HashSet<int> {
+				NPCID.Slimer,
+				NPCID.CaveBat,
+				NPCID.GiantBat,
+				NPCID.JungleBat,
+				NPCID.IceBat,
+				NPCID.Hellbat
+			} );
+			FlyerSwarmAmbush.HardModeFlyers = new ReadOnlySet<int>( new HashSet<int> {
+				NPCID.GiantBat,
+				NPCID.IlluminantBat,
+				NPCID.GiantFlyingFox,
+				NPCID.Lavabat
+			} );
+
+			FlyerSwarmAmbush.AllFlyers = new HashSet<int>( FlyerSwarmAmbush.PreHardModeFlyers );
+			FlyerSwarmAmbush.AllFlyers.UnionWith( FlyerSwarmAmbush.HardModeFlyers );
+		}
+
+
+
+		////////////////
+
 		public override float WorldGenWeight => AmbushesMod.Config.FlyerSwarmAmbushPriorityWeight;
 
 
@@ -28,7 +59,7 @@ namespace Ambushes.Ambushes {
 			bool isEntrapping = AmbushesMod.Config.AmbushEntrapmentOdds <= 0
 				? false
 				: TmlHelpers.SafelyGetRand().Next( AmbushesMod.Config.AmbushEntrapmentOdds ) == 0;
-			isEntrapping = isEntrapping && !WorldHelpers.IsWithinUnderworld( new Vector2(tileX<<4, tileY<<4) );
+			isEntrapping = isEntrapping && !WorldHelpers.IsWithinUnderworld( new Vector2( tileX << 4, tileY << 4 ) );
 
 			return new FlyerSwarmAmbush( tileX, tileY, isEntrapping );
 		}
@@ -41,6 +72,12 @@ namespace Ambushes.Ambushes {
 		}
 
 		protected override void OnDeactivate() {
+		}
+
+		////
+
+		protected override bool RunUntil() {
+			return base.RunUntil();
 		}
 
 
@@ -107,6 +144,13 @@ namespace Ambushes.Ambushes {
 
 				pool[npcid] = 1f;
 			}
+		}
+
+
+		////
+
+		protected override bool PreClaimNPC( NPC npc ) {
+			return FlyerSwarmAmbush.AllFlyers.Contains( npc.type );
 		}
 	}
 }

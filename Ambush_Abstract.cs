@@ -38,7 +38,7 @@ namespace Ambushes {
 			float depthPercent = undergroundTileY / rangeY;
 			
 			float weight = AmbushesMod.Config.DefaultNPCSpawnWeight
-				+ (depthPercent * AmbushesMod.Config.DefaultNPCSpawnWeightPerDepthPercent);
+				+ (depthPercent * AmbushesMod.Config.DefaultNPCSpawnWeightAddedAsDepthPercent);
 			if( Main.hardMode ) {
 				weight *= AmbushesMod.Config.DefaultNPCSpawnWeightPerHardMode;
 			}
@@ -61,6 +61,10 @@ namespace Ambushes {
 		public virtual void EditNPCSpawnData( Player player, ref int spawnRate, ref int maxSpawns ) { }
 
 		////
+
+		protected virtual bool PreClaimNPC( NPC npc ) {
+			return true;
+		}
 
 		protected virtual void OnClaimNPC( NPC npc ) { }
 

@@ -10,6 +10,12 @@ using Terraria.ModLoader;
 
 namespace Ambushes {
 	abstract partial class Ambush {
+		protected int ElapsedTicks = 0;
+
+
+
+		////////////////
+
 		protected ISet<int> ClaimedNpcWhos { get; } = new HashSet<int>();
 
 		////
@@ -59,6 +65,8 @@ namespace Ambushes {
 
 				this.FlushDeadNPCs();
 			}
+
+			this.ElapsedTicks++;
 		}
 
 		internal void InternalUpdateNPCForAmbush( NPC npc ) {
@@ -67,6 +75,10 @@ namespace Ambushes {
 			}
 			if( this.ClaimedNpcWhos.Contains(npc.whoAmI) ) {
 				this.UpdateNPCForAmbush( npc );
+			}
+
+			if( AmbushesMod.Config.DebugModeInfoSpawns ) {
+				DebugHelpers.Print( this.GetType() + "_claimed_npcs", this.ClaimedNpcWhos.Count+"", 20 );
 			}
 		}
 

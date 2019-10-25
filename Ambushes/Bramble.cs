@@ -7,12 +7,6 @@ using Terraria;
 
 namespace Ambushes.Ambushes {
 	abstract class BrambleAmbush : Ambush {
-		protected int ElapsedTicks = 0;
-
-
-
-		////////////////
-
 		protected BrambleAmbush( int tileX, int tileY ) : base( tileX, tileY ) {
 		}
 
@@ -36,8 +30,6 @@ namespace Ambushes.Ambushes {
 					this.RunCleanup( ref cleanupComplete );
 				}
 			}
-
-			this.ElapsedTicks++;
 
 			return cleanupComplete;
 		}

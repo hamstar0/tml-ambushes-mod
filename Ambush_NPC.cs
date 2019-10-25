@@ -30,7 +30,9 @@ namespace Ambushes {
 
 			bool isNearby = dist.LengthSquared() < minDistSqr;
 			if( isNearby ) {
-				this.ClaimedNpcWhos.Add( npc.whoAmI );
+				if( this.PreClaimNPC(npc) ) {
+					this.ClaimedNpcWhos.Add( npc.whoAmI );
+				}
 			}
 
 			return isNearby;
