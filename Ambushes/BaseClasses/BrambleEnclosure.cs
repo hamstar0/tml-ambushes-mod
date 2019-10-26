@@ -21,7 +21,7 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool OnActivate( int clearTileX, int clearTileY ) {
-			this.CreateBrambleEnclosure();
+			this.CreateBrambleEnclosureIfEntrapping();
 
 			return true;
 		}
@@ -47,7 +47,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		protected void CreateBrambleEnclosure() {
+		protected void CreateBrambleEnclosureIfEntrapping() {
 			if( this.IsEntrapping ) {
 				int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
 				IDictionary<int, ISet<int>> tileTrace = CursedBrambleTile.TraceTileEnclosure( this.TileX, this.TileY, radius );

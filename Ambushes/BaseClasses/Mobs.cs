@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Services.Timers;
+﻿using HamstarHelpers.Helpers.World;
+using HamstarHelpers.Services.Timers;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -37,7 +38,7 @@ namespace Ambushes.Ambushes {
 				return false;
 			} );
 
-			return base.OnActivate( clearTileX, clearTileY );
+			return true;//base.OnActivate( clearTileX, clearTileY );	<- overrides brambles; begin when spawns do
 		}
 
 		protected override void OnDeactivate() {
@@ -48,40 +49,29 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected override bool RunUntil() {
+			Player player = Main.player[this.TriggeringPlayer];
+			bool isPlayerActive = player != null && player.active && !player.dead;
+			bool isPlayerUnderground = isPlayerActive && player.Center.Y >= WorldHelpers.DirtLayerTopTileY;
+			int spawnDurationMax = this.GetNPCSpawnsDuration();
+
+			// Ambush follows player until "encountered"
 			if( !this.HasEncounterBegun ) {
-				// Time out after 10 seconds of "encounter"
-				if( this.ElapsedTicks > 600 ) {
-					if( AmbushesMod.Config.DebugModeInfoSpawns ) {
-						Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " aborted: Timed out." );
-					}
+				if( !isPlayerActive || !isPlayerUnderground ) {
 					return true;
 				}
-				// Abort if player leaves
-				if( this.IsEntrapping ) {
-					if( !this.ArePlayersNearby( (int)((float)AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius * 0.75f) ) ) {
-						if( AmbushesMod.Config.DebugModeInfoSpawns ) {
-							Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " aborted: No one nearby (1)." );
-						}
-						return true;
-					}
-				} else {
-					if( !this.ArePlayersNearby( AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius ) ) {
-						if( AmbushesMod.Config.DebugModeInfoSpawns ) {
-							Main.NewText( "Ambush " + this.GetType().Name + " at " + this.TileX + "," + this.TileY + " aborted: No one nearby (2)." );
-						}
-						return true;
-					}
-				}
-			}
 
-			// Minimum nearby NPCs? Begin "encounter"
-			if( this.ClaimedNpcWhos.Count >= 4 ) {
-				if( !this.HasEncounterBegun ) {
+				this.TileX = (int)player.Center.X >> 4;
+				this.TileY = (int)player.Center.Y >> 4;
+
+				// Minimum nearby NPCs? Begin "encounter"
+				if( this.ClaimedNpcWhos.Count >= 4 ) {
 					this.HasEncounterBegun = true;
+
 					this.ShowMessage();
 
-					// Reset ticks
-					this.ElapsedTicks = 1;
+					if( this.ElapsedTicks < spawnDurationMax ) {
+						this.CreateBrambleEnclosureIfEntrapping();
+					}
 				}
 			}
 
@@ -90,12 +80,15 @@ namespace Ambushes.Ambushes {
 				return false;
 			}
 
-			// Give priority to bramble enclosure
+			return this.RunEncounterUntil();
+		}
+
+		private bool RunEncounterUntil() {
+			// Give priority to bramble cleanup
 			if( !base.RunUntil() ) {
 				return false;
 			}
 
-			// End when timer expires or no players nearby
 			bool spawnsEnded = this.ElapsedTicks >= this.GetNPCSpawnsDuration();
 			bool alone = !this.ArePlayersNearby( AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius );
 

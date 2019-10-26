@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Tiles;
+using HamstarHelpers.Helpers.World;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,8 @@ namespace Ambushes {
 
 		////
 
-		public int TileX { get; }
-		public int TileY { get; }
+		public int TileX { get; protected set; }
+		public int TileY { get; protected set; }
 
 		////
 
@@ -112,7 +113,9 @@ namespace Ambushes {
 				}
 
 				if( Vector2.DistanceSquared( plr.Center, this.WorldPosition ) < minDistSqr ) {
-					return true;
+					if( plr.Center.Y >= WorldHelpers.DirtLayerTopTileY ) {
+						return true;
+					}
 				}
 			}
 

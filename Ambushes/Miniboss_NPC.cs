@@ -68,19 +68,7 @@ namespace Ambushes.Ambushes {
 					return;
 				}
 
-				Main.NewText( "An imposing presence nears...", Color.DarkOrange );
-
-				this.MinibossWho = npc.whoAmI;
-				MinibossAmbush.SetAsMiniboss( npc );
-
-				// Reset ticks
-				this.ElapsedTicks = 1;
-
-				// Refresh spawns so only to the miniboss's type now appears
-				Timers.SetTimer( "SpawnPoolUpdate", 2, () => {
-					NPC.SpawnNPC();
-					return false;
-				} );
+				this.BeginEncounter( npc );
 			}
 		}
 
