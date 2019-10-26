@@ -1,11 +1,9 @@
-﻿using HamstarHelpers.Classes.Tiles.TilePattern;
-using HamstarHelpers.Helpers.Debug;
+﻿using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
-using HamstarHelpers.Helpers.Tiles;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ID;
+using Terraria.ModLoader;
 
 
 namespace Ambushes {
@@ -15,17 +13,10 @@ namespace Ambushes {
 				{ tileX, new HashSet<int> { tileY } }
 			};
 
+			var myworld = ModContent.GetInstance<AmbushesWorld>();
 			var edgeTileQueue = new Dictionary<int, ISet<int>>();
 			var chartedTiles = new Dictionary<int, ISet<int>>();
-			var dungeonWalls = new HashSet<int>( TileWallHelpers.UnsafeDungeonWallTypes );
-			dungeonWalls.Add( WallID.LihzahrdBrickUnsafe );
 
-			TilePattern pattern = new TilePattern( new TilePatternBuilder {
-				IsSolid = false,
-				IsActuated = false,
-				MaximumBrightness = 0.25f,
-				CustomCheck = (x, y) => !dungeonWalls.Contains(Main.tile[x,y].wall)
-			} );
 			int maxDistSqr = 50 * 50;
 			int minNeededAirTiles = 32 * 32;
 			int airTileCount = 0;
@@ -40,16 +31,16 @@ namespace Ambushes {
 							continue;
 						}
 
-						if( pattern.Check(eTileX, eTileY) ) {
+						if( myworld.AmbushMngr.ViableAmbushTile.Check(eTileX, eTileY) ) {
 							if( !chartedTiles.ContainsKey(eTileX) || !chartedTiles[eTileX].Contains(eTileY) ) {
 								chartedTiles.Set2D( eTileX, eTileY );
 								edgeTileQueue.Set2D( eTileX, eTileY );
 								airTileCount++;
+								
+								if( airTileCount >= minNeededAirTiles ) {
+									break;
+								}
 							}
-						}
-						
-						if( airTileCount >= minNeededAirTiles ) {
-							break;
 						}
 					}
 				}
@@ -73,7 +64,8 @@ namespace Ambushes {
 		private static void GetUnchartedNeighboringEdgeTiles(
 					int eTileX, int eTileY,
 					IDictionary<int, ISet<int>> chartedTiles,
-					ref IDictionary<int, ISet<int>> newEdgeTiles ) {
+					ref IDictionary<int, ISet<int>> newScanTiles ) {
+			var myworld = ModContent.GetInstance<AmbushesWorld>();
 			IEnumerable<(int, int)> neighbors() {
 				yield return ( eTileX, eTileY - 1 );
 				yield return ( eTileX - 1, eTileY );
@@ -88,8 +80,8 @@ namespace Ambushes {
 
 				Tile tile = Framing.GetTileSafely( tileX, tileY );
 
-				if( TileHelpers.IsAir(tile, true, false) ) {
-					newEdgeTiles.Set2D( tileX, tileY );
+				if( myworld.AmbushMngr.ViableAmbushTile.Check(eTileX, eTileY) ) {
+					newScanTiles.Set2D( tileX, tileY );
 				}
 			}
 		}
@@ -97,13 +89,18 @@ namespace Ambushes {
 		////////////////
 
 		public static void AdjustAmbushTileCenter( int tileX, ref int tileY ) {
-			Tile tile;
+			var myworld = ModContent.GetInstance<AmbushesWorld>();
 			int y = 0;
 
 			do {
-				tile = Framing.GetTileSafely( tileX, tileY + y );
+				if( (tileY + y) >= Main.maxTilesY - 1 ) {
+					LogHelpers.Warn( "Exceeded height check." );
+					y = 0;
+					break;
+				}
+
 				y++;
-			} while( TileHelpers.IsAir(tile, true, false) );
+			} while( myworld.AmbushMngr.ViableAmbushTile.Check(tileX, tileY+y) );
 
 			tileY = Math.Max( tileY, (tileY + y) - (AmbushesMod.Config.AmbushTriggerRadiusTiles / 2) );
 		}

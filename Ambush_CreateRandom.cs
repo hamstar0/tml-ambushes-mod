@@ -44,22 +44,6 @@ namespace Ambushes {
 				}
 			}
 			return -1;
-			/*switch( ambush.GetType().Name ) {
-			case "BrambleWallAmbush":
-				return 1;
-			case "FloodAmbush":
-				return 2;
-			case "FlyerSwarmAmbush":
-				return 3;
-			case "MinibossAmbush":
-				return 4;
-			case "SkeletonRaidersAmbush":
-				return 5;
-			case "WormsInfestationAmbush":
-				return 6;
-			default:
-				return -1;
-			}*/
 		}
 
 

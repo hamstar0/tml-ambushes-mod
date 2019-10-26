@@ -1,6 +1,8 @@
 ﻿using Ambushes.Ambushes;
+using HamstarHelpers.Classes.Tiles.TilePattern;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
+using HamstarHelpers.Helpers.Tiles;
 using HamstarHelpers.Helpers.World;
 using HamstarHelpers.Services.OverlaySounds;
 using System;
@@ -8,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader.IO;
 
 
@@ -61,10 +64,25 @@ namespace Ambushes {
 		private OverlaySound RecentMusic = null;
 
 
+		////////////////
+
+		public TilePattern ViableAmbushTile { get; }
+
+
 
 		////////////////
 
-		public AmbushManager( WorldSize size ) { }
+		public AmbushManager( WorldSize size ) {
+			var dungeonWalls = new HashSet<int>( TileWallHelpers.UnsafeDungeonWallTypes );
+			dungeonWalls.Add( WallID.LihzahrdBrickUnsafe );
+
+			this.ViableAmbushTile = new TilePattern( new TilePatternBuilder {
+				IsSolid = false,
+				IsActuated = false,
+				MaximumBrightness = 0.25f,
+				CustomCheck = ( x, y ) => !dungeonWalls.Contains( Main.tile[x, y].wall )
+			} );
+		}
 
 
 		////////////////

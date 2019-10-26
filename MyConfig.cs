@@ -56,9 +56,9 @@ namespace Ambushes {
 		public int AmbushInitialGenerationSlowness { get; set; } = 10;*/
 
 		[Range( 1, 60 * 60 * 60 * 24 )]
-		[DefaultValue( 60 * 60 * 10 )]
+		[DefaultValue( 60 * 60 * 5 )]
 		[Label( "Duration (in ticks) until a used ambush re-randomizes" )]
-		public int AmbushRegenTickRate { get; set; } = 60 * 60 * 10;    // 10 minutes
+		public int AmbushRegenTickRate { get; set; } = 60 * 60 * 5;    // 5 minutes
 
 		[Range( 1, 50000 )]
 		[DefaultValue( 64 )]
@@ -177,9 +177,9 @@ namespace Ambushes {
 		public float FlyerSwarmAmbushPriorityWeight { get; set; } = 0.25f;
 
 		[Range( 0f, 100f )]
-		[DefaultValue( 10f )]
+		[DefaultValue( 6.5f )]
 		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
-		public float FlyerswarmAmbushSpawnWeight { get; set; } = 10f;
+		public float FlyerswarmAmbushSpawnWeight { get; set; } = 6.5f;
 
 
 		[Header( "Ambush skeleton raiders type settings" )]
