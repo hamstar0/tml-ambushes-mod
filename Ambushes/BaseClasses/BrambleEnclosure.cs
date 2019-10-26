@@ -7,7 +7,7 @@ using Terraria;
 
 namespace Ambushes.Ambushes {
 	abstract class BrambleEnclosureAmbush : BrambleAmbush {
-		public bool IsEntrapping { get; private set; }
+		public bool IsEntrapping { get; internal set; }
 
 
 
@@ -48,6 +48,10 @@ namespace Ambushes.Ambushes {
 		////////////////
 
 		protected void CreateBrambleEnclosureIfEntrapping() {
+			if( Main.netMode == 1 ) {
+				return;
+			}
+
 			if( this.IsEntrapping ) {
 				int radius = AmbushesMod.Config.AmbushEntrapmentRadius;
 				IDictionary<int, ISet<int>> tileTrace = CursedBrambleTile.TraceTileEnclosure( this.TileX, this.TileY, radius );

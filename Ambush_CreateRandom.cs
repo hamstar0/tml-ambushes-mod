@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Helpers.Debug;
+﻿using Ambushes.Ambushes;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET;
 using HamstarHelpers.Helpers.DotNET.Reflection;
 using HamstarHelpers.Helpers.TModLoader;
@@ -36,6 +37,34 @@ namespace Ambushes {
 
 		////////////////
 
+		public static int GetAmbushCode( Ambush ambush ) {
+			for( int i=0; i<Ambush.StaticInstances.Count; i++ ) {
+				if( ambush.GetType().Name == Ambush.StaticInstances[i].GetType().Name ) {
+					return i;
+				}
+			}
+			return -1;
+			/*switch( ambush.GetType().Name ) {
+			case "BrambleWallAmbush":
+				return 1;
+			case "FloodAmbush":
+				return 2;
+			case "FlyerSwarmAmbush":
+				return 3;
+			case "MinibossAmbush":
+				return 4;
+			case "SkeletonRaidersAmbush":
+				return 5;
+			case "WormsInfestationAmbush":
+				return 6;
+			default:
+				return -1;
+			}*/
+		}
+
+
+		////////////////
+
 		public static Ambush CreateRandomType( int tileX, int tileY ) {
 			float rand = TmlHelpers.SafelyGetRand().NextFloat() * (float)Ambush.TotalWeight;
 			Ambush randAmbush = null;
@@ -50,6 +79,19 @@ namespace Ambushes {
 			}
 			
 			return randAmbush?.CloneRandomized( tileX, tileY );
+		}
+
+
+		public static Ambush CreateType( int ambushType, int tileX, int tileY, bool isEntrapping ) {
+			Ambush template = Ambush.StaticInstances[ ambushType ];
+			Ambush ambush = template.CloneRandomized( tileX, tileY );
+
+			if( ambush is BrambleEnclosureAmbush ) {
+				var brambleAmbush = (BrambleEnclosureAmbush)ambush;
+				brambleAmbush.IsEntrapping = isEntrapping;
+			}
+
+			return ambush;
 		}
 	}
 }

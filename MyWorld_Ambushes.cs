@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Helpers.Debug;
+﻿using Ambushes.NetProtocols;
+using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.TModLoader;
 using System;
 using System.Threading.Tasks;
@@ -60,6 +61,10 @@ namespace Ambushes {
 		////////////////
 
 		private void UpdateAmbushesRegen( int maxAmbushes ) {
+			if( Main.netMode == 1 ) {
+				return;
+			}
+
 			if( this.AmbushRegenDelay++ >= AmbushesMod.Config.AmbushRegenTickRate ) {
 				this.AmbushRegenDelay = 0;
 
@@ -148,6 +153,10 @@ namespace Ambushes {
 			}
 
 			this.AmbushMngr.ArmAmbush( ambush );
+
+			if( Main.netMode == 2 ) {
+				AmbushAddProtocol.QuickSendToClients( ambush );
+			}
 		}
 	}
 }

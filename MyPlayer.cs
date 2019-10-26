@@ -1,4 +1,5 @@
-﻿using Ambushes.Tiles;
+﻿using Ambushes.NetProtocols;
+using Ambushes.Tiles;
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.Players;
 using HamstarHelpers.Services.Timers;
@@ -13,6 +14,25 @@ using Terraria.ModLoader;
 
 namespace Ambushes {
 	class AmbushesPlayer : ModPlayer {
+		public override void OnEnterWorld( Player player ) {
+			if( player.whoAmI != Main.myPlayer ) { return; }
+			if( this.player.whoAmI != Main.myPlayer ) { return; }
+
+			if( Main.netMode == 1 ) {
+				this.OnCurrentClientConnect();
+			}
+		}
+
+
+		////////////////
+
+		private void OnCurrentClientConnect() {
+			AmbushesProtocol.QuickRequest();
+		}
+
+
+		////////////////
+
 		public override void PreUpdate() {
 			if( Main.netMode == 1 ) { return; }
 

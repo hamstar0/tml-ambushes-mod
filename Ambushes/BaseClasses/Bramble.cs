@@ -38,6 +38,10 @@ namespace Ambushes.Ambushes {
 		////
 
 		private void RunErode() {
+			if( Main.netMode == 1 ) {
+				return;
+			}
+
 			int rad = AmbushesMod.Config.AmbushEntrapmentRadius + AmbushesMod.Config.BrambleThickness + 1;
 			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
 			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
@@ -57,9 +61,12 @@ namespace Ambushes.Ambushes {
 
 			if( brambles.Count > 0 ) {
 				if( brambles.Count < 48 ) {
-					foreach( (int x, int y) in brambles ) {
-						CursedBrambleTile.RemoveBrambleAt( x, y );
+					if( Main.netMode != 1 ) {
+						foreach( (int x, int y) in brambles ) {
+							CursedBrambleTile.RemoveBrambleAt( x, y );
+						}
 					}
+
 					cleanupComplete = true;
 				}
 			} else {
