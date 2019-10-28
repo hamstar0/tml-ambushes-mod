@@ -24,7 +24,9 @@ namespace Ambushes.Ambushes {
 					}
 				}
 
-				this.RunErode();
+				if( this.ElapsedTicks % 10 == 0 ) {
+					this.RunErode();
+				}
 
 				if( this.ElapsedTicks % 60 == 0 ) {
 					this.RunCleanup( ref cleanupComplete );
@@ -43,14 +45,9 @@ namespace Ambushes.Ambushes {
 			}
 
 			int rad = AmbushesMod.Config.AmbushEntrapmentRadius + AmbushesMod.Config.BrambleThickness + 1;
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
-			CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			for( int i=0; i<120; i++ ) {
+				CursedBrambleTile.ErodeRandomBrambleWithinRadius( this.TileX, this.TileY, rad );
+			}
 		}
 
 		private void RunCleanup( ref bool cleanupComplete ) {

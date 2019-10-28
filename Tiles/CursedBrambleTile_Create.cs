@@ -1,6 +1,5 @@
 using HamstarHelpers.Helpers.Debug;
 using HamstarHelpers.Helpers.DotNET.Extensions;
-using HamstarHelpers.Helpers.Tiles;
 using HamstarHelpers.Helpers.TModLoader;
 using HamstarHelpers.Services.Timers;
 using System;
@@ -80,28 +79,47 @@ namespace Ambushes.Tiles {
 						continue;
 					}
 
-					int x = tileX + i;
-					int y = tileY + j;
-					Tile tile = Framing.GetTileSafely( x, y );
-
-					if( tile == null || !tile.active() ) {
-						if( TileHelpers.PlaceTile(x, y, brambleTileType) ) {
-							Tile newTile = Main.tile[x, y];
-							newTile.wire( tile.wire() );
-							newTile.wire2( tile.wire2() );
-							newTile.wire3( tile.wire3() );
-							newTile.wire4( tile.wire4() );
-							newTile.liquid = tile.liquid;
-							newTile.liquidType( tile.liquidType() );
-							NetMessage.SendData( MessageID.TileChange, -1, -1, null, 1, (float)x, (float)y, (float)brambleTileType, 0, 0, 0 );
-
-							bramblesPlaced++;
-						}
+					Tile tile = CursedBrambleTile.CreateBrambleAt( tileX + i, tileY + j );
+					if( tile != null ) {
+						bramblesPlaced++;
 					}
 				}
 			}
 
 			return bramblesPlaced;
+		}
+
+
+		public static Tile CreateBrambleAt( int tileX, int tileY ) {
+			int brambleTileType = ModContent.TileType<CursedBrambleTile>();
+
+			Tile tileAt = Main.tile[tileX, tileY];
+			if( tileAt != null && tileAt.active() && tileAt.type == brambleTileType ) {
+				return null;
+			}
+
+			Tile tile = Framing.GetTileSafely( tileX, tileY );
+			if( tile.active() ) {
+				return null;
+			}
+
+			if( !WorldGen.PlaceTile( tileX, tileY, brambleTileType ) ) {
+				return null;
+			}
+
+			Tile newTile = Main.tile[ tileX, tileY ];
+			newTile.wire( tile.wire() );
+			newTile.wire2( tile.wire2() );
+			newTile.wire3( tile.wire3() );
+			newTile.wire4( tile.wire4() );
+			newTile.liquid = tile.liquid;
+			newTile.liquidType( tile.liquidType() );
+
+			if( Main.netMode != 0 ) {
+				NetMessage.SendData( MessageID.TileChange, -1, -1, null, 1, (float)tileX, (float)tileY, (float)brambleTileType, 0, 0, 0 );
+			}
+
+			return newTile;
 		}
 	}
 }

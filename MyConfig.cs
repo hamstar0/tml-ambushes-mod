@@ -169,6 +169,22 @@ namespace Ambushes {
 		public float BrambleWallAmbushPriorityWeight { get; set; } = 2f;
 
 
+		[Header( "Ambush bramble wall type settings" )]
+		[Range( 0f, 10f )]
+		[DefaultValue( 0.5f )]
+		[ReloadRequired]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
+		public float BrambleBloomAmbushPriorityWeight { get; set; } = 0.5f;
+
+		[Range( 0, 360 )]
+		[DefaultValue( 45 )]
+		public int BrambleBloomThickness { get; set; } = 45;
+
+		[Range( 0, 400 )]
+		[DefaultValue( 40 )]
+		public int BrambleBloomRadius { get; set; } = 40;
+
+
 		[Header( "Ambush flyer swarm type settings" )]
 		[Range( 0f, 10f )]
 		[DefaultValue( 0.25f )]

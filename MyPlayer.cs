@@ -34,8 +34,6 @@ namespace Ambushes {
 		////////////////
 
 		public override void PreUpdate() {
-			if( Main.netMode == 1 ) { return; }
-
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
 			IList<Ambush> ambushes = myworld.AmbushMngr.GetAmbushesNear(
 				(int)this.player.position.X >> 4,
