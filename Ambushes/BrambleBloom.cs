@@ -108,9 +108,9 @@ namespace Ambushes.Ambushes {
 				}
 
 				(int x, int y) growAt = tendril.Grow();
+				nearby = this.CountBramblesNear( growAt.x, growAt.y ) + 1;
 
-				nearby = this.CountBramblesNear( growAt.x, growAt.y );
-				if( nearby <= 1 || rand.Next(nearby) == 0 ) {
+				if( nearby <= 1 || rand.NextFloat() < (1f - ((float)nearby/10f)) ) {
 					CursedBrambleTile.CreateBrambleAt( growAt.x, growAt.y );
 				}
 			}
@@ -138,7 +138,7 @@ namespace Ambushes.Ambushes {
 
 		////////////////
 
-		private int CountBramblesNear( int tileX, int tileY ) {
+		public int CountBramblesNear( int tileX, int tileY ) {
 			int brambleType = ModContent.TileType<CursedBrambleTile>();
 			int nearbyBrambles = 0;
 

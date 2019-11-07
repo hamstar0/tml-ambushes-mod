@@ -46,9 +46,11 @@ namespace Ambushes {
 		[DefaultValue( 1280 )]
 		public int HugeWorldInitialAmbushes { get; set; } = 2048;
 
+		////
+
 		[Range( 0, 10000 )]
 		[DefaultValue( 80 )]
-		public int AmbushPlayerNearbyNeededTileRadius { get; set; } = 80;
+		public int AmbushPlayerNearbyNeededTileRadiusElseAbort { get; set; } = 80;
 
 
 		/*[Range( 1, 10000 )]

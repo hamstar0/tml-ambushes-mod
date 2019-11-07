@@ -1,5 +1,5 @@
 ﻿using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.DotNET.Extensions;
+using HamstarHelpers.Helpers.Tiles;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -9,81 +9,20 @@ using Terraria.ModLoader;
 namespace Ambushes {
 	abstract partial class Ambush {
 		public static bool CheckForAmbushElegibility( int tileX, int tileY ) {
-			IDictionary<int, ISet<int>> edgeTiles = new Dictionary<int, ISet<int>> {
-				{ tileX, new HashSet<int> { tileY } }
-			};
-
 			var myworld = ModContent.GetInstance<AmbushesWorld>();
-			var edgeTileQueue = new Dictionary<int, ISet<int>>();
-			var chartedTiles = new Dictionary<int, ISet<int>>();
+			int maxChartedTiles = 48 * 48;
 
-			int maxDistSqr = 50 * 50;
-			int minNeededAirTiles = 32 * 32;
-			int airTileCount = 0;
+			IList<(ushort, ushort)> unclosedTiles = new List<(ushort, ushort)>();
+			IList<(ushort, ushort)> chartedTiles = TileFinderHelpers.GetAllContiguousMatchingTiles(
+				pattern: myworld.AmbushMngr.ViableAmbushTilePattern,
+				tileX: tileX,
+				tileY: tileY,
+				unclosedTiles: out unclosedTiles,
+				maxRadius: 50,
+				maxTiles: maxChartedTiles
+			);
 
-			do {
-				foreach( (int eTileX, ISet<int> eTileYs) in edgeTiles ) {
-					foreach( int eTileY in eTileYs ) {
-						int distX = tileX - eTileX;
-						int distY = tileY - eTileY;
-
-						if( ((distX * distX) + (distY * distY)) > maxDistSqr ) {
-							continue;
-						}
-
-						if( myworld.AmbushMngr.ViableAmbushTile.Check(eTileX, eTileY) ) {
-							if( !chartedTiles.ContainsKey(eTileX) || !chartedTiles[eTileX].Contains(eTileY) ) {
-								chartedTiles.Set2D( eTileX, eTileY );
-								edgeTileQueue.Set2D( eTileX, eTileY );
-								airTileCount++;
-								
-								if( airTileCount >= minNeededAirTiles ) {
-									break;
-								}
-							}
-						}
-					}
-				}
-
-				edgeTiles.Clear();
-
-				foreach( (int eTileX, ISet<int> eTileYs) in edgeTileQueue ) {
-					foreach( int eTileY in eTileYs ) {
-						Ambush.GetUnchartedNeighboringEdgeTiles( eTileX, eTileY, chartedTiles, ref edgeTiles );
-					}
-				}
-
-				edgeTileQueue.Clear();
-			} while( edgeTiles.Count > 0 && airTileCount < minNeededAirTiles );
-			
-			return airTileCount >= minNeededAirTiles;
-		}
-
-		////
-
-		private static void GetUnchartedNeighboringEdgeTiles(
-					int eTileX, int eTileY,
-					IDictionary<int, ISet<int>> chartedTiles,
-					ref IDictionary<int, ISet<int>> newScanTiles ) {
-			var myworld = ModContent.GetInstance<AmbushesWorld>();
-			IEnumerable<(int, int)> neighbors() {
-				yield return ( eTileX, eTileY - 1 );
-				yield return ( eTileX - 1, eTileY );
-				yield return ( eTileX + 1, eTileY );
-				yield return ( eTileX, eTileY + 1 );
-			};
-
-			foreach( (int tileX, int tileY) in neighbors() ) {
-				if( chartedTiles.ContainsKey( tileX ) && chartedTiles[tileX].Contains( tileY ) ) {
-					continue;
-				}
-
-				Tile tile = Framing.GetTileSafely( tileX, tileY );
-
-				if( myworld.AmbushMngr.ViableAmbushTile.Check(eTileX, eTileY) ) {
-					newScanTiles.Set2D( tileX, tileY );
-				}
-			}
+			return chartedTiles.Count >= maxChartedTiles;
 		}
 
 		////////////////
@@ -94,13 +33,13 @@ namespace Ambushes {
 
 			do {
 				if( (tileY + y) >= Main.maxTilesY - 1 ) {
-					LogHelpers.Warn( "Exceeded height check." );
+					//LogHelpers.WarnOnce( "Exceeded height check ("+tileX+", "+tileY+")" );
 					y = 0;
 					break;
 				}
 
 				y++;
-			} while( myworld.AmbushMngr.ViableAmbushTile.Check(tileX, tileY+y) );
+			} while( myworld.AmbushMngr.ViableAmbushTilePattern.Check(tileX, tileY+y) );
 
 			tileY = Math.Max( tileY, (tileY + y) - (AmbushesMod.Config.AmbushTriggerRadiusTiles / 2) );
 		}

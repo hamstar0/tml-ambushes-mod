@@ -90,7 +90,7 @@ namespace Ambushes.Ambushes {
 			}
 
 			bool spawnsEnded = this.ElapsedTicks >= this.GetNPCSpawnsDuration();
-			bool alone = !this.ArePlayersNearby( AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadius );
+			bool alone = !this.ArePlayersNearby( AmbushesMod.Config.AmbushPlayerNearbyNeededTileRadiusElseAbort );
 
 			if( AmbushesMod.Config.DebugModeInfoSpawns ) {
 				if( spawnsEnded ) {

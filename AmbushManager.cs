@@ -66,7 +66,7 @@ namespace Ambushes {
 
 		////////////////
 
-		public TilePattern ViableAmbushTile { get; }
+		public TilePattern ViableAmbushTilePattern { get; }
 
 
 
@@ -76,8 +76,9 @@ namespace Ambushes {
 			var dungeonWalls = new HashSet<int>( TileWallHelpers.UnsafeDungeonWallTypes );
 			dungeonWalls.Add( WallID.LihzahrdBrickUnsafe );
 
-			this.ViableAmbushTile = new TilePattern( new TilePatternBuilder {
-				IsSolid = false,
+			this.ViableAmbushTilePattern = new TilePattern( new TilePatternBuilder {
+				HasSolidProperties = false,
+				IsPlatform = false,
 				IsActuated = false,
 				MaximumBrightness = 0.25f,
 				CustomCheck = ( x, y ) => !dungeonWalls.Contains( Main.tile[x, y].wall )
